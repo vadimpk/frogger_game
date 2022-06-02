@@ -248,5 +248,7 @@ public class Frog {
     public Texture getTexture() {return texture;}
 
 
-
+    public void setX(float x) {
+        this.x = x;
+    }
 }

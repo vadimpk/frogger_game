@@ -20,6 +20,9 @@ public class FroggerGame extends ApplicationAdapter {
 	public static final int tilesPerColumn = 30;
 
 	public static Tile[][] tiles = new Tile[tilesPerRow][tilesPerColumn];
+
+	private MovableRow movableRow;
+	private Row row;
 	private static Frog frog;
 
 
@@ -65,6 +68,11 @@ public class FroggerGame extends ApplicationAdapter {
 			}
 		}
 
+		row = new Row(tiles[0][0], "grass_tile.png");
+		movableRow = new Logs(tiles[0][1], 5, 0, 3, 200,
+							tiles[0][1].getSize() - 20, new Texture(Gdx.files.internal("log.png")), new Texture(Gdx.files.internal("water.png")));
+
+
 		// spawn frog in the center horizontally and at the bottom vertically
 		frog = new Frog(tiles[tilesPerRow / 2][0]);
 	}
@@ -83,6 +91,11 @@ public class FroggerGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClear(GL20.GL_ALPHA_BITS);
 
+
+		movableRow.update(0);
+		if(movableRow.isCollision(frog)) {
+			frog.setX(frog.getX() + movableRow.speed);
+		}
 		// start game batch
 		gameBatch.begin();
 
@@ -98,6 +111,9 @@ public class FroggerGame extends ApplicationAdapter {
 
 			}
 		}
+		movableRow.render(gameBatch);
+
+		row.render(gameBatch);
 
 		// TODO: draw logs
 
