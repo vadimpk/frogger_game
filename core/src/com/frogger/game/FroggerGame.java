@@ -26,7 +26,10 @@ public class FroggerGame extends ApplicationAdapter {
 	private static Frog frog;
 
 
+	MovingObject m;
+	MovingObject m2;
 	Texture t2;
+	Texture t3;
 
 	/** variables for calculating time between frames in render() method */
 	long now = 0;
@@ -45,6 +48,7 @@ public class FroggerGame extends ApplicationAdapter {
 		// temporary texture for attributes
 		// TODO: create separate Java class for attributes (score, lives etc.)
 		t2 = new Texture(Gdx.files.internal("temp.png"));
+		t3 = new Texture(Gdx.files.internal("tile2.png"));
 
 		// get screen size
 		int screenWidth = Gdx.graphics.getWidth();
@@ -68,9 +72,14 @@ public class FroggerGame extends ApplicationAdapter {
 			}
 		}
 
-		row = new Row(tiles[0][0], "grass_tile.png");
+		m = new MovingObject(tiles[0][0].getSize(), tiles[12][0].getX(), tiles[0][7].getY(), 10f,3,t3,false, Util.Direction.RIGHT);
+		m2 = new MovingObject(tiles[0][0].getSize(), tiles[5][0].getX(), tiles[0][7].getY(), 10f,3,t3,false, Util.Direction.RIGHT);
+
+
+		row = new Row(tiles[0][0], "tile2.png");
 		movableRow = new Logs(tiles[0][1], 5, 0, 3, 200,
-							tiles[0][1].getSize() - 20, new Texture(Gdx.files.internal("log.png")), new Texture(Gdx.files.internal("water.png")));
+							tiles[0][1].getSize() - 20, new Texture(Gdx.files.internal("frog.jpg")), new Texture(Gdx.files.internal("frog2.png")));
+
 
 
 		// spawn frog in the center horizontally and at the bottom vertically
@@ -90,7 +99,6 @@ public class FroggerGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClear(GL20.GL_ALPHA_BITS);
-
 
 		movableRow.update(0);
 		if(movableRow.isCollision(frog)) {
@@ -115,13 +123,18 @@ public class FroggerGame extends ApplicationAdapter {
 
 		row.render(gameBatch);
 
+		m.draw(gameBatch, frog);
+		m.move();
+		m2.draw(gameBatch, frog);
+		m2.move();
+
 		// TODO: draw logs
 
 		// draw frog
-		gameBatch.draw(frog.getTexture(), frog.getX(), frog.getY(), frog.getSize(), frog.getSize());
+		if (frog.isAlive()) gameBatch.draw(frog.getTexture(), frog.getX(), frog.getY(), frog.getSize(), frog.getSize());
 
 		// call function that handles frog logics
-		frog.update(dt);
+		if (frog.isAlive()) frog.update(dt);
 
 		// calculate delta time for each frame
 		last = TimeUtils.nanoTime();

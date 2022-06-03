@@ -13,6 +13,7 @@ public class Frog {
     private Tile tile;
     private float x,y,size;
     private Texture texture = new Texture(Gdx.files.internal("frog3.png"));
+    private boolean alive;
 
     /** initialize fields for movements  */
     private long startedMovingTime;
@@ -32,6 +33,7 @@ public class Frog {
         x = tile.getX();
         y = tile.getY();
         size = tile.getSize();
+        alive = true;
     }
 
     /**
@@ -39,7 +41,6 @@ public class Frog {
      * @param dt delta time
      */
     public void update(float dt) {
-
 
         // movement
         if (isMoving) {
@@ -247,8 +248,13 @@ public class Frog {
      */
     public Texture getTexture() {return texture;}
 
+    public boolean isAlive() {
+        return alive;
+    }
 
     public void setX(float x) {
         this.x = x;
     }
+
+    public void setAlive(boolean alive) {this.alive = alive;}
 }
