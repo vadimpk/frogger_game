@@ -22,10 +22,11 @@ public abstract class MovableRow{
 
     protected float x, y;
     protected float width, height;
+    protected int movingObjLength;
 
     protected Texture bg;
 
-    public MovableRow(Tile startingTile, float speed, float phase, float amountOfMovingObj, float movingObjWidth, float movingObjHeight, Texture movingObjTexture, Texture bg) {
+    public MovableRow(Tile startingTile, float speed, float phase, float amountOfMovingObj, int movingObjLength, float movingObjHeight, Texture movingObjTexture, Texture bg) {
         this.x = startingTile.getX();
         this.y = startingTile.getY();
         this.width = (int) (startingTile.getSize() * tilesPerRow);
@@ -34,6 +35,8 @@ public abstract class MovableRow{
         this.phase = phase;
         this.amountOfMovingObj = amountOfMovingObj;
         this.bg = bg;
+        this.movingObjLength = movingObjLength;
+        float movingObjWidth = movingObjLength * startingTile.getSize();
 
         if (width - amountOfMovingObj * movingObjWidth < 0) throw new IllegalArgumentException("distance between moving objects smaller than 0");
         distance = (2 * movingObjWidth + width - amountOfMovingObj * movingObjWidth) / amountOfMovingObj;
@@ -63,22 +66,16 @@ public abstract class MovableRow{
         }
     }
 
-    public boolean isCollision(Frog frog) {
-        if(frog.getY() == y) {
-            for (MovingObj movingObj : movingObjs) {
-                if (movingObj.x < frog.getX() && movingObj.x + movingObj.width > frog.getX() + frog.getSize()){
-                    System.out.println("У мене є колізія!");
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+    public abstract boolean isCollision(Frog frog);
+    public abstract MovingObj getCollider(Frog frog);
+
+
 
     protected static class MovingObj {
         float x, y;
         float width, height;
         Texture texture;
+        boolean isFrogOn;
 
         public MovingObj(float x, float y, float width, float height, Texture texture) {
             this.x = x;
@@ -86,6 +83,7 @@ public abstract class MovableRow{
             this.width = width;
             this.height = height;
             this.texture = texture;
+            isFrogOn = false;
         }
     }
 }

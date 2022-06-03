@@ -39,15 +39,15 @@ public class MovingObject {
 
         if (direction == Direction.LEFT) {
 
-            if ((x + size*length) < FroggerGame.tiles[0][0].getX()) {
-                x = FroggerGame.tiles[FroggerGame.tilesPerRow-1][0].getX() + FroggerGame.tiles[0][0].getSize();
+            if ((x + size*length) < FroggerGame.rows[0].getTiles()[0].getX()) {
+                x = FroggerGame.rows[FroggerGame.tilesPerRow-1].getTiles()[0].getX() + FroggerGame.rows[0].getTiles()[0].getSize();
             }
 
             x -= size / speed;
         } else if (direction == Direction.RIGHT) {
 
-            if (x > FroggerGame.tiles[FroggerGame.tilesPerRow-1][0].getX() + FroggerGame.tiles[0][0].getSize()) {
-                x = FroggerGame.tiles[0][0].getX() - FroggerGame.tiles[0][0].getSize() * length;
+            if (x > FroggerGame.rows[FroggerGame.tilesPerRow-1].getTiles()[0].getX() + FroggerGame.rows[0].getTiles()[0].getSize()) {
+                x = FroggerGame.rows[0].getTiles()[0].getX() - FroggerGame.rows[0].getTiles()[0].getSize() * length;
             }
 
             x += size / speed;

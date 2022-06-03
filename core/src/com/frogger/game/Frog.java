@@ -61,7 +61,7 @@ public class Frog {
             {
                 if (tile.getRow() < FroggerGame.tilesPerColumn -1) {
 
-                    tile = FroggerGame.tiles[tile.getColumn()][tile.getRow() +1];
+                    tile = FroggerGame.rows[tile.getRow() +1].getTiles()[tile.getColumn()];
                     startMoving(Direction.UP);
 
                 }
@@ -70,7 +70,7 @@ public class Frog {
             {
                 if (tile.getRow() > 0) {
 
-                    tile = FroggerGame.tiles[tile.getColumn()][tile.getRow() -1];
+                    tile = FroggerGame.rows[tile.getRow() -1].getTiles()[tile.getColumn()];
                     startMoving(Direction.DOWN);
 
                 }
@@ -79,7 +79,7 @@ public class Frog {
             {
                 if (tile.getColumn() < FroggerGame.tilesPerRow - 1) {
 
-                    tile = FroggerGame.tiles[tile.getColumn() +1][tile.getRow()];
+                    tile = FroggerGame.rows[tile.getRow()].getTiles()[tile.getColumn() +1];
                     startMoving(Direction.RIGHT);
 
                 }
@@ -88,7 +88,7 @@ public class Frog {
             {
                 if (tile.getColumn() > 0) {
 
-                    tile = FroggerGame.tiles[tile.getColumn() -1][tile.getRow()];
+                    tile = FroggerGame.rows[tile.getRow()].getTiles()[tile.getColumn() -1];
                     startMoving(Direction.LEFT);
 
                 }
@@ -257,4 +257,9 @@ public class Frog {
     }
 
     public void setAlive(boolean alive) {this.alive = alive;}
+
+    public void setTile(Tile tile) {
+        this.tile = tile;
+    }
 }
+
