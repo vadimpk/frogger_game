@@ -1,23 +1,29 @@
 package com.frogger.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.frogger.game.Util.TypeOfRow;
 
-public abstract class Row {
-    protected Texture texture;
-    protected int  rowIndex;
-    protected Tile[] tiles;
+public class Row {
 
-    protected Row(int rowIndex, String src) {
-        this.rowIndex = rowIndex;
-        this.texture = new Texture(Gdx.files.internal(src));
+    public int rowIndex;
+    public TypeOfRow type;
+    public MovingObject[] objects;
+
+
+    protected Row(int index, TypeOfRow typeOfRow, MovingObject[] movingObjects) {
+        rowIndex = index;
+        type = typeOfRow;
+        objects = movingObjects;
     }
-    public Tile[] getTiles() {
-        return tiles;
+
+    public void render(SpriteBatch batch) {
+        for (MovingObject object: objects) {
+            object.move();
+            object.render(batch);
+        }
     }
 
-    protected abstract void render(SpriteBatch batch);
-    protected abstract void update(float dt);
-
+    public TypeOfRow getType() {
+        return type;
+    }
 }

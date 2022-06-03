@@ -24,14 +24,9 @@ public class MovingObject {
         this.direction = direction;
     }
 
-    public void draw(SpriteBatch batch, Frog frog) {
+    public void render(SpriteBatch batch) {
         for (int i = 0; i < length; i++) {
             batch.draw(texture, x + i * size, y, size, size);
-        }
-        if (!safe) {
-            if (checkCollision(frog)) {
-                frog.setAlive(false);
-            }
         }
     }
 
@@ -39,15 +34,15 @@ public class MovingObject {
 
         if (direction == Direction.LEFT) {
 
-            if ((x + size*length) < FroggerGame.rows[0].getTiles()[0].getX()) {
-                x = FroggerGame.rows[FroggerGame.tilesPerRow-1].getTiles()[0].getX() + FroggerGame.rows[0].getTiles()[0].getSize();
+            if ((x + size*length) < FroggerGame.tiles[0][0].getX()) {
+                x = FroggerGame.tiles[0][FroggerGame.nColumns -1].getX() + FroggerGame.tiles[0][0].getSize();
             }
 
             x -= size / speed;
         } else if (direction == Direction.RIGHT) {
 
-            if (x > FroggerGame.rows[FroggerGame.tilesPerRow-1].getTiles()[0].getX() + FroggerGame.rows[0].getTiles()[0].getSize()) {
-                x = FroggerGame.rows[0].getTiles()[0].getX() - FroggerGame.rows[0].getTiles()[0].getSize() * length;
+            if (x > FroggerGame.tiles[0][FroggerGame.nColumns -1].getX() + FroggerGame.tiles[0][0].getSize()) {
+                x = FroggerGame.tiles[0][0].getX() - FroggerGame.tiles[0][0].getSize() * length;
             }
 
             x += size / speed;

@@ -2,6 +2,7 @@ package com.frogger.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 public class Tile {
@@ -15,14 +16,14 @@ public class Tile {
     private float size;
     private Texture texture;
 
-    Tile(int numberOfRows, float screenWidth, float screenHeight, int column, int row) {
+    Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
 
-        this.column = column;
         this.row = row;
+        this.column = column;
 
         // size of a game batch is 90% of whole screen height
         // to calculate size of a single tile size of a batch is divided by number of tiles per row
-        size = (float) 0.9 * screenHeight / numberOfRows;
+        size = (float) 0.9 * screenHeight / numberOfColumns;
 
         // x coordinate is:
         // x of first column + size of every tile in a row before this one
@@ -34,6 +35,10 @@ public class Tile {
 
         // set texture
         texture = defaultTileTexture;
+    }
+
+    public void render(SpriteBatch batch) {
+        batch.draw(texture, x,y,size,size);
     }
 
 

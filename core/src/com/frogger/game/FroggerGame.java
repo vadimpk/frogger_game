@@ -15,14 +15,16 @@ public class FroggerGame extends ApplicationAdapter {
 	public static OrthographicCamera gameCamera;
 	private static SpriteBatch attributesBatch;
 
-	public static final int tilesPerRow = 15;
-	public static final int tilesPerColumn = 30;
+	public static final int nColumns = 15;
+	public static final int nRows = 30;
 
-	public static Row[] rows = new Row[tilesPerColumn];
+	public static Row[] rows = new Row[nRows];
+	public static Tile[][] tiles = new Tile[nRows][nColumns];
 
 	private static Frog frog;
 
 	Texture t2;
+	Texture t21;
 	Texture t3;
 
 	/** variables for calculating time between frames in render() method */
@@ -42,6 +44,7 @@ public class FroggerGame extends ApplicationAdapter {
 		// temporary texture for attributes
 		// TODO: create separate Java class for attributes (score, lives etc.)
 		t2 = new Texture(Gdx.files.internal("temp.png"));
+		t21 = new Texture(Gdx.files.internal("temp2.jpg"));
 		t3 = new Texture(Gdx.files.internal("tile2.png"));
 
 		// get screen size
@@ -58,19 +61,44 @@ public class FroggerGame extends ApplicationAdapter {
 
 		// create tiles (default)
 		// TODO: create levels and simplify creation of tiles in separate Java class
-			for (int row = 0; row < tilesPerColumn; row++) {
-				if(row != 2) rows[row] = new StaticRow(row, "tile.png");
-				else rows[row] = new MovingRow(row, "tile2.png", "water.png", 10, 0, 2, 2);
+
+		for (int row = 0; row < nRows; row++) {
+			for (int column = 0; column < nColumns; column++) {
+				tiles[row][column] = new Tile(nColumns, screenWidth, screenHeight, row, column);
 			}
+		}
 
+		for (int i = 0; i < rows.length; i++) {
+			rows[i] = new Row(i, Util.TypeOfRow.STATIC, new MovingObject[]{});
+		}
 
-//		m = new MovingObject(tiles[0][0].getSize(), tiles[12][0].getX(), tiles[0][7].getY(), 10f,3,t3,false, Util.Direction.RIGHT);
-//		m2 = new MovingObject(tiles[0][0].getSize(), tiles[5][0].getX(), tiles[0][7].getY(), 10f,3,t3,false, Util.Direction.RIGHT);
+		// create moving rows
+		rows[6] = new Row(6, Util.TypeOfRow.CAR, new MovingObject[]{
+				new MovingObject(tiles[0][0].getSize(), tiles[6][0].getX(), tiles[6][0].getY(), 15f, 3, t3, false, Util.Direction.LEFT),
+				new MovingObject(tiles[0][0].getSize(), tiles[6][6].getX(), tiles[6][0].getY(), 15f, 2, t3, false, Util.Direction.LEFT),
+				new MovingObject(tiles[0][0].getSize(), tiles[6][12].getX(), tiles[6][0].getY(), 15f, 3, t3, false, Util.Direction.LEFT),
+		});
 
+		rows[3] = new Row(3, Util.TypeOfRow.LOG, new Log[]{
+				new Log(tiles[0][0].getSize(), tiles[3][0].getX(), tiles[3][0].getY(), 20f, 3, t3, Util.Direction.RIGHT),
+				new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[3][0].getY(), 20f, 3, t3, Util.Direction.RIGHT),
+				new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[3][0].getY(), 20f, 3, t3, Util.Direction.RIGHT),
+		});
+		rows[4] = new Row(4, Util.TypeOfRow.LOG, new Log[]{
+				new Log(tiles[0][0].getSize(), tiles[4][0].getX(), tiles[4][0].getY(), 15f, 3, t3, Util.Direction.LEFT),
+				new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[4][0].getY(), 15f, 3, t3, Util.Direction.LEFT),
+				new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[4][0].getY(), 15f, 3, t3, Util.Direction.LEFT),
+		});
+
+		rows[2] = new Row(2, Util.TypeOfRow.LOG, new Log[]{
+				new Log(tiles[0][0].getSize(), tiles[2][0].getX(), tiles[2][0].getY(), 30f, 3, t3, Util.Direction.LEFT),
+				new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[2][0].getY(), 30f, 3, t3, Util.Direction.LEFT),
+				new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[2][0].getY(), 30f, 3, t3, Util.Direction.LEFT),
+		});
 
 
 		// spawn frog in the center horizontally and at the bottom vertically
-		frog = new Frog(rows[0].getTiles()[tilesPerRow / 2]);
+		frog = new Frog(tiles[0][nColumns / 2]);
 	}
 
 
@@ -96,20 +124,24 @@ public class FroggerGame extends ApplicationAdapter {
 		now = TimeUtils.nanoTime();
 		dt = now - last;
 
-		// draw tiles
-		for (Row row : rows) {
-			row.update(0);
-			row.render(gameBatch);
+		// render tiles
+		for (int row = 0; row < nRows; row++) {
+			for (int column = 0; column < nColumns; column++) {
+				tiles[row][column].render(gameBatch);
+			}
 		}
 
+		// render each row (if not static)
+		for (Row row: rows) {
+			if (row.getType() != Util.TypeOfRow.STATIC) row.render(gameBatch);
+		}
 
-		// TODO: draw logs
+		// render frog
+		if (frog.isAlive()) frog.render(gameBatch);
 
-		// draw frog
-		if (frog.isAlive()) gameBatch.draw(frog.getTexture(), frog.getX(), frog.getY(), frog.getSize(), frog.getSize());
-
-		// call function that handles frog logics
-		if (frog.isAlive()) frog.update(dt);
+		if (!frog.isAlive()) {
+			frog = new Frog(tiles[0][nColumns / 2]);
+		}
 
 		// calculate delta time for each frame
 		last = TimeUtils.nanoTime();
@@ -119,8 +151,11 @@ public class FroggerGame extends ApplicationAdapter {
 
 		// attributes batch setup
 		attributesBatch.begin();
-		attributesBatch.draw(t2,0,0,Gdx.graphics.getWidth(), rows[0].getTiles()[0].getY());
-		attributesBatch.draw(t2,0,rows[tilesPerRow -1].getTiles()[0].getY() + rows[0].getTiles()[0].getSize(),Gdx.graphics.getWidth(), rows[0].getTiles()[0].getY());
+		attributesBatch.draw(t2,0,0,Gdx.graphics.getWidth(), tiles[0][0].getY());
+		attributesBatch.draw(t2,0,tiles[nColumns -1][0].getY() + tiles[0][0].getSize(), Gdx.graphics.getWidth(), tiles[0][0].getY());
+		attributesBatch.draw(t21,0,0,tiles[0][0].getX(), Gdx.graphics.getHeight());
+		attributesBatch.draw(t21,tiles[0][nColumns-1].getX() + tiles[0][0].getSize(),0, Gdx.graphics.getWidth() - tiles[0][nColumns-1].getX() + tiles[0][0].getSize(), Gdx.graphics.getHeight());
+
 		attributesBatch.end();
 
 	}
@@ -134,9 +169,9 @@ public class FroggerGame extends ApplicationAdapter {
 		gameBatch.dispose();
 		attributesBatch.dispose();
 
-		for (Row staticRow : rows) {
-			for (Tile tile: staticRow.getTiles()) {
-				tile.getTexture().dispose();
+		for (int row = 0; row < nRows; row++) {
+			for (int column = 0; column < nColumns; column++) {
+				tiles[row][column].getTexture().dispose();
 			}
 		}
 
