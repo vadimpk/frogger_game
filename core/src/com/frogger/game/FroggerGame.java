@@ -7,6 +7,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.frogger.game.objects.Car;
+import com.frogger.game.objects.Log;
+import com.frogger.game.objects.MovingObject;
+import com.frogger.game.objects.Train;
 
 public class FroggerGame extends ApplicationAdapter {
 
@@ -24,13 +28,15 @@ public class FroggerGame extends ApplicationAdapter {
 	private static Frog frog;
 
 	Texture t2;
-	Texture t21;
-	Texture t3;
 
 	/** variables for calculating time between frames in render() method */
 	long now = 0;
 	long last = 0;
 	float dt;
+
+	public static Frog getFrog() {
+		return frog;
+	}
 
 	/**
 	 * Method create() runs on the start of the program.
@@ -43,9 +49,7 @@ public class FroggerGame extends ApplicationAdapter {
 
 		// temporary texture for attributes
 		// TODO: create separate Java class for attributes (score, lives etc.)
-		t2 = new Texture(Gdx.files.internal("temp.png"));
-		t21 = new Texture(Gdx.files.internal("temp2.jpg"));
-		t3 = new Texture(Gdx.files.internal("tile2.png"));
+		t2 = new Texture(Gdx.files.internal("temp2.jpg"));
 
 		// get screen size
 		int screenWidth = Gdx.graphics.getWidth();
@@ -73,27 +77,31 @@ public class FroggerGame extends ApplicationAdapter {
 		}
 
 		// create moving rows
-		rows[6] = new Row(6, Util.TypeOfRow.CAR, new MovingObject[]{
-				new MovingObject(tiles[0][0].getSize(), tiles[6][0].getX(), tiles[6][0].getY(), 15f, 3, t3, false, Util.Direction.LEFT),
-				new MovingObject(tiles[0][0].getSize(), tiles[6][6].getX(), tiles[6][0].getY(), 15f, 2, t3, false, Util.Direction.LEFT),
-				new MovingObject(tiles[0][0].getSize(), tiles[6][12].getX(), tiles[6][0].getY(), 15f, 3, t3, false, Util.Direction.LEFT),
+		rows[6] = new Row(6, Util.TypeOfRow.CAR, new Car[]{
+				new Car(tiles[0][0].getSize(), tiles[6][0].getX(), tiles[6][0].getY(), 15f, 3,Util.Direction.LEFT),
+				new Car(tiles[0][0].getSize(), tiles[6][6].getX(), tiles[6][0].getY(), 15f, 2, Util.Direction.LEFT),
+				new Car(tiles[0][0].getSize(), tiles[6][12].getX(), tiles[6][0].getY(), 15f, 3, Util.Direction.LEFT),
 		});
 
 		rows[3] = new Row(3, Util.TypeOfRow.LOG, new Log[]{
-				new Log(tiles[0][0].getSize(), tiles[3][0].getX(), tiles[3][0].getY(), 20f, 3, t3, Util.Direction.RIGHT),
-				new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[3][0].getY(), 20f, 3, t3, Util.Direction.RIGHT),
-				new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[3][0].getY(), 20f, 3, t3, Util.Direction.RIGHT),
+				new Log(tiles[0][0].getSize(), tiles[3][0].getX(), tiles[3][0].getY(), 20f, 3, Util.Direction.RIGHT),
+				new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[3][0].getY(), 20f, 3, Util.Direction.RIGHT, true, 150000000),
+				new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[3][0].getY(), 20f, 3, Util.Direction.RIGHT, true, 150000000),
 		});
 		rows[4] = new Row(4, Util.TypeOfRow.LOG, new Log[]{
-				new Log(tiles[0][0].getSize(), tiles[4][0].getX(), tiles[4][0].getY(), 15f, 3, t3, Util.Direction.LEFT),
-				new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[4][0].getY(), 15f, 3, t3, Util.Direction.LEFT),
-				new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[4][0].getY(), 15f, 3, t3, Util.Direction.LEFT),
+				new Log(tiles[0][0].getSize(), tiles[4][0].getX(), tiles[4][0].getY(), 15f, 3, Util.Direction.LEFT),
+				new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[4][0].getY(), 15f, 3, Util.Direction.LEFT),
+				new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[4][0].getY(), 15f, 3, Util.Direction.LEFT),
 		});
 
 		rows[2] = new Row(2, Util.TypeOfRow.LOG, new Log[]{
-				new Log(tiles[0][0].getSize(), tiles[2][0].getX(), tiles[2][0].getY(), 30f, 3, t3, Util.Direction.LEFT),
-				new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[2][0].getY(), 30f, 3, t3, Util.Direction.LEFT),
-				new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[2][0].getY(), 30f, 3, t3, Util.Direction.LEFT),
+				new Log(tiles[0][0].getSize(), tiles[2][0].getX(), tiles[2][0].getY(), 30f, 3, Util.Direction.LEFT),
+				new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[2][0].getY(), 30f, 3, Util.Direction.LEFT),
+				new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[2][0].getY(), 30f, 3, Util.Direction.LEFT),
+		});
+
+		rows[12] = new Row(10, Util.TypeOfRow.TRAIN, new Train[]{
+				new Train(tiles[0][0].getSize(), tiles[12][0].getY())
 		});
 
 
@@ -153,8 +161,8 @@ public class FroggerGame extends ApplicationAdapter {
 		attributesBatch.begin();
 		attributesBatch.draw(t2,0,0,Gdx.graphics.getWidth(), tiles[0][0].getY());
 		attributesBatch.draw(t2,0,tiles[nColumns -1][0].getY() + tiles[0][0].getSize(), Gdx.graphics.getWidth(), tiles[0][0].getY());
-		attributesBatch.draw(t21,0,0,tiles[0][0].getX(), Gdx.graphics.getHeight());
-		attributesBatch.draw(t21,tiles[0][nColumns-1].getX() + tiles[0][0].getSize(),0, Gdx.graphics.getWidth() - tiles[0][nColumns-1].getX() + tiles[0][0].getSize(), Gdx.graphics.getHeight());
+		attributesBatch.draw(t2,0,0,tiles[0][0].getX(), Gdx.graphics.getHeight());
+		attributesBatch.draw(t2,tiles[0][nColumns-1].getX() + tiles[0][0].getSize(),0, Gdx.graphics.getWidth() - tiles[0][nColumns-1].getX() + tiles[0][0].getSize(), Gdx.graphics.getHeight());
 
 		attributesBatch.end();
 
@@ -169,12 +177,12 @@ public class FroggerGame extends ApplicationAdapter {
 		gameBatch.dispose();
 		attributesBatch.dispose();
 
-		for (int row = 0; row < nRows; row++) {
-			for (int column = 0; column < nColumns; column++) {
-				tiles[row][column].getTexture().dispose();
-			}
-		}
+		Frog.dispose();
+		MovingObject.dispose();
+		Log.dispose();
+		Car.dispose();
+		Train.dispose();
 
-		frog.getTexture().dispose();
+		Tile.dispose();
 	}
 }
