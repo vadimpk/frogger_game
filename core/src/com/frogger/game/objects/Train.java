@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.frogger.game.FroggerGame;
+import com.frogger.game.Map;
 import com.frogger.game.Util.Direction;
 
 public class Train extends MovingObject {
@@ -28,14 +29,14 @@ public class Train extends MovingObject {
     private static final int MIN_TILES_AFTER_MOVING  = 10;
 
     public Train(float size, float y) {
-        super(size, FroggerGame.tiles[0][FroggerGame.nColumns - 1].getX() + size,
+        super(size, Map.tiles[0][Map.nColumns - 1].getX() + size,
                 y, SPEED, LENGTH, MOVING_DIRECTION);
         setSafe(SAFE);
     }
 
     public void render(SpriteBatch batch) {
 
-        float frogY = FroggerGame.getFrog().getY();
+        float frogY = Map.getFrog().getY();
 
         if (!moving) {
             if (getY() - frogY < MIN_TILES_BEFORE_MOVING * getSize()) {
@@ -66,10 +67,10 @@ public class Train extends MovingObject {
     @Override
     public void move() {
 
-        if ((getX() + getSize()*getLength()) < FroggerGame.tiles[0][0].getX()) {
+        if ((getX() + getSize()*getLength()) < Map.tiles[0][0].getX()) {
             startedMovingTime = TimeUtils.nanoTime();
             deltaTime = TIME_BETWEEN_MOVES;
-            setX(FroggerGame.tiles[0][FroggerGame.nColumns -1].getX() + FroggerGame.tiles[0][0].getSize());
+            setX(Map.tiles[0][Map.nColumns -1].getX() + Map.tiles[0][0].getSize());
         } else
             setX(getX() - getSize() / getSpeed());
 

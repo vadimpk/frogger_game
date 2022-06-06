@@ -60,18 +60,18 @@ public class Frog {
     public void update(float dt) {
 
         // check for collision with car
-        if (FroggerGame.rows[tile.getROW()].getType() == TypeOfRow.CAR) {
-            for (MovingObject car: FroggerGame.rows[tile.getROW()].getMovingObjects()) {
+        if (Map.rows[tile.getROW()].getType() == TypeOfRow.CAR) {
+            for (MovingObject car: Map.rows[tile.getROW()].getMovingObjects()) {
                 if (car.checkCollision(this)) alive = false;
             }
-            for (MovingObject car: FroggerGame.rows[tile.getROW() - 1].getMovingObjects()) {
+            for (MovingObject car: Map.rows[tile.getROW() - 1].getMovingObjects()) {
                 if (car.checkCollision(this)) alive = false;
             }
         }
 
         // check for collision with train
-        if (FroggerGame.rows[tile.getROW()].getType() == TypeOfRow.TRAIN) {
-            for (MovingObject train: FroggerGame.rows[tile.getROW()].getMovingObjects()) {
+        if (Map.rows[tile.getROW()].getType() == TypeOfRow.TRAIN) {
+            for (MovingObject train: Map.rows[tile.getROW()].getMovingObjects()) {
                 if (train.checkCollision(this)) alive = false;
             }
         }
@@ -81,7 +81,7 @@ public class Frog {
             if (!log.isSafe()) {
                 alive = false;
             }
-            if (x < FroggerGame.tiles[0][0].getX() || x > FroggerGame.tiles[0][FroggerGame.nColumns - 1].getX()) {
+            if (x < Map.tiles[0][0].getX() || x > Map.tiles[0][Map.nColumns - 1].getX()) {
                 alive = false;
             }
             if (log.getDirection() == Direction.RIGHT) {
@@ -110,7 +110,7 @@ public class Frog {
             if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D))
             {
                 // if not in the last column
-                if (tile.getCOLUMN() < FroggerGame.nColumns - 1) {
+                if (tile.getCOLUMN() < Map.nColumns - 1) {
 
                     // if on a log then check if won't land in water (if yes then die)
                     if (onLog) {
@@ -119,12 +119,12 @@ public class Frog {
                             alive = false;
                         } else {
                             logIndex++;
-                            tile = FroggerGame.tiles[tile.getROW()][tile.getCOLUMN()];
+                            tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
                         }
                         startMoving(Direction.RIGHT);
                     } else {
-                        if (FroggerGame.tiles[tile.getROW()][tile.getCOLUMN() + 1].isTransparent()) {
-                            tile = FroggerGame.tiles[tile.getROW()][tile.getCOLUMN() + 1];
+                        if (Map.tiles[tile.getROW()][tile.getCOLUMN() + 1].isTransparent()) {
+                            tile = Map.tiles[tile.getROW()][tile.getCOLUMN() + 1];
                             startMoving(Direction.RIGHT);
                         }
                     }
@@ -144,12 +144,12 @@ public class Frog {
                             alive = false;
                         } else {
                             logIndex--;
-                            tile = FroggerGame.tiles[tile.getROW()][tile.getCOLUMN()];
+                            tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
                         }
                         startMoving(Direction.LEFT);
                     } else {
-                        if (FroggerGame.tiles[tile.getROW()][tile.getCOLUMN() - 1].isTransparent()) {
-                            tile = FroggerGame.tiles[tile.getROW()][tile.getCOLUMN() - 1];
+                        if (Map.tiles[tile.getROW()][tile.getCOLUMN() - 1].isTransparent()) {
+                            tile = Map.tiles[tile.getROW()][tile.getCOLUMN() - 1];
                             startMoving(Direction.LEFT);
                         }
                     }
@@ -160,18 +160,18 @@ public class Frog {
             else if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W))
             {
                 // if not in the last row
-                if (tile.getROW() < FroggerGame.nRows -1) {
+                if (tile.getROW() < Map.nRows -1) {
 
                     // if next row is the row with logs (from any to log)
-                    if (FroggerGame.rows[tile.getROW() + 1].getType() == TypeOfRow.LOG)
+                    if (Map.rows[tile.getROW() + 1].getType() == TypeOfRow.LOG)
                     {
                         onLog = false; // set current log to false to check if frog lands on another log
-                        for (MovingObject log: FroggerGame.rows[tile.getROW() + 1].getMovingObjects()) {
+                        for (MovingObject log: Map.rows[tile.getROW() + 1].getMovingObjects()) {
                             // method getLogWhenMovingUp() checks if frog has landed on a log
                             // if true, it saves information about log and information needed for animation in
                             // some variables, and it also defines tile from next row
                             if (getLogWhenMovingUpOrDown(log)) {
-                                tile = FroggerGame.tiles[tile.getROW() + 1][tile.getCOLUMN()];
+                                tile = Map.tiles[tile.getROW() + 1][tile.getCOLUMN()];
                                 startMoving(Direction.UP);
                                 break; // stop iterating as the log is already found
                             }
@@ -182,7 +182,7 @@ public class Frog {
                     {
 
                         // if the row frog jumps FROM is log (from log to ground)
-                        if (FroggerGame.rows[tile.getROW()].getType() == TypeOfRow.LOG) {
+                        if (Map.rows[tile.getROW()].getType() == TypeOfRow.LOG) {
                             // find the tile to jump to
                             if (findTileByCoordinates(tile.getROW() + 1))
                                 // call method that changes variables responsible for frog movement
@@ -191,12 +191,12 @@ public class Frog {
                         else {
                             // from ground to ground
                             // define next tile (if it's transparent)
-                            if (FroggerGame.tiles[tile.getROW() + 1][tile.getCOLUMN()].isTransparent()) {
+                            if (Map.tiles[tile.getROW() + 1][tile.getCOLUMN()].isTransparent()) {
                                 // clear variables
                                 onLog = false;
                                 log = null;
                                 distanceX = 0;
-                                tile = FroggerGame.tiles[tile.getROW() + 1][tile.getCOLUMN()];
+                                tile = Map.tiles[tile.getROW() + 1][tile.getCOLUMN()];
                                 startMoving(Direction.UP);
                             }
                         }
@@ -213,10 +213,10 @@ public class Frog {
                 if (tile.getROW() > 0) {
 
                     // from any to log
-                    if (FroggerGame.rows[tile.getROW() - 1].getType() == TypeOfRow.LOG) {
-                        for (MovingObject log: FroggerGame.rows[tile.getROW() - 1].getMovingObjects()) {
+                    if (Map.rows[tile.getROW() - 1].getType() == TypeOfRow.LOG) {
+                        for (MovingObject log: Map.rows[tile.getROW() - 1].getMovingObjects()) {
                             if (getLogWhenMovingUpOrDown(log)) {
-                                tile = FroggerGame.tiles[tile.getROW() - 1][tile.getCOLUMN()];
+                                tile = Map.tiles[tile.getROW() - 1][tile.getCOLUMN()];
                                 startMoving(Direction.DOWN);
                                 break;
                             }
@@ -225,18 +225,18 @@ public class Frog {
                     } else {
 
                         // from log to ground
-                        if (FroggerGame.rows[tile.getROW()].getType() == TypeOfRow.LOG) {
+                        if (Map.rows[tile.getROW()].getType() == TypeOfRow.LOG) {
                             // from log to ground
                             if (findTileByCoordinates(tile.getROW() - 1))
                                 startMoving(Direction.DOWN);
 
                         } else {
                             // from ground to ground
-                            if (FroggerGame.tiles[tile.getROW() - 1][tile.getCOLUMN()].isTransparent()) {
+                            if (Map.tiles[tile.getROW() - 1][tile.getCOLUMN()].isTransparent()) {
                                 onLog = false;
                                 log = null;
                                 distanceX = 0;
-                                tile = FroggerGame.tiles[tile.getROW() - 1][tile.getCOLUMN()];
+                                tile = Map.tiles[tile.getROW() - 1][tile.getCOLUMN()];
                                 startMoving(Direction.DOWN);
                             }
                         }
@@ -252,9 +252,9 @@ public class Frog {
      * @param rowIndex next row index
      */
     private boolean findTileByCoordinates(int rowIndex) {
-        for (Tile t : FroggerGame.tiles[rowIndex]) {
+        for (Tile t : Map.tiles[rowIndex]) {
             if (x + size / 2 >= t.getX() && x + size / 2 < t.getX() + t.getSize() && t.isTransparent()) {
-                tile = FroggerGame.tiles[rowIndex][t.getCOLUMN()];
+                tile = Map.tiles[rowIndex][t.getCOLUMN()];
                 distanceX = t.getX() - x;
                 // clear variables that are responsible for movement on logs
                 onLog = false;
@@ -337,7 +337,7 @@ public class Frog {
             if (animationFrameCount == (int) SPEED) // check if it's the last animation leap (total is SPEED)
             {
                 // when it's the last animation frame just set coordinates to what they have to be
-                if (FroggerGame.rows[tile.getROW()].getType() != TypeOfRow.LOG) dx = tile.getX() - x;
+                if (Map.rows[tile.getROW()].getType() != TypeOfRow.LOG) dx = tile.getX() - x;
                 else dx = log.getX() + log.getSize() * logIndex - x;
 
                 dy = tile.getY() - y;
@@ -354,7 +354,7 @@ public class Frog {
             x += dx;
 
             // move camera
-            if (tile.getROW() > (FroggerGame.nColumns / 2) && tile.getROW() < (FroggerGame.nRows - (FroggerGame.nColumns / 2)))
+            if (tile.getROW() > (Map.nColumns / 2) && tile.getROW() < (Map.nRows - (Map.nColumns / 2)))
                 FroggerGame.gameCamera.translate(0,dy,0);
 
         }
@@ -380,7 +380,7 @@ public class Frog {
             if (animationFrameCount == (int) SPEED) // check if it's the last animation leap (total is SPEED)
             {
                 // when it's the last animation frame just set coordinates to what they have to be
-                if (FroggerGame.rows[tile.getROW()].getType() != TypeOfRow.LOG) dx = tile.getX() - x;
+                if (Map.rows[tile.getROW()].getType() != TypeOfRow.LOG) dx = tile.getX() - x;
                 else dx = log.getX() + log.getSize() * logIndex - x;
 
                 dy = tile.getY() - y;
@@ -396,7 +396,7 @@ public class Frog {
             y += dy;
 
             // move camera
-            if (tile.getROW() >= FroggerGame.nColumns / 2 && tile.getROW() < (FroggerGame.nRows - (FroggerGame.nColumns / 2) - 1))
+            if (tile.getROW() >= Map.nColumns / 2 && tile.getROW() < (Map.nRows - (Map.nColumns / 2) - 1))
                 FroggerGame.gameCamera.translate(0,dy,0);
         }
     }
@@ -413,7 +413,7 @@ public class Frog {
         else {
             if (animationFrameCount == (int) SPEED) {
                 // when it's the last animation frame just set coordinates to what they have to be
-                if (FroggerGame.rows[tile.getROW()].getType() != TypeOfRow.LOG) x = tile.getX();
+                if (Map.rows[tile.getROW()].getType() != TypeOfRow.LOG) x = tile.getX();
                 else x = log.getX() + log.getSize() * logIndex;
 
             } else if (animationFrameCount < (int) SPEED) {
@@ -441,7 +441,7 @@ public class Frog {
         else {
             if (animationFrameCount == (int) SPEED) {
                 // when it's the last animation frame just set coordinates to what they have to be
-                if (FroggerGame.rows[tile.getROW()].getType() != TypeOfRow.LOG) x = tile.getX();
+                if (Map.rows[tile.getROW()].getType() != TypeOfRow.LOG) x = tile.getX();
                 else x = log.getX() + log.getSize() * logIndex;
 
             } else if (animationFrameCount < (int) SPEED) {

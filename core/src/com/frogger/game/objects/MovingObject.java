@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.frogger.game.Frog;
 import com.frogger.game.FroggerGame;
+import com.frogger.game.Map;
 import com.frogger.game.Util.Direction;
 
 
@@ -36,15 +37,15 @@ public class MovingObject {
 
         if (direction == Direction.LEFT) {
 
-            if ((x + size*length) < FroggerGame.tiles[0][0].getX()) {
-                x = FroggerGame.tiles[0][FroggerGame.nColumns -1].getX() + FroggerGame.tiles[0][0].getSize();
+            if ((x + size*length) < Map.tiles[0][0].getX()) {
+                x = Map.tiles[0][Map.nColumns -1].getX() + Map.tiles[0][0].getSize();
             }
 
             x -= size / speed;
         } else if (direction == Direction.RIGHT) {
 
-            if (x > FroggerGame.tiles[0][FroggerGame.nColumns -1].getX() + FroggerGame.tiles[0][0].getSize()) {
-                x = FroggerGame.tiles[0][0].getX() - FroggerGame.tiles[0][0].getSize() * length;
+            if (x > Map.tiles[0][Map.nColumns -1].getX() + Map.tiles[0][0].getSize()) {
+                x = Map.tiles[0][0].getX() - Map.tiles[0][0].getSize() * length;
             }
 
             x += size / speed;
