@@ -7,10 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.frogger.game.objects.Car;
-import com.frogger.game.objects.Log;
-import com.frogger.game.objects.MovingObject;
-import com.frogger.game.objects.Train;
+import com.frogger.game.objects.*;
 
 public class FroggerGame extends ApplicationAdapter {
 
@@ -104,6 +101,14 @@ public class FroggerGame extends ApplicationAdapter {
 				new Train(tiles[0][0].getSize(), tiles[12][0].getY())
 		});
 
+		tiles[5][1].setTransparent(false);
+		tiles[5][3].setTransparent(false);
+		tiles[5][8].setTransparent(false);
+		tiles[5][10].setTransparent(false);
+		tiles[10][10].setTransparent(false);
+		tiles[10][11].setTransparent(false);
+		tiles[1][6].setTransparent(false);
+
 
 		// spawn frog in the center horizontally and at the bottom vertically
 		frog = new Frog(tiles[0][nColumns / 2]);
@@ -141,7 +146,7 @@ public class FroggerGame extends ApplicationAdapter {
 
 		// render each row (if not static)
 		for (Row row: rows) {
-			if (row.getType() != Util.TypeOfRow.STATIC) row.render(gameBatch);
+			row.render(gameBatch);
 		}
 
 		// render frog

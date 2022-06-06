@@ -61,17 +61,17 @@ public class Frog {
 
         // check for collision with car
         if (FroggerGame.rows[tile.getROW()].getType() == TypeOfRow.CAR) {
-            for (MovingObject car: FroggerGame.rows[tile.getROW()].objects) {
+            for (MovingObject car: FroggerGame.rows[tile.getROW()].getMovingObjects()) {
                 if (car.checkCollision(this)) alive = false;
             }
-            for (MovingObject car: FroggerGame.rows[tile.getROW() - 1].objects) {
+            for (MovingObject car: FroggerGame.rows[tile.getROW() - 1].getMovingObjects()) {
                 if (car.checkCollision(this)) alive = false;
             }
         }
 
         // check for collision with train
         if (FroggerGame.rows[tile.getROW()].getType() == TypeOfRow.TRAIN) {
-            for (MovingObject train: FroggerGame.rows[tile.getROW()].objects) {
+            for (MovingObject train: FroggerGame.rows[tile.getROW()].getMovingObjects()) {
                 if (train.checkCollision(this)) alive = false;
             }
         }
@@ -121,11 +121,13 @@ public class Frog {
                             logIndex++;
                             tile = FroggerGame.tiles[tile.getROW()][tile.getCOLUMN()];
                         }
+                        startMoving(Direction.RIGHT);
                     } else {
-                        tile = FroggerGame.tiles[tile.getROW()][tile.getCOLUMN() + 1];
+                        if (FroggerGame.tiles[tile.getROW()][tile.getCOLUMN() + 1].isTransparent()) {
+                            tile = FroggerGame.tiles[tile.getROW()][tile.getCOLUMN() + 1];
+                            startMoving(Direction.RIGHT);
+                        }
                     }
-
-                    startMoving(Direction.RIGHT);
                 }
             }
 
@@ -144,11 +146,13 @@ public class Frog {
                             logIndex--;
                             tile = FroggerGame.tiles[tile.getROW()][tile.getCOLUMN()];
                         }
+                        startMoving(Direction.LEFT);
                     } else {
-                        tile = FroggerGame.tiles[tile.getROW()][tile.getCOLUMN() -1];
+                        if (FroggerGame.tiles[tile.getROW()][tile.getCOLUMN() - 1].isTransparent()) {
+                            tile = FroggerGame.tiles[tile.getROW()][tile.getCOLUMN() - 1];
+                            startMoving(Direction.LEFT);
+                        }
                     }
-                    startMoving(Direction.LEFT);
-
                 }
             }
 
@@ -162,12 +166,13 @@ public class Frog {
                     if (FroggerGame.rows[tile.getROW() + 1].getType() == TypeOfRow.LOG)
                     {
                         onLog = false; // set current log to false to check if frog lands on another log
-                        for (MovingObject log: FroggerGame.rows[tile.getROW() + 1].objects) {
+                        for (MovingObject log: FroggerGame.rows[tile.getROW() + 1].getMovingObjects()) {
                             // method getLogWhenMovingUp() checks if frog has landed on a log
                             // if true, it saves information about log and information needed for animation in
                             // some variables, and it also defines tile from next row
                             if (getLogWhenMovingUpOrDown(log)) {
                                 tile = FroggerGame.tiles[tile.getROW() + 1][tile.getCOLUMN()];
+                                startMoving(Direction.UP);
                                 break; // stop iterating as the log is already found
                             }
                         }
@@ -176,26 +181,28 @@ public class Frog {
                     else // if next row is NOT the row with logs
                     {
 
-                        // clear variables that are responsible for movement on logs
-                        onLog = false;
-                        log = null;
-
                         // if the row frog jumps FROM is log (from log to ground)
                         if (FroggerGame.rows[tile.getROW()].getType() == TypeOfRow.LOG) {
                             // find the tile to jump to
-                            findTileByCoordinates(tile.getROW() + 1);
-
+                            if (findTileByCoordinates(tile.getROW() + 1))
+                                // call method that changes variables responsible for frog movement
+                                startMoving(Direction.UP);
                         }
                         else {
                             // from ground to ground
-                            distanceX = 0; // clear variables (just in case)
-                            // define next tile
-                            tile = FroggerGame.tiles[tile.getROW() + 1][tile.getCOLUMN()];
+                            // define next tile (if it's transparent)
+                            if (FroggerGame.tiles[tile.getROW() + 1][tile.getCOLUMN()].isTransparent()) {
+                                // clear variables
+                                onLog = false;
+                                log = null;
+                                distanceX = 0;
+                                tile = FroggerGame.tiles[tile.getROW() + 1][tile.getCOLUMN()];
+                                startMoving(Direction.UP);
+                            }
                         }
 
                     }
-                    // call method that changes variables responsible for frog movement
-                    startMoving(Direction.UP);
+
                 }
             }
 
@@ -207,32 +214,34 @@ public class Frog {
 
                     // from any to log
                     if (FroggerGame.rows[tile.getROW() - 1].getType() == TypeOfRow.LOG) {
-                        onLog = false;
-                        for (MovingObject log: FroggerGame.rows[tile.getROW() - 1].objects) {
+                        for (MovingObject log: FroggerGame.rows[tile.getROW() - 1].getMovingObjects()) {
                             if (getLogWhenMovingUpOrDown(log)) {
                                 tile = FroggerGame.tiles[tile.getROW() - 1][tile.getCOLUMN()];
+                                startMoving(Direction.DOWN);
                                 break;
                             }
                         }
                         if (!onLog) alive = false;
                     } else {
-                        // clear log
-                        onLog = false;
-                        log = null;
 
                         // from log to ground
                         if (FroggerGame.rows[tile.getROW()].getType() == TypeOfRow.LOG) {
                             // from log to ground
-                            findTileByCoordinates(tile.getROW() - 1);
+                            if (findTileByCoordinates(tile.getROW() - 1))
+                                startMoving(Direction.DOWN);
 
                         } else {
                             // from ground to ground
-                            distanceX = 0;
-                            tile = FroggerGame.tiles[tile.getROW() - 1][tile.getCOLUMN()];
+                            if (FroggerGame.tiles[tile.getROW() - 1][tile.getCOLUMN()].isTransparent()) {
+                                onLog = false;
+                                log = null;
+                                distanceX = 0;
+                                tile = FroggerGame.tiles[tile.getROW() - 1][tile.getCOLUMN()];
+                                startMoving(Direction.DOWN);
+                            }
                         }
 
                     }
-                    startMoving(Direction.DOWN);
                 }
             }
         }
@@ -242,13 +251,18 @@ public class Frog {
      * Method to find the next tile when jumping from log
      * @param rowIndex next row index
      */
-    private void findTileByCoordinates(int rowIndex) {
+    private boolean findTileByCoordinates(int rowIndex) {
         for (Tile t : FroggerGame.tiles[rowIndex]) {
-            if (x + size / 2 >= t.getX() && x + size / 2 < t.getX() + t.getSize()) {
+            if (x + size / 2 >= t.getX() && x + size / 2 < t.getX() + t.getSize() && t.isTransparent()) {
                 tile = FroggerGame.tiles[rowIndex][t.getCOLUMN()];
                 distanceX = t.getX() - x;
+                // clear variables that are responsible for movement on logs
+                onLog = false;
+                log = null;
+                return true;
             }
         }
+        return false;
     }
 
 

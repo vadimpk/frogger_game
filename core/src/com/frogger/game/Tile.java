@@ -9,6 +9,7 @@ public class Tile {
 
     // TODO: add different textures
     private static final Texture DEFAULT_TILE_TEXTURE = new Texture(Gdx.files.internal("tile.png"));
+    private static final Texture NOT_TRANSPARENT_TILE_TEXTURE = new Texture(Gdx.files.internal("log.png"));
 
     /** initialize tile attributes */
     private final int ROW;
@@ -16,6 +17,7 @@ public class Tile {
     private final float X, Y;
     private final float SIZE;
 
+    private boolean transparent;
     private Texture texture;
 
     Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
@@ -37,6 +39,15 @@ public class Tile {
 
         // set texture
         texture = DEFAULT_TILE_TEXTURE;
+        transparent = true;
+    }
+
+    Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column, boolean transparent) {
+        this(numberOfColumns, screenWidth, screenHeight, row, column);
+        this.transparent = transparent;
+        if (!transparent) {
+            texture = NOT_TRANSPARENT_TILE_TEXTURE;
+        }
     }
 
     public void render(SpriteBatch batch) {
@@ -45,6 +56,7 @@ public class Tile {
 
     public static void dispose() {
         DEFAULT_TILE_TEXTURE.dispose();
+        NOT_TRANSPARENT_TILE_TEXTURE.dispose();
     }
 
 
@@ -84,11 +96,18 @@ public class Tile {
      */
     public Texture getTexture() {return texture;}
 
+    public boolean isTransparent() {
+        return transparent;
+    }
+
     /**
      * Set texture of a tile
      * @param texture new texture
      */
     public void setTexture(Texture texture) {this.texture = texture;}
 
-
+    public void setTransparent(boolean transparent) {
+        this.transparent = transparent;
+        if (!transparent) texture = NOT_TRANSPARENT_TILE_TEXTURE;
+    }
 }

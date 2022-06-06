@@ -2,28 +2,35 @@ package com.frogger.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.frogger.game.Util.TypeOfRow;
-import com.frogger.game.objects.MovingObject;
+import com.frogger.game.objects.*;
 
 public class Row {
 
-    public int rowIndex;
-    public TypeOfRow type;
-    public MovingObject[] objects;
+    private int rowIndex;
+    private TypeOfRow type;
+    private MovingObject[] movingObjects = new MovingObject[0];
 
 
     protected Row(int index, TypeOfRow typeOfRow, MovingObject[] movingObjects) {
         rowIndex = index;
         type = typeOfRow;
-        objects = movingObjects;
+        this.movingObjects = movingObjects;
     }
 
     public void render(SpriteBatch batch) {
-        for (MovingObject object: objects) {
-            object.render(batch);
+
+        if (movingObjects != null) {
+            for (MovingObject object : movingObjects) {
+                object.render(batch);
+            }
         }
     }
 
     public TypeOfRow getType() {
         return type;
+    }
+
+    public MovingObject[] getMovingObjects() {
+        return movingObjects;
     }
 }
