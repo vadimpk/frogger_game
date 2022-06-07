@@ -124,10 +124,6 @@ public class Map  implements Serializable{
         // render frog
         if (frog.isAlive()) frog.render(gameBatch);
 
-        if (!frog.isAlive()) {
-            frog = new Frog(tiles[0][nColumns / 2]);
-        }
-
         // calculate delta time for each frame
         last = TimeUtils.nanoTime();
 
@@ -143,5 +139,9 @@ public class Map  implements Serializable{
 
         attributesBatch.end();
 
+    }
+
+    public void setFrog(Frog frog) {
+        this.frog = frog;
     }
 }

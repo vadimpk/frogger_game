@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.io.Serializable;
 
-public class Tile {
+
+public class Tile implements Serializable {
 
     // TODO: add different textures
     private static final Texture DEFAULT_TILE_TEXTURE = new Texture(Gdx.files.internal("tile.png"));

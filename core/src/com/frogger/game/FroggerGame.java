@@ -1,16 +1,12 @@
 package com.frogger.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.TimeUtils;
+import com.frogger.game.Screens.MainMenuScreen;
 import com.frogger.game.objects.*;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -66,7 +62,7 @@ public class FroggerGame extends Game {
 		Tile.dispose();
 	}
 
-	protected void loadLevelsToFile(String src, Level[] levels) {
+	public void loadLevelsToFile(String src, Level[] levels) {
 		try(ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get(src)))) {
 			out.writeObject(levels);
 		} catch (IOException e) {
@@ -74,7 +70,7 @@ public class FroggerGame extends Game {
 		}
 	}
 
-	protected Level[] loadLevelsFromFile(String src) {
+	public Level[] loadLevelsFromFile(String src) {
 		Level[] levels = null;
 		try(ObjectInputStream out = new ObjectInputStream(Files.newInputStream(Paths.get(src)))) {
 			levels = (Level[]) out.readObject();
