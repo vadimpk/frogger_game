@@ -1,16 +1,11 @@
-package com.frogger.game.Screens;
+package com.frogger.game.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.frogger.game.Frog;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.Level;
-import com.frogger.game.Map;
-
-import static com.frogger.game.FroggerGame.*;
 
 public class FroggerGameScreen extends ScreenAdapter {
 

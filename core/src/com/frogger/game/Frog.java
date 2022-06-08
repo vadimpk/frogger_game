@@ -15,7 +15,18 @@ public class Frog {
     private Tile tile;
     private float x,y,size;
     private boolean alive;
-    private static final Texture FROG_TEXTURE = new Texture(Gdx.files.internal("frog3.png"));
+    private Texture texture;
+
+    private static final Texture FROG_LOOKING_UP_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-looking-up.png"));
+    private static final Texture FROG_LOOKING_DOWN_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-looking-down.png"));
+    private static final Texture FROG_LOOKING_RIGHT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-looking-right.png"));
+    private static final Texture FROG_LOOKING_LEFT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-looking-left.png"));
+
+    private static final Texture FROG_JUMPING_UP_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-up.png"));
+    private static final Texture FROG_JUMPING_DOWN_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-down.png"));
+    private static final Texture FROG_JUMPING_RIGHT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-right.png"));
+    private static final Texture FROG_JUMPING_LEFT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-left.png"));
+
 
     /** initialize fields for movement mechanic  */
     private long startedMovingTime;
@@ -23,7 +34,9 @@ public class Frog {
     private Direction movingDirection;
     private static final float SPEED = 5f;
     private static final long MOVE_TIME = 200000000;
+    private static final long MOVE_ANIMATION_TIME = 150000000;
     private int animationFrameCount = 0;
+    private boolean moveToTheWall;
 
     /** initialize fields for movement mechanic on logs  */
     private boolean onLog = false;
@@ -42,15 +55,23 @@ public class Frog {
         y = tile.getY();
         size = tile.getSize();
         alive = true;
+        texture = FROG_LOOKING_UP_TEXTURE;
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(FROG_TEXTURE, x, y, size, size);
+        batch.draw(texture, x, y, size, size);
         update(0f);
     }
 
     public static void dispose() {
-        FROG_TEXTURE.dispose();
+        FROG_LOOKING_UP_TEXTURE.dispose();
+        FROG_LOOKING_DOWN_TEXTURE.dispose();
+        FROG_LOOKING_LEFT_TEXTURE.dispose();
+        FROG_LOOKING_RIGHT_TEXTURE.dispose();
+        FROG_JUMPING_UP_TEXTURE.dispose();
+        FROG_JUMPING_DOWN_TEXTURE.dispose();
+        FROG_JUMPING_LEFT_TEXTURE.dispose();
+        FROG_JUMPING_RIGHT_TEXTURE.dispose();
     }
 
     /**
@@ -95,13 +116,13 @@ public class Frog {
         if (isMoving) {
 
             if (movingDirection == Direction.UP) {
-                moveUp();
+                animateMovingUp();
             } else if (movingDirection == Direction.DOWN) {
-                moveDown();
+                animateMovingDown();
             } else if (movingDirection == Direction.RIGHT) {
-                moveRight();
+                animateMovingRight();
             } else if (movingDirection == Direction.LEFT) {
-                moveLeft();
+                animateMovingLeft();
             }
 
         } else {
@@ -109,140 +130,178 @@ public class Frog {
             // MOVE RIGHT
             if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D))
             {
-                // if not in the last column
-                if (tile.getCOLUMN() < Map.nColumns - 1) {
-
-                    // if on a log then check if won't land in water (if yes then die)
-                    if (onLog) {
-                        if (logIndex == log.getLength() - 1) {
-                            onLog = false;
-                            alive = false;
-                        } else {
-                            logIndex++;
-                            tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
-                        }
-                        startMoving(Direction.RIGHT);
-                    } else {
-                        if (Map.tiles[tile.getROW()][tile.getCOLUMN() + 1].isTransparent()) {
-                            tile = Map.tiles[tile.getROW()][tile.getCOLUMN() + 1];
-                            startMoving(Direction.RIGHT);
-                        }
-                    }
-                }
+                moveRight();
             }
 
             // MOVE LEFT
             else if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A))
             {
-                // if not in the first column
-                if (tile.getCOLUMN() > 0) {
-
-                    // if on a log then check if won't land in water (if yes then die)
-                    if (onLog) {
-                        if (logIndex == 0) {
-                            onLog = false;
-                            alive = false;
-                        } else {
-                            logIndex--;
-                            tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
-                        }
-                        startMoving(Direction.LEFT);
-                    } else {
-                        if (Map.tiles[tile.getROW()][tile.getCOLUMN() - 1].isTransparent()) {
-                            tile = Map.tiles[tile.getROW()][tile.getCOLUMN() - 1];
-                            startMoving(Direction.LEFT);
-                        }
-                    }
-                }
+                moveLeft();
             }
 
             // MOVE UP
             else if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W))
             {
-                // if not in the last row
-                if (tile.getROW() < Map.nRows -1) {
-
-                    // if next row is the row with logs (from any to log)
-                    if (Map.rows[tile.getROW() + 1].getType() == TypeOfRow.LOG)
-                    {
-                        onLog = false; // set current log to false to check if frog lands on another log
-                        for (MovingObject log: Map.rows[tile.getROW() + 1].getMovingObjects()) {
-                            // method getLogWhenMovingUp() checks if frog has landed on a log
-                            // if true, it saves information about log and information needed for animation in
-                            // some variables, and it also defines tile from next row
-                            if (getLogWhenMovingUpOrDown(log)) {
-                                tile = Map.tiles[tile.getROW() + 1][tile.getCOLUMN()];
-                                startMoving(Direction.UP);
-                                break; // stop iterating as the log is already found
-                            }
-                        }
-                        if (!onLog) alive = false; // if frog didn't land on the log then die
-                    }
-                    else // if next row is NOT the row with logs
-                    {
-
-                        // if the row frog jumps FROM is log (from log to ground)
-                        if (Map.rows[tile.getROW()].getType() == TypeOfRow.LOG) {
-                            // find the tile to jump to
-                            if (findTileByCoordinates(tile.getROW() + 1))
-                                // call method that changes variables responsible for frog movement
-                                startMoving(Direction.UP);
-                        }
-                        else {
-                            // from ground to ground
-                            // define next tile (if it's transparent)
-                            if (Map.tiles[tile.getROW() + 1][tile.getCOLUMN()].isTransparent()) {
-                                // clear variables
-                                onLog = false;
-                                log = null;
-                                distanceX = 0;
-                                tile = Map.tiles[tile.getROW() + 1][tile.getCOLUMN()];
-                                startMoving(Direction.UP);
-                            }
-                        }
-
-                    }
-
-                }
+                moveUp();
             }
 
             // MOVE DOWN
             else if(Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S))
             {
-                // if not in the first row
-                if (tile.getROW() > 0) {
+                moveDown();
+            }
+        }
+    }
 
-                    // from any to log
-                    if (Map.rows[tile.getROW() - 1].getType() == TypeOfRow.LOG) {
-                        for (MovingObject log: Map.rows[tile.getROW() - 1].getMovingObjects()) {
-                            if (getLogWhenMovingUpOrDown(log)) {
-                                tile = Map.tiles[tile.getROW() - 1][tile.getCOLUMN()];
-                                startMoving(Direction.DOWN);
-                                break;
-                            }
-                        }
-                        if (!onLog) alive = false;
-                    } else {
+    /**
+     * Method that handles moving right action when player pressed "D" or "->" button.
+     */
+    private void moveRight() {
+        texture = FROG_LOOKING_RIGHT_TEXTURE;
+        // if not in the last column
+        if (tile.getCOLUMN() < Map.nColumns - 1) {
 
-                        // from log to ground
-                        if (Map.rows[tile.getROW()].getType() == TypeOfRow.LOG) {
-                            // from log to ground
-                            if (findTileByCoordinates(tile.getROW() - 1))
-                                startMoving(Direction.DOWN);
+            // if on a log then check if won't land in water (if yes then die)
+            if (onLog) {
+                if (logIndex == log.getLength() - 1) {
+                    onLog = false;
+                    alive = false;
+                } else {
+                    logIndex++;
+                    tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
+                }
+                startMoving(Direction.RIGHT);
+            } else {
+                startMoving(Direction.RIGHT, !Map.tiles[tile.getROW()][tile.getCOLUMN() + 1].isTransparent());
+                if (Map.tiles[tile.getROW()][tile.getCOLUMN() + 1].isTransparent())
+                    tile = Map.tiles[tile.getROW()][tile.getCOLUMN() + 1];
+                else
+                    tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
 
-                        } else {
-                            // from ground to ground
-                            if (Map.tiles[tile.getROW() - 1][tile.getCOLUMN()].isTransparent()) {
-                                onLog = false;
-                                log = null;
-                                distanceX = 0;
-                                tile = Map.tiles[tile.getROW() - 1][tile.getCOLUMN()];
-                                startMoving(Direction.DOWN);
-                            }
-                        }
+            }
+        }
+    }
 
+    /**
+     * Method that handles moving left action when player pressed "A" or "<-" button.
+     */
+    private void moveLeft() {
+        texture = FROG_LOOKING_LEFT_TEXTURE;
+        // if not in the first column
+        if (tile.getCOLUMN() > 0) {
+
+            // if on a log then check if won't land in water (if yes then die)
+            if (onLog) {
+                if (logIndex == 0) {
+                    onLog = false;
+                    alive = false;
+                } else {
+                    logIndex--;
+                    tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
+                }
+                startMoving(Direction.LEFT);
+            } else {
+                startMoving(Direction.LEFT, !Map.tiles[tile.getROW()][tile.getCOLUMN() - 1].isTransparent());
+                if (Map.tiles[tile.getROW()][tile.getCOLUMN() - 1].isTransparent())
+                    tile = Map.tiles[tile.getROW()][tile.getCOLUMN() - 1];
+                else
+                    tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
+            }
+        }
+    }
+
+    /**
+     * Method that handles moving up action when player pressed "W" or "^" button.
+     */
+    private void moveUp() {
+        texture = FROG_LOOKING_UP_TEXTURE;
+        // if not in the last row
+        if (tile.getROW() < Map.nRows -1) {
+
+            // if next row is the row with logs (from any to log)
+            if (Map.rows[tile.getROW() + 1].getType() == TypeOfRow.LOG)
+            {
+                onLog = false; // set current log to false to check if frog lands on another log
+                for (MovingObject log: Map.rows[tile.getROW() + 1].getMovingObjects()) {
+                    // method getLogWhenMovingUp() checks if frog has landed on a log
+                    // if true, it saves information about log and information needed for animation in
+                    // some variables, and it also defines tile from next row
+                    if (getLogWhenMovingUpOrDown(log)) {
+                        tile = Map.tiles[tile.getROW() + 1][tile.getCOLUMN()];
+                        startMoving(Direction.UP);
+                        texture = FROG_LOOKING_UP_TEXTURE;
+                        break; // stop iterating as the log is already found
                     }
                 }
+                if (!onLog) alive = false; // if frog didn't land on the log then die
+            }
+            else // if next row is NOT the row with logs
+            {
+
+                // if the row frog jumps FROM is log (from log to ground)
+                if (Map.rows[tile.getROW()].getType() == TypeOfRow.LOG) {
+                    // find the tile to jump to
+                    if (findTileByCoordinates(tile.getROW() + 1))
+                        // call method that changes variables responsible for frog movement
+                        startMoving(Direction.UP);
+                }
+                else {
+                    // from ground to ground
+                    // clear variables
+                    onLog = false;
+                    log = null;
+                    distanceX = 0;
+                    // define next tile and start animation
+                    startMoving(Direction.UP, !Map.tiles[tile.getROW() + 1][tile.getCOLUMN()].isTransparent());
+                    if (Map.tiles[tile.getROW() + 1][tile.getCOLUMN()].isTransparent())
+                        tile = Map.tiles[tile.getROW() + 1][tile.getCOLUMN()];
+                    else
+                        tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
+                }
+
+            }
+
+        }
+    }
+
+    /**
+     * Method that handles moving left action when player pressed "S" or "down" button.
+     */
+    private void moveDown() {
+        texture = FROG_LOOKING_DOWN_TEXTURE;
+        // if not in the first row
+        if (tile.getROW() > 0) {
+
+            // from any to log
+            if (Map.rows[tile.getROW() - 1].getType() == TypeOfRow.LOG) {
+                for (MovingObject log: Map.rows[tile.getROW() - 1].getMovingObjects()) {
+                    if (getLogWhenMovingUpOrDown(log)) {
+                        tile = Map.tiles[tile.getROW() - 1][tile.getCOLUMN()];
+                        startMoving(Direction.DOWN, false);
+                        break;
+                    }
+                }
+                if (!onLog) alive = false;
+            } else {
+
+                // from log to ground
+                if (Map.rows[tile.getROW()].getType() == TypeOfRow.LOG) {
+                    // from log to ground
+                    if (findTileByCoordinates(tile.getROW() - 1))
+                        startMoving(Direction.DOWN);
+
+                } else {
+                    // from ground to ground
+                    onLog = false;
+                    log = null;
+                    distanceX = 0;
+                    startMoving(Direction.DOWN, !Map.tiles[tile.getROW() - 1][tile.getCOLUMN()].isTransparent());
+                    if (Map.tiles[tile.getROW() - 1][tile.getCOLUMN()].isTransparent())
+                        tile = Map.tiles[tile.getROW() - 1][tile.getCOLUMN()];
+                    else
+                        tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
+                }
+
             }
         }
     }
@@ -310,6 +369,14 @@ public class Frog {
      * Method that changes parameters when the movement starts
      * @param direction moving direction
      */
+    private void startMoving (Direction direction, boolean toTheWall) {
+        startedMovingTime = TimeUtils.nanoTime();
+        isMoving = true;
+        movingDirection = direction;
+        animationFrameCount = 0;
+        moveToTheWall = toTheWall;
+    }
+
     private void startMoving (Direction direction) {
         startedMovingTime = TimeUtils.nanoTime();
         isMoving = true;
@@ -317,23 +384,28 @@ public class Frog {
         animationFrameCount = 0;
     }
 
+
     /**
      * Method to move up. Runs every frame
      */
-    public void moveUp() {
+    public void animateMovingUp() {
+        // don't let next move until time passes
+        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
+            isMoving = false; // when time passes end moving
+        }
+
         // counter of frames (for animation)
         animationFrameCount++;
 
         float dy = 0f;
         float dx = 0f;
 
-        // don't let next move until time passes
-        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME)
-        {
-            isMoving = false; // when time passes end moving
-        }
-        else
-        {
+        if (moveToTheWall) {
+            texture = FROG_JUMPING_UP_TEXTURE;
+            if (animationFrameCount > 2) {
+                texture = FROG_LOOKING_UP_TEXTURE;
+            }
+        } else {
             if (animationFrameCount == (int) SPEED) // check if it's the last animation leap (total is SPEED)
             {
                 // when it's the last animation frame just set coordinates to what they have to be
@@ -357,23 +429,37 @@ public class Frog {
             if (tile.getROW() > (Map.nColumns / 2) && tile.getROW() < (Map.nRows - (Map.nColumns / 2)))
                 FroggerGame.gameCamera.translate(0,dy,0);
 
+            // animate
+            if (animationFrameCount == 2) {
+                texture = FROG_JUMPING_UP_TEXTURE;
+            } if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
+                texture = FROG_LOOKING_UP_TEXTURE;
+            }
+
         }
     }
 
     /**
      * Method to move down. Runs every frame
      */
-    public void moveDown() {
+    public void animateMovingDown() {
+        // don't let next move until time passes
+        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
+            isMoving = false; // when time passes end moving
+        }
+
         // counter of frames (for animation)
         animationFrameCount++;
 
         float dy = 0f;
         float dx = 0f;
 
-        // don't let next move until time passes
-        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME)
-        {
-            isMoving = false; // when time passes end moving
+
+        if (moveToTheWall) {
+            texture = FROG_JUMPING_DOWN_TEXTURE;
+            if (animationFrameCount > 2) {
+                texture = FROG_LOOKING_DOWN_TEXTURE;
+            }
         }
         else
         {
@@ -398,25 +484,40 @@ public class Frog {
             // move camera
             if (tile.getROW() >= Map.nColumns / 2 && tile.getROW() < (Map.nRows - (Map.nColumns / 2) - 1))
                 FroggerGame.gameCamera.translate(0,dy,0);
+
+            // animate
+            if (animationFrameCount == 2) {
+                texture = FROG_JUMPING_DOWN_TEXTURE;
+            } if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
+                texture = FROG_LOOKING_DOWN_TEXTURE;
+            }
         }
     }
 
     /**
      * Method to move right. Runs every frame
      */
-    private void moveRight() {
-        animationFrameCount++;
+    private void animateMovingRight() {
 
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false;
         }
-        else {
+
+        animationFrameCount++;
+
+        if (moveToTheWall) {
+            texture = FROG_JUMPING_RIGHT_TEXTURE;
+            if (animationFrameCount > 2) {
+                texture = FROG_LOOKING_RIGHT_TEXTURE;
+            }
+        } else {
             if (animationFrameCount == (int) SPEED) {
                 // when it's the last animation frame just set coordinates to what they have to be
                 if (Map.rows[tile.getROW()].getType() != TypeOfRow.LOG) x = tile.getX();
                 else x = log.getX() + log.getSize() * logIndex;
 
             } else if (animationFrameCount < (int) SPEED) {
+                x += size / SPEED;
                 if (onLog) {
                     if (log.getDirection() == Direction.RIGHT) {
                         x -= log.getSize() / log.getSpeed();
@@ -424,7 +525,12 @@ public class Frog {
                         x += log.getSize() / log.getSpeed();
                     }
                 }
-                x += size / SPEED;
+            }
+            // animate
+            if (animationFrameCount == 2) {
+                texture = FROG_JUMPING_RIGHT_TEXTURE;
+            } if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
+                texture = FROG_LOOKING_RIGHT_TEXTURE;
             }
         }
     }
@@ -432,13 +538,18 @@ public class Frog {
     /**
      * Method to move left. Runs every frame
      */
-    public void moveLeft() {
-        animationFrameCount++;
-
+    public void animateMovingLeft() {
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false;
         }
-        else {
+        animationFrameCount++;
+
+        if (moveToTheWall) {
+            texture = FROG_JUMPING_LEFT_TEXTURE;
+            if (animationFrameCount > 2) {
+                texture = FROG_LOOKING_LEFT_TEXTURE;
+            }
+        } else {
             if (animationFrameCount == (int) SPEED) {
                 // when it's the last animation frame just set coordinates to what they have to be
                 if (Map.rows[tile.getROW()].getType() != TypeOfRow.LOG) x = tile.getX();
@@ -453,6 +564,12 @@ public class Frog {
                         x += log.getSize() / log.getSpeed();
                     }
                 }
+            }
+            // animate
+            if (animationFrameCount == 2) {
+                texture = FROG_JUMPING_LEFT_TEXTURE;
+            } if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
+                texture = FROG_LOOKING_LEFT_TEXTURE;
             }
         }
     }

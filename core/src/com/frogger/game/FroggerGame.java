@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.frogger.game.Screens.MainMenuScreen;
+import com.frogger.game.screens.MainMenuScreen;
 import com.frogger.game.objects.*;
 
 import java.io.IOException;
