@@ -15,6 +15,12 @@ public class Row {
         rowIndex = index;
         type = typeOfRow;
         this.movingObjects = movingObjects;
+
+        if (typeOfRow == TypeOfRow.LOG) {
+            for (Tile tile: Map.tiles[index]) {
+                tile.setWater(true);
+            }
+        }
     }
 
     public void render(SpriteBatch batch) {

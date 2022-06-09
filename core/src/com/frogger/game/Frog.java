@@ -22,10 +22,10 @@ public class Frog {
     private static final Texture FROG_LOOKING_RIGHT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-looking-right.png"));
     private static final Texture FROG_LOOKING_LEFT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-looking-left.png"));
 
-    private static final Texture FROG_JUMPING_UP_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-up.png"));
-    private static final Texture FROG_JUMPING_DOWN_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-down.png"));
-    private static final Texture FROG_JUMPING_RIGHT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-right.png"));
-    private static final Texture FROG_JUMPING_LEFT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-left.png"));
+    private static final Texture FROG_JUMPING_UP_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-up2.png"));
+    private static final Texture FROG_JUMPING_DOWN_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-down2.png"));
+    private static final Texture FROG_JUMPING_RIGHT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-right2.png"));
+    private static final Texture FROG_JUMPING_LEFT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-left2.png"));
 
 
     /** initialize fields for movement mechanic  */
@@ -274,10 +274,12 @@ public class Frog {
 
             // from any to log
             if (Map.rows[tile.getROW() - 1].getType() == TypeOfRow.LOG) {
+                onLog = false;
                 for (MovingObject log: Map.rows[tile.getROW() - 1].getMovingObjects()) {
                     if (getLogWhenMovingUpOrDown(log)) {
                         tile = Map.tiles[tile.getROW() - 1][tile.getCOLUMN()];
-                        startMoving(Direction.DOWN, false);
+                        startMoving(Direction.DOWN);
+                        texture = FROG_LOOKING_DOWN_TEXTURE;
                         break;
                     }
                 }
@@ -404,6 +406,7 @@ public class Frog {
             texture = FROG_JUMPING_UP_TEXTURE;
             if (animationFrameCount > 2) {
                 texture = FROG_LOOKING_UP_TEXTURE;
+                moveToTheWall = false;
             }
         } else {
             if (animationFrameCount == (int) SPEED) // check if it's the last animation leap (total is SPEED)
@@ -459,6 +462,7 @@ public class Frog {
             texture = FROG_JUMPING_DOWN_TEXTURE;
             if (animationFrameCount > 2) {
                 texture = FROG_LOOKING_DOWN_TEXTURE;
+                moveToTheWall = false;
             }
         }
         else
@@ -509,6 +513,7 @@ public class Frog {
             texture = FROG_JUMPING_RIGHT_TEXTURE;
             if (animationFrameCount > 2) {
                 texture = FROG_LOOKING_RIGHT_TEXTURE;
+                moveToTheWall = false;
             }
         } else {
             if (animationFrameCount == (int) SPEED) {
@@ -548,6 +553,7 @@ public class Frog {
             texture = FROG_JUMPING_LEFT_TEXTURE;
             if (animationFrameCount > 2) {
                 texture = FROG_LOOKING_LEFT_TEXTURE;
+                moveToTheWall = false;
             }
         } else {
             if (animationFrameCount == (int) SPEED) {

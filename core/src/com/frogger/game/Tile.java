@@ -3,6 +3,7 @@ package com.frogger.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import java.io.Serializable;
 
@@ -10,8 +11,11 @@ import java.io.Serializable;
 public class Tile implements Serializable {
 
     // TODO: add different textures
-    private static final Texture DEFAULT_TILE_TEXTURE = new Texture(Gdx.files.internal("tile.png"));
+    private static final Texture DEFAULT_TILE_TEXTURE = new Texture(Gdx.files.internal("grass_tile.png"));
     private static final Texture NOT_TRANSPARENT_TILE_TEXTURE = new Texture(Gdx.files.internal("log.png"));
+
+    private static final Texture WATER_TEXTURE_0 = new Texture(Gdx.files.internal("objects/water/water0.png"));
+
 
     /** initialize tile attributes */
     private final int ROW;
@@ -19,7 +23,12 @@ public class Tile implements Serializable {
     private final float X, Y;
     private final float SIZE;
 
+    private static final long ANIMATION_TIME = 500000000;
+    private long lastAnimation;
+
     private boolean transparent;
+    private boolean water;
+    private int waterState;
     private Texture texture;
 
     Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
@@ -42,6 +51,7 @@ public class Tile implements Serializable {
         // set texture
         texture = DEFAULT_TILE_TEXTURE;
         transparent = true;
+        water = false;
     }
 
     Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column, boolean transparent) {
@@ -53,7 +63,12 @@ public class Tile implements Serializable {
     }
 
     public void render(SpriteBatch batch) {
+        animate();
         batch.draw(texture, X, Y,SIZE,SIZE);
+    }
+
+    private void animate() {
+                if (water) texture = WATER_TEXTURE_0;
     }
 
     public static void dispose() {
@@ -111,5 +126,9 @@ public class Tile implements Serializable {
     public void setTransparent(boolean transparent) {
         this.transparent = transparent;
         if (!transparent) texture = NOT_TRANSPARENT_TILE_TEXTURE;
+    }
+
+    public void setWater(boolean water) {
+        this.water = water;
     }
 }
