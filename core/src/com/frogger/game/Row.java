@@ -3,21 +3,23 @@ package com.frogger.game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.frogger.game.Util.TypeOfRow;
 import com.frogger.game.objects.*;
+import com.frogger.game.screens.FroggerGameScreen;
 
-public class Row {
+import java.io.Serializable;
+
+public class Row  implements Serializable {
 
     private int rowIndex;
     private TypeOfRow type;
     private MovingObject[] movingObjects = new MovingObject[0];
 
 
-    protected Row(int index, TypeOfRow typeOfRow, MovingObject[] movingObjects) {
-        rowIndex = index;
+    protected Row(Tile[] tiles, TypeOfRow typeOfRow, MovingObject[] movingObjects){
         type = typeOfRow;
         this.movingObjects = movingObjects;
 
         if (typeOfRow == TypeOfRow.LOG) {
-            for (Tile tile: Map.tiles[index]) {
+            for (Tile tile: tiles) {
                 tile.setWater(true);
             }
         }

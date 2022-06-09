@@ -8,9 +8,12 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.frogger.game.Util.Direction;
 import com.frogger.game.Util.TypeOfRow;
 import com.frogger.game.objects.MovingObject;
+import com.frogger.game.screens.FroggerGameScreen;
 
 public class Frog {
 
+    private static Frog instance;
+    
     /** initialize frog attributes */
     private Tile tile;
     private float x,y,size;
@@ -45,17 +48,28 @@ public class Frog {
     private float distanceX = 0f;
 
 
-    /**
-     * Constructor that creates frog on a specific tile
-     * @param tile tile
-     */
-    Frog(Tile tile) {
+    public static Frog get() {
+        if(instance == null) instance = new Frog();
+        return instance;
+    }
+    
+    private Frog() {
+        alive = true;
+        texture = FROG_LOOKING_UP_TEXTURE;
+    }
+    
+    public void setStartingTile(Tile tile){
         this.tile = tile;
         x = tile.getX();
         y = tile.getY();
         size = tile.getSize();
+    }
+
+    public void respawn(Tile tile) {
+        this.tile = tile;
+        x = tile.getX();
+        y = tile.getY();
         alive = true;
-        texture = FROG_LOOKING_UP_TEXTURE;
     }
 
     public void render(SpriteBatch batch) {
@@ -79,20 +93,24 @@ public class Frog {
      * @param dt delta time
      */
     public void update(float dt) {
+        
+        Row[] rows = FroggerGameScreen.level.getMap().getRows();
+        Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
+        int nColumns = FroggerGameScreen.level.getMap().getnColumns();
 
         // check for collision with car
-        if (Map.rows[tile.getROW()].getType() == TypeOfRow.CAR) {
-            for (MovingObject car: Map.rows[tile.getROW()].getMovingObjects()) {
+        if (rows[tile.getROW()].getType() == TypeOfRow.CAR) {
+            for (MovingObject car: rows[tile.getROW()].getMovingObjects()) {
                 if (car.checkCollision(this)) alive = false;
             }
-            for (MovingObject car: Map.rows[tile.getROW() - 1].getMovingObjects()) {
+            for (MovingObject car: rows[tile.getROW() - 1].getMovingObjects()) {
                 if (car.checkCollision(this)) alive = false;
             }
         }
 
         // check for collision with train
-        if (Map.rows[tile.getROW()].getType() == TypeOfRow.TRAIN) {
-            for (MovingObject train: Map.rows[tile.getROW()].getMovingObjects()) {
+        if (rows[tile.getROW()].getType() == TypeOfRow.TRAIN) {
+            for (MovingObject train: rows[tile.getROW()].getMovingObjects()) {
                 if (train.checkCollision(this)) alive = false;
             }
         }
@@ -102,7 +120,7 @@ public class Frog {
             if (!log.isSafe()) {
                 alive = false;
             }
-            if (x < Map.tiles[0][0].getX() || x > Map.tiles[0][Map.nColumns - 1].getX()) {
+            if (x < tiles[0][0].getX() || x > tiles[0][nColumns - 1].getX()) {
                 alive = false;
             }
             if (log.getDirection() == Direction.RIGHT) {
@@ -157,9 +175,12 @@ public class Frog {
      * Method that handles moving right action when player pressed "D" or "->" button.
      */
     private void moveRight() {
+        Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
+        int nColumns = FroggerGameScreen.level.getMap().getnColumns();
+        
         texture = FROG_LOOKING_RIGHT_TEXTURE;
         // if not in the last column
-        if (tile.getCOLUMN() < Map.nColumns - 1) {
+        if (tile.getCOLUMN() < nColumns - 1) {
 
             // if on a log then check if won't land in water (if yes then die)
             if (onLog) {
@@ -168,15 +189,15 @@ public class Frog {
                     alive = false;
                 } else {
                     logIndex++;
-                    tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
+                    tile = tiles[tile.getROW()][tile.getCOLUMN()];
                 }
                 startMoving(Direction.RIGHT);
             } else {
-                startMoving(Direction.RIGHT, !Map.tiles[tile.getROW()][tile.getCOLUMN() + 1].isTransparent());
-                if (Map.tiles[tile.getROW()][tile.getCOLUMN() + 1].isTransparent())
-                    tile = Map.tiles[tile.getROW()][tile.getCOLUMN() + 1];
+                startMoving(Direction.RIGHT, !tiles[tile.getROW()][tile.getCOLUMN() + 1].isTransparent());
+                if (tiles[tile.getROW()][tile.getCOLUMN() + 1].isTransparent())
+                    tile = tiles[tile.getROW()][tile.getCOLUMN() + 1];
                 else
-                    tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
+                    tile = tiles[tile.getROW()][tile.getCOLUMN()];
 
             }
         }
@@ -186,6 +207,8 @@ public class Frog {
      * Method that handles moving left action when player pressed "A" or "<-" button.
      */
     private void moveLeft() {
+        Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
+        
         texture = FROG_LOOKING_LEFT_TEXTURE;
         // if not in the first column
         if (tile.getCOLUMN() > 0) {
@@ -197,15 +220,15 @@ public class Frog {
                     alive = false;
                 } else {
                     logIndex--;
-                    tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
+                    tile = tiles[tile.getROW()][tile.getCOLUMN()];
                 }
                 startMoving(Direction.LEFT);
             } else {
-                startMoving(Direction.LEFT, !Map.tiles[tile.getROW()][tile.getCOLUMN() - 1].isTransparent());
-                if (Map.tiles[tile.getROW()][tile.getCOLUMN() - 1].isTransparent())
-                    tile = Map.tiles[tile.getROW()][tile.getCOLUMN() - 1];
+                startMoving(Direction.LEFT, !tiles[tile.getROW()][tile.getCOLUMN() - 1].isTransparent());
+                if (tiles[tile.getROW()][tile.getCOLUMN() - 1].isTransparent())
+                    tile = tiles[tile.getROW()][tile.getCOLUMN() - 1];
                 else
-                    tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
+                    tile = tiles[tile.getROW()][tile.getCOLUMN()];
             }
         }
     }
@@ -214,20 +237,24 @@ public class Frog {
      * Method that handles moving up action when player pressed "W" or "^" button.
      */
     private void moveUp() {
+        Row[] rows = FroggerGameScreen.level.getMap().getRows();
+        Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
+        int nRows = FroggerGameScreen.level.getMap().getnRows();
+        
         texture = FROG_LOOKING_UP_TEXTURE;
         // if not in the last row
-        if (tile.getROW() < Map.nRows -1) {
+        if (tile.getROW() < nRows -1) {
 
             // if next row is the row with logs (from any to log)
-            if (Map.rows[tile.getROW() + 1].getType() == TypeOfRow.LOG)
+            if (rows[tile.getROW() + 1].getType() == TypeOfRow.LOG)
             {
                 onLog = false; // set current log to false to check if frog lands on another log
-                for (MovingObject log: Map.rows[tile.getROW() + 1].getMovingObjects()) {
+                for (MovingObject log: rows[tile.getROW() + 1].getMovingObjects()) {
                     // method getLogWhenMovingUp() checks if frog has landed on a log
                     // if true, it saves information about log and information needed for animation in
                     // some variables, and it also defines tile from next row
                     if (getLogWhenMovingUpOrDown(log)) {
-                        tile = Map.tiles[tile.getROW() + 1][tile.getCOLUMN()];
+                        tile = tiles[tile.getROW() + 1][tile.getCOLUMN()];
                         startMoving(Direction.UP);
                         texture = FROG_LOOKING_UP_TEXTURE;
                         break; // stop iterating as the log is already found
@@ -239,7 +266,7 @@ public class Frog {
             {
 
                 // if the row frog jumps FROM is log (from log to ground)
-                if (Map.rows[tile.getROW()].getType() == TypeOfRow.LOG) {
+                if (rows[tile.getROW()].getType() == TypeOfRow.LOG) {
                     // find the tile to jump to
                     if (findTileByCoordinates(tile.getROW() + 1))
                         // call method that changes variables responsible for frog movement
@@ -252,11 +279,11 @@ public class Frog {
                     log = null;
                     distanceX = 0;
                     // define next tile and start animation
-                    startMoving(Direction.UP, !Map.tiles[tile.getROW() + 1][tile.getCOLUMN()].isTransparent());
-                    if (Map.tiles[tile.getROW() + 1][tile.getCOLUMN()].isTransparent())
-                        tile = Map.tiles[tile.getROW() + 1][tile.getCOLUMN()];
+                    startMoving(Direction.UP, !tiles[tile.getROW() + 1][tile.getCOLUMN()].isTransparent());
+                    if (tiles[tile.getROW() + 1][tile.getCOLUMN()].isTransparent())
+                        tile = tiles[tile.getROW() + 1][tile.getCOLUMN()];
                     else
-                        tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
+                        tile = tiles[tile.getROW()][tile.getCOLUMN()];
                 }
 
             }
@@ -268,16 +295,19 @@ public class Frog {
      * Method that handles moving left action when player pressed "S" or "down" button.
      */
     private void moveDown() {
+        Row[] rows = FroggerGameScreen.level.getMap().getRows();
+        Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
+
         texture = FROG_LOOKING_DOWN_TEXTURE;
         // if not in the first row
         if (tile.getROW() > 0) {
 
             // from any to log
-            if (Map.rows[tile.getROW() - 1].getType() == TypeOfRow.LOG) {
+            if (rows[tile.getROW() - 1].getType() == TypeOfRow.LOG) {
                 onLog = false;
-                for (MovingObject log: Map.rows[tile.getROW() - 1].getMovingObjects()) {
+                for (MovingObject log: rows[tile.getROW() - 1].getMovingObjects()) {
                     if (getLogWhenMovingUpOrDown(log)) {
-                        tile = Map.tiles[tile.getROW() - 1][tile.getCOLUMN()];
+                        tile = tiles[tile.getROW() - 1][tile.getCOLUMN()];
                         startMoving(Direction.DOWN);
                         texture = FROG_LOOKING_DOWN_TEXTURE;
                         break;
@@ -287,7 +317,7 @@ public class Frog {
             } else {
 
                 // from log to ground
-                if (Map.rows[tile.getROW()].getType() == TypeOfRow.LOG) {
+                if (rows[tile.getROW()].getType() == TypeOfRow.LOG) {
                     // from log to ground
                     if (findTileByCoordinates(tile.getROW() - 1))
                         startMoving(Direction.DOWN);
@@ -297,11 +327,11 @@ public class Frog {
                     onLog = false;
                     log = null;
                     distanceX = 0;
-                    startMoving(Direction.DOWN, !Map.tiles[tile.getROW() - 1][tile.getCOLUMN()].isTransparent());
-                    if (Map.tiles[tile.getROW() - 1][tile.getCOLUMN()].isTransparent())
-                        tile = Map.tiles[tile.getROW() - 1][tile.getCOLUMN()];
+                    startMoving(Direction.DOWN, !tiles[tile.getROW() - 1][tile.getCOLUMN()].isTransparent());
+                    if (tiles[tile.getROW() - 1][tile.getCOLUMN()].isTransparent())
+                        tile = tiles[tile.getROW() - 1][tile.getCOLUMN()];
                     else
-                        tile = Map.tiles[tile.getROW()][tile.getCOLUMN()];
+                        tile = tiles[tile.getROW()][tile.getCOLUMN()];
                 }
 
             }
@@ -313,9 +343,11 @@ public class Frog {
      * @param rowIndex next row index
      */
     private boolean findTileByCoordinates(int rowIndex) {
-        for (Tile t : Map.tiles[rowIndex]) {
+        Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
+
+        for (Tile t : tiles[rowIndex]) {
             if (x + size / 2 >= t.getX() && x + size / 2 < t.getX() + t.getSize() && t.isTransparent()) {
-                tile = Map.tiles[rowIndex][t.getCOLUMN()];
+                tile = tiles[rowIndex][t.getCOLUMN()];
                 distanceX = t.getX() - x;
                 // clear variables that are responsible for movement on logs
                 onLog = false;
@@ -391,6 +423,10 @@ public class Frog {
      * Method to move up. Runs every frame
      */
     public void animateMovingUp() {
+        Row[] rows = FroggerGameScreen.level.getMap().getRows();
+        int nColumns = FroggerGameScreen.level.getMap().getnColumns();
+        int nRows = FroggerGameScreen.level.getMap().getnRows();
+
         // don't let next move until time passes
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false; // when time passes end moving
@@ -412,7 +448,7 @@ public class Frog {
             if (animationFrameCount == (int) SPEED) // check if it's the last animation leap (total is SPEED)
             {
                 // when it's the last animation frame just set coordinates to what they have to be
-                if (Map.rows[tile.getROW()].getType() != TypeOfRow.LOG) dx = tile.getX() - x;
+                if (rows[tile.getROW()].getType() != TypeOfRow.LOG) dx = tile.getX() - x;
                 else dx = log.getX() + log.getSize() * logIndex - x;
 
                 dy = tile.getY() - y;
@@ -429,7 +465,7 @@ public class Frog {
             x += dx;
 
             // move camera
-            if (tile.getROW() > (Map.nColumns / 2) && tile.getROW() < (Map.nRows - (Map.nColumns / 2)))
+            if (tile.getROW() > (nColumns / 2) && tile.getROW() < (nRows - (nColumns / 2)))
                 FroggerGame.gameCamera.translate(0,dy,0);
 
             // animate
@@ -446,6 +482,10 @@ public class Frog {
      * Method to move down. Runs every frame
      */
     public void animateMovingDown() {
+        Row[] rows = FroggerGameScreen.level.getMap().getRows();
+        int nColumns = FroggerGameScreen.level.getMap().getnColumns();
+        int nRows = FroggerGameScreen.level.getMap().getnRows();
+
         // don't let next move until time passes
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false; // when time passes end moving
@@ -470,7 +510,7 @@ public class Frog {
             if (animationFrameCount == (int) SPEED) // check if it's the last animation leap (total is SPEED)
             {
                 // when it's the last animation frame just set coordinates to what they have to be
-                if (Map.rows[tile.getROW()].getType() != TypeOfRow.LOG) dx = tile.getX() - x;
+                if (rows[tile.getROW()].getType() != TypeOfRow.LOG) dx = tile.getX() - x;
                 else dx = log.getX() + log.getSize() * logIndex - x;
 
                 dy = tile.getY() - y;
@@ -486,7 +526,7 @@ public class Frog {
             y += dy;
 
             // move camera
-            if (tile.getROW() >= Map.nColumns / 2 && tile.getROW() < (Map.nRows - (Map.nColumns / 2) - 1))
+            if (tile.getROW() >= nColumns / 2 && tile.getROW() < (nRows - (nColumns / 2) - 1))
                 FroggerGame.gameCamera.translate(0,dy,0);
 
             // animate
@@ -502,6 +542,7 @@ public class Frog {
      * Method to move right. Runs every frame
      */
     private void animateMovingRight() {
+        Row[] rows = FroggerGameScreen.level.getMap().getRows();
 
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false;
@@ -518,7 +559,7 @@ public class Frog {
         } else {
             if (animationFrameCount == (int) SPEED) {
                 // when it's the last animation frame just set coordinates to what they have to be
-                if (Map.rows[tile.getROW()].getType() != TypeOfRow.LOG) x = tile.getX();
+                if (rows[tile.getROW()].getType() != TypeOfRow.LOG) x = tile.getX();
                 else x = log.getX() + log.getSize() * logIndex;
 
             } else if (animationFrameCount < (int) SPEED) {
@@ -544,6 +585,8 @@ public class Frog {
      * Method to move left. Runs every frame
      */
     public void animateMovingLeft() {
+        Row[] rows = FroggerGameScreen.level.getMap().getRows();
+
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false;
         }
@@ -558,7 +601,7 @@ public class Frog {
         } else {
             if (animationFrameCount == (int) SPEED) {
                 // when it's the last animation frame just set coordinates to what they have to be
-                if (Map.rows[tile.getROW()].getType() != TypeOfRow.LOG) x = tile.getX();
+                if (rows[tile.getROW()].getType() != TypeOfRow.LOG) x = tile.getX();
                 else x = log.getX() + log.getSize() * logIndex;
 
             } else if (animationFrameCount < (int) SPEED) {

@@ -22,11 +22,7 @@ public class LevelsScreen extends Screen {
     @Override
     public void show() {
         // creating levels array
-        Level[] temp = new Level[10];
-        for (int i = 0; i < 10; i++) {
-            temp[i] = new Level(i + 1, new Map());
-        }
-        game.loadLevelsToFile("levels.txt", temp);
+
         final Level[] levels = game.loadLevelsFromFile("levels.txt");
 
         Gdx.input.setInputProcessor(stage);

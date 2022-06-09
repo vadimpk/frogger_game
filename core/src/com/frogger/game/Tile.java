@@ -29,7 +29,7 @@ public class Tile implements Serializable {
     private boolean transparent;
     private boolean water;
     private int waterState;
-    private Texture texture;
+    private static Texture texture;
 
     Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
 

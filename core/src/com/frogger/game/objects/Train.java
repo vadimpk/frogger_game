@@ -8,6 +8,8 @@ import com.frogger.game.FroggerGame;
 import com.frogger.game.Map;
 import com.frogger.game.Util.Direction;
 
+import static com.frogger.game.screens.FroggerGameScreen.level;
+
 public class Train extends MovingObject {
 
     private boolean moving;
@@ -28,8 +30,8 @@ public class Train extends MovingObject {
     private static final int MIN_TILES_BEFORE_MOVING = 3;
     private static final int MIN_TILES_AFTER_MOVING  = 10;
 
-    public Train(float size, float y) {
-        super(size, Map.tiles[0][Map.nColumns - 1].getX() + size,
+    public Train(float size, float x, float y) {
+        super(size, x + size,
                 y, SPEED, LENGTH, MOVING_DIRECTION);
         setSafe(SAFE);
     }
@@ -67,10 +69,10 @@ public class Train extends MovingObject {
     @Override
     public void move() {
 
-        if ((getX() + getSize()*getLength()) < Map.tiles[0][0].getX()) {
+        if ((getX() + getSize()*getLength()) < level.getMap().getTiles()[0][0].getX()) {
             startedMovingTime = TimeUtils.nanoTime();
             deltaTime = TIME_BETWEEN_MOVES;
-            setX(Map.tiles[0][Map.nColumns -1].getX() + Map.tiles[0][0].getSize());
+            setX(level.getMap().getTiles()[0][level.getMap().getnColumns() -1].getX() + level.getMap().getTiles()[0][0].getSize());
         } else
             setX(getX() - getSize() / getSpeed());
 

@@ -8,6 +8,7 @@ import com.frogger.game.objects.Car;
 import com.frogger.game.objects.Log;
 import com.frogger.game.objects.MovingObject;
 import com.frogger.game.objects.Train;
+import jdk.internal.joptsimple.internal.Rows;
 
 import java.io.Serializable;
 
@@ -16,11 +17,11 @@ import static com.frogger.game.FroggerGame.attributesBatch;
 
 public class Map  implements Serializable{
 
-    public static final int nColumns = 15;
-    public static final int nRows = 30;
+    private int nColumns;
+    private int nRows;
 
-    public static Row[] rows = new Row[nRows];
-    public static Tile[][] tiles = new Tile[nRows][nColumns];
+    private Row[] rows;
+    private Tile[][] tiles;
 
     private static Frog frog;
 
@@ -31,61 +32,23 @@ public class Map  implements Serializable{
     long last = 0;
     float dt;
 
-    public Map() {
-        // get screen size
-        int screenWidth = Gdx.graphics.getWidth();
-        int screenHeight = Gdx.graphics.getHeight();
-
+    public Map(Row[] rows, Tile[][] tiles, Tile[] nontransparentTiles) {
         t2 = new Texture(Gdx.files.internal("temp2.jpg"));
-        for (int row = 0; row < nRows; row++) {
-            for (int column = 0; column < nColumns; column++) {
-                tiles[row][column] = new Tile(nColumns, screenWidth, screenHeight, row, column);
-            }
-        }
 
-        for (int i = 0; i < rows.length; i++) {
-            rows[i] = new Row(i, Util.TypeOfRow.STATIC, new MovingObject[]{});
-        }
+        nColumns = tiles[0].length;
+        nRows = tiles.length;
 
-        // create moving rows
-        rows[6] = new Row(6, Util.TypeOfRow.CAR, new Car[]{
-                new Car(tiles[0][0].getSize(), tiles[6][0].getX(), tiles[6][0].getY(), 15f, 3,Util.Direction.LEFT),
-                new Car(tiles[0][0].getSize(), tiles[6][6].getX(), tiles[6][0].getY(), 15f, 2, Util.Direction.LEFT),
-                new Car(tiles[0][0].getSize(), tiles[6][12].getX(), tiles[6][0].getY(), 15f, 3, Util.Direction.LEFT),
-        });
+        this.rows = rows;
+        this.tiles = tiles;
 
-        rows[3] = new Row(3, Util.TypeOfRow.LOG, new Log[]{
-                new Log(tiles[0][0].getSize(), tiles[3][0].getX(), tiles[3][0].getY(), 20f, 3, Util.Direction.RIGHT),
-                new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[3][0].getY(), 20f, 3, Util.Direction.RIGHT, true, 150000000),
-                new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[3][0].getY(), 20f, 3, Util.Direction.RIGHT, true, 150000000),
-        });
-        rows[4] = new Row(4, Util.TypeOfRow.LOG, new Log[]{
-                new Log(tiles[0][0].getSize(), tiles[4][0].getX(), tiles[4][0].getY(), 15f, 3, Util.Direction.LEFT),
-                new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[4][0].getY(), 15f, 3, Util.Direction.LEFT),
-                new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[4][0].getY(), 15f, 3, Util.Direction.LEFT),
-        });
-
-        rows[2] = new Row(2, Util.TypeOfRow.LOG, new Log[]{
-                new Log(tiles[0][0].getSize(), tiles[2][0].getX(), tiles[2][0].getY(), 30f, 3, Util.Direction.LEFT),
-                new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[2][0].getY(), 30f, 3, Util.Direction.LEFT),
-                new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[2][0].getY(), 30f, 3, Util.Direction.LEFT),
-        });
-
-        rows[12] = new Row(10, Util.TypeOfRow.TRAIN, new Train[]{
-                new Train(tiles[0][0].getSize(), tiles[12][0].getY())
-        });
-
-        tiles[5][1].setTransparent(false);
-        tiles[5][3].setTransparent(false);
-        tiles[5][8].setTransparent(false);
-        tiles[5][10].setTransparent(false);
-        tiles[10][10].setTransparent(false);
-        tiles[10][11].setTransparent(false);
-        tiles[1][6].setTransparent(false);
-
+        for(Tile tile: nontransparentTiles) tile.setTransparent(false);
 
         // spawn frog in the center horizontally and at the bottom vertically
-        frog = new Frog(tiles[0][nColumns / 2]);
+        frog = Frog.get();
+        System.out.println(nColumns);
+        System.out.println(tiles[0].length);
+        frog.setStartingTile(tiles[0][nColumns / 2]);
+
     }
 
     public static Frog getFrog() {
@@ -138,10 +101,21 @@ public class Map  implements Serializable{
         attributesBatch.draw(t2, tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), 0, Gdx.graphics.getWidth() - tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), Gdx.graphics.getHeight());
 
         attributesBatch.end();
-
     }
 
-    public void setFrog(Frog frog) {
-        this.frog = frog;
+    public int getnColumns() {
+        return nColumns;
+    }
+
+    public int getnRows() {
+        return nRows;
+    }
+
+    public Row[] getRows() {
+        return rows;
+    }
+
+    public Tile[][] getTiles() {
+        return tiles;
     }
 }

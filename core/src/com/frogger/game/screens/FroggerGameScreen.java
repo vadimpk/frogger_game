@@ -9,22 +9,21 @@ import com.frogger.game.Level;
 
 public class FroggerGameScreen extends ScreenAdapter {
 
-    private Level level;
+    public static Level level;
     private FroggerGame game;
-    private Level current;
-    private Frog frog;
 
 
     public FroggerGameScreen(FroggerGame game, Level level) {
         this.game = game;
-        this.level = level;
-        frog = level.getMap().getFrog();
+        FroggerGameScreen.level = level;
+        Frog.get().respawn(level.getMap().getTiles()[0][level.getMap().getnColumns() / 2]);
+
     }
 
     @Override
     public void render(float delta) {
         level.render(delta);
-        if (!frog.isAlive()) {
+        if (!Frog.get().isAlive()) {
             ((Game)Gdx.app.getApplicationListener()).setScreen(new DieScreen(game, level));
         }
     }

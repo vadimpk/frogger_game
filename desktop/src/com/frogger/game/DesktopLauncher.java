@@ -12,6 +12,11 @@ public class DesktopLauncher {
 		config.useVsync(true);
 		config.setForegroundFPS(60);
 		config.setTitle("Frogger Game");
-		new Lwjgl3Application(new FroggerGame(), config);
+
+		try {
+			new Lwjgl3Application(new FroggerGame(), config);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 }

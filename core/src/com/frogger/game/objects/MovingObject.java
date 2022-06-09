@@ -7,9 +7,12 @@ import com.frogger.game.Frog;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.Map;
 import com.frogger.game.Util.Direction;
+import com.frogger.game.screens.FroggerGameScreen;
+
+import java.io.Serializable;
 
 
-public class MovingObject {
+public class MovingObject  implements Serializable {
 
     private static final Texture DEFAULT_MOVING_OBJECT_TEXTURE = new Texture(Gdx.files.internal("tile2.png"));
 
@@ -37,15 +40,15 @@ public class MovingObject {
 
         if (direction == Direction.LEFT) {
 
-            if ((x + size*length) < Map.tiles[0][0].getX()) {
-                x = Map.tiles[0][Map.nColumns -1].getX() + Map.tiles[0][0].getSize();
+            if ((x + size*length) < FroggerGameScreen.level.getMap().getTiles()[0][0].getX()) {
+                x = FroggerGameScreen.level.getMap().getTiles()[0][FroggerGameScreen.level.getMap().getnColumns() -1].getX() + FroggerGameScreen.level.getMap().getTiles()[0][0].getSize();
             }
 
             x -= size / speed;
         } else if (direction == Direction.RIGHT) {
 
-            if (x > Map.tiles[0][Map.nColumns -1].getX() + Map.tiles[0][0].getSize()) {
-                x = Map.tiles[0][0].getX() - Map.tiles[0][0].getSize() * length;
+            if (x > FroggerGameScreen.level.getMap().getTiles()[0][FroggerGameScreen.level.getMap().getnColumns() -1].getX() + FroggerGameScreen.level.getMap().getTiles()[0][0].getSize()) {
+                x = FroggerGameScreen.level.getMap().getTiles()[0][0].getX() - FroggerGameScreen.level.getMap().getTiles()[0][0].getSize() * length;
             }
 
             x += size / speed;
