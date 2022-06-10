@@ -15,7 +15,7 @@ import java.io.Serializable;
 import static com.frogger.game.FroggerGame.*;
 import static com.frogger.game.FroggerGame.attributesBatch;
 
-public class Map  implements Serializable{
+public class Map {
 
     private int nColumns;
     private int nRows;
@@ -25,14 +25,14 @@ public class Map  implements Serializable{
 
     private static Frog frog;
 
-    public static Texture t2;
+    public Texture t2;
 
     /** variables for calculating time between frames in render() method */
     long now = 0;
     long last = 0;
     float dt;
 
-    public Map(Row[] rows, Tile[][] tiles, Tile[] nontransparentTiles) {
+    public Map(Row[] rows, Tile[][] tiles) {
         t2 = new Texture(Gdx.files.internal("temp2.jpg"));
 
         nColumns = tiles[0].length;
@@ -41,12 +41,8 @@ public class Map  implements Serializable{
         this.rows = rows;
         this.tiles = tiles;
 
-        for(Tile tile: nontransparentTiles) tile.setTransparent(false);
-
         // spawn frog in the center horizontally and at the bottom vertically
         frog = Frog.get();
-        System.out.println(nColumns);
-        System.out.println(tiles[0].length);
         frog.setStartingTile(tiles[0][nColumns / 2]);
 
     }

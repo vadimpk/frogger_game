@@ -7,11 +7,11 @@ import com.frogger.game.screens.FroggerGameScreen;
 
 import java.io.Serializable;
 
-public class Row  implements Serializable {
+public class Row  {
 
     private int rowIndex;
     private TypeOfRow type;
-    private MovingObject[] movingObjects = new MovingObject[0];
+    private MovingObject[] movingObjects;
 
 
     protected Row(Tile[] tiles, TypeOfRow typeOfRow, MovingObject[] movingObjects){
@@ -27,9 +27,9 @@ public class Row  implements Serializable {
 
     public void render(SpriteBatch batch) {
 
-        if (movingObjects != null) {
+        if (movingObjects != null && movingObjects.length > 0) {
             for (MovingObject object : movingObjects) {
-                object.render(batch);
+                if (object != null) object.render(batch);
             }
         }
     }

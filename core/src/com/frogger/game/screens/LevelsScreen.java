@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.Level;
+import com.frogger.game.LevelsGenerator;
 import com.frogger.game.Map;
 
 import static com.frogger.game.Const.*;
@@ -23,7 +24,7 @@ public class LevelsScreen extends Screen {
     public void show() {
         // creating levels array
 
-        final Level[] levels = game.loadLevelsFromFile("levels.txt");
+        final Level[] levels = FroggerGame.levels;
 
         Gdx.input.setInputProcessor(stage);
 

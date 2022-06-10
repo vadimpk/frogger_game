@@ -10,7 +10,7 @@ public class Car extends MovingObject {
     private static final Texture DEFAULT_CAR_TEXTURE = new Texture(Gdx.files.internal("tile2.png"));
     private static final boolean SAFE = false;
 
-    private static Texture texture;
+    private Texture texture;
 
     public Car(float size, float x, float y, float speed, int length, Util.Direction direction) {
         super(size, x, y, speed, length, direction);

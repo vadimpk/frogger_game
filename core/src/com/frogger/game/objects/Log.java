@@ -33,7 +33,7 @@ public class Log extends MovingObject {
     private int state;
     private long deltaTime;
     private long startTime;
-    private static Texture texture;
+    private Texture texture;
 
     public Log(float size, float x, float y, float speed, int length, Util.Direction direction) {
         super(size, x, y, speed, length, direction);

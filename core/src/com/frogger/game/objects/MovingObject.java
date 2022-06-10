@@ -12,7 +12,7 @@ import com.frogger.game.screens.FroggerGameScreen;
 import java.io.Serializable;
 
 
-public class MovingObject  implements Serializable {
+public class MovingObject {
 
     private static final Texture DEFAULT_MOVING_OBJECT_TEXTURE = new Texture(Gdx.files.internal("tile2.png"));
 

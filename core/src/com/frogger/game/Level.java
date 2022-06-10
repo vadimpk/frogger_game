@@ -2,13 +2,13 @@ package com.frogger.game;
 
 import java.io.Serializable;
 
-public class Level implements Serializable {
+public class Level{
     private int number;
     private int scores;
     private int lives;
     private Map map;
 
-    public Level(int number, Map map) {
+    public Level(int number, int scores, Map map) {
         this.number = number;
         this.map = map;
     }

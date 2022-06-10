@@ -30,9 +30,14 @@ public class FroggerGame extends Game {
 	 */
 	@Override
 	public void create () {
-		//TODO: design levels and delete createLevelsTEMP method
-		createLevelsTEMP();
-		levels = loadLevelsFromFile("levels.txt");
+//		createLevelsTEMP();
+		try {
+			LevelsGenerator levelsGenerator = new LevelsGenerator();
+			levels = levelsGenerator.getLevels();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
 		// get screen size
 		int screenWidth = Gdx.graphics.getWidth();
 		int screenHeight = Gdx.graphics.getHeight();
@@ -66,79 +71,5 @@ public class FroggerGame extends Game {
 		Train.dispose();
 
 		Tile.dispose();
-	}
-
-	public void loadLevelsToFile(String src, Level[] levels) {
-		try(ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get(src)))) {
-			out.writeObject(levels);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public Level[] loadLevelsFromFile(String src) {
-		Level[] levels;
-		try(ObjectInputStream out = new ObjectInputStream(Files.newInputStream(Paths.get(src)))) {
-			levels = (Level[]) out.readObject();
-		} catch (IOException | ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-		return levels;
-	}
-
-	private void createLevelsTEMP() {
-		int screenWidth = Gdx.graphics.getWidth();
-		int screenHeight = Gdx.graphics.getHeight();
-		int nColumns = 15;
-		int nRows = 30;
-
-		Row[] rows = new Row[nRows];
-		Tile[][] tiles = new Tile[nRows][nColumns];
-
-		for (int row = 0; row < nRows; row++) {
-			for (int column = 0; column < nColumns; column++) {
-				tiles[row][column] = new Tile(nColumns, screenWidth, screenHeight, row, column);
-			}
-		}
-
-		for (int i = 0; i < rows.length; i++) {
-			rows[i] = new Row(tiles[i], Util.TypeOfRow.STATIC, new MovingObject[]{});
-		}
-
-		// create moving rows
-		rows[6] = new Row(tiles[6], Util.TypeOfRow.CAR, new Car[]{
-				new Car(tiles[0][0].getSize(), tiles[6][0].getX(), tiles[6][0].getY(), 15f, 3,Util.Direction.LEFT),
-				new Car(tiles[0][0].getSize(), tiles[6][6].getX(), tiles[6][0].getY(), 15f, 2, Util.Direction.LEFT),
-				new Car(tiles[0][0].getSize(), tiles[6][12].getX(), tiles[6][0].getY(), 15f, 3, Util.Direction.LEFT),
-		});
-
-		rows[3] = new Row(tiles[3], Util.TypeOfRow.LOG, new Log[]{
-				new Log(tiles[0][0].getSize(), tiles[3][0].getX(), tiles[3][0].getY(), 20f, 3, Util.Direction.RIGHT),
-				new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[3][0].getY(), 20f, 3, Util.Direction.RIGHT, true, 150000000),
-				new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[3][0].getY(), 20f, 3, Util.Direction.RIGHT, true, 150000000),
-		});
-		rows[4] = new Row(tiles[4], Util.TypeOfRow.LOG, new Log[]{
-				new Log(tiles[0][0].getSize(), tiles[4][0].getX(), tiles[4][0].getY(), 15f, 3, Util.Direction.LEFT),
-				new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[4][0].getY(), 15f, 3, Util.Direction.LEFT),
-				new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[4][0].getY(), 15f, 3, Util.Direction.LEFT),
-		});
-
-		rows[2] = new Row(tiles[2], Util.TypeOfRow.LOG, new Log[]{
-				new Log(tiles[0][0].getSize(), tiles[2][0].getX(), tiles[2][0].getY(), 30f, 3, Util.Direction.LEFT),
-				new Log(tiles[0][0].getSize(), tiles[3][5].getX(), tiles[2][0].getY(), 30f, 3, Util.Direction.LEFT),
-				new Log(tiles[0][0].getSize(), tiles[3][10].getX(), tiles[2][0].getY(), 30f, 3, Util.Direction.LEFT),
-		});
-
-		rows[12] = new Row(tiles[10], Util.TypeOfRow.TRAIN, new Train[]{
-				new Train(tiles[0][0].getSize(), tiles[0][nColumns - 1].getX(), tiles[12][0].getY())
-		});
-
-		Tile[] nontransparentTiles = new Tile[] {tiles[5][1], tiles[5][3], tiles[5][8], tiles[5][10], tiles[10][10], tiles[10][11], tiles[1][6]};
-
-		Level[] temp = new Level[10];
-		for (int i = 0; i < 10; i++) {
-			temp[i] = new Level(i + 1, new Map(rows, tiles, nontransparentTiles));
-		}
-		loadLevelsToFile("levels.txt", temp);
 	}
 }

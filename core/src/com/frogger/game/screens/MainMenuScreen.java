@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.Level;
+import com.frogger.game.LevelsGenerator;
 import com.frogger.game.Map;
 
 import static com.frogger.game.Const.*;
@@ -49,7 +50,7 @@ public class MainMenuScreen extends Screen {
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Level level = game.loadLevelsFromFile("levels.txt")[0];
+                Level level =  FroggerGame.levels[0];
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new FroggerGameScreen(game, level));
             }
         });

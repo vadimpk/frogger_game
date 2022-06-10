@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import java.io.Serializable;
 
 
-public class Tile implements Serializable {
+public class Tile{
 
     // TODO: add different textures
     private static final Texture DEFAULT_TILE_TEXTURE = new Texture(Gdx.files.internal("grass_tile.png"));
@@ -29,7 +29,7 @@ public class Tile implements Serializable {
     private boolean transparent;
     private boolean water;
     private int waterState;
-    private static Texture texture;
+    private Texture texture;
 
     Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
 
