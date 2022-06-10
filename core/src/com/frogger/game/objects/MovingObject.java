@@ -123,4 +123,6 @@ public class MovingObject {
         this.speed = speed;
     }
 
+    public void setFlooded(boolean flooded) {}
+
 }

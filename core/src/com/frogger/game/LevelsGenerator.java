@@ -16,8 +16,7 @@ import java.nio.file.Paths;
 public class LevelsGenerator implements Serializable{
 
     public LevelsGenerator() {
-        //It will be done only once
-//        createLevels();
+        createLevels();
 
     }
 

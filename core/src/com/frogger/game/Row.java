@@ -3,9 +3,6 @@ package com.frogger.game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.frogger.game.Util.TypeOfRow;
 import com.frogger.game.objects.*;
-import com.frogger.game.screens.FroggerGameScreen;
-
-import java.io.Serializable;
 
 public class Row  {
 
@@ -20,7 +17,7 @@ public class Row  {
 
         if (typeOfRow == TypeOfRow.LOG) {
             for (Tile tile: tiles) {
-                tile.setWater(true);
+                tile.setWaterTexture();
             }
         }
     }

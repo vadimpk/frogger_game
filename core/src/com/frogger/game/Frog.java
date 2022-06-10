@@ -430,6 +430,7 @@ public class Frog {
         // don't let next move until time passes
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false; // when time passes end moving
+            if (onLog) log.setFlooded(false);
         }
 
         // counter of frames (for animation)
@@ -458,7 +459,7 @@ public class Frog {
             {
                 dy = size / SPEED;
                 dx = distanceX / SPEED;
-
+                if (onLog) log.setFlooded(true);
             }
 
             y += dy;
@@ -471,9 +472,11 @@ public class Frog {
             // animate
             if (animationFrameCount == 2) {
                 texture = FROG_JUMPING_UP_TEXTURE;
-            } if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
+            }
+            if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
                 texture = FROG_LOOKING_UP_TEXTURE;
             }
+
 
         }
     }
@@ -489,6 +492,7 @@ public class Frog {
         // don't let next move until time passes
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false; // when time passes end moving
+            if (onLog) log.setFlooded(false);
         }
 
         // counter of frames (for animation)
@@ -520,6 +524,7 @@ public class Frog {
             {
                 dy = -size / SPEED;
                 dx = distanceX / SPEED;
+                if (onLog) log.setFlooded(true);
             }
 
             x += dx;
@@ -546,6 +551,7 @@ public class Frog {
 
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false;
+            if (onLog) log.setFlooded(false);
         }
 
         animationFrameCount++;
@@ -565,6 +571,7 @@ public class Frog {
             } else if (animationFrameCount < (int) SPEED) {
                 x += size / SPEED;
                 if (onLog) {
+                    log.setFlooded(true);
                     if (log.getDirection() == Direction.RIGHT) {
                         x -= log.getSize() / log.getSpeed();
                     } else {
@@ -589,6 +596,7 @@ public class Frog {
 
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false;
+            if (onLog) log.setFlooded(false);
         }
         animationFrameCount++;
 
@@ -607,6 +615,7 @@ public class Frog {
             } else if (animationFrameCount < (int) SPEED) {
                 x -= size / SPEED;
                 if (onLog) {
+                    log.setFlooded(true);
                     if (log.getDirection() == Direction.RIGHT) {
                         x -= log.getSize() / log.getSpeed();
                     } else {

@@ -3,18 +3,17 @@ package com.frogger.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.TimeUtils;
 
-import java.io.Serializable;
+import java.util.Random;
 
 
 public class Tile{
 
     // TODO: add different textures
-    private static final Texture DEFAULT_TILE_TEXTURE = new Texture(Gdx.files.internal("grass_tile.png"));
-    private static final Texture NOT_TRANSPARENT_TILE_TEXTURE = new Texture(Gdx.files.internal("log.png"));
-
-    private static final Texture WATER_TEXTURE_0 = new Texture(Gdx.files.internal("objects/water/water0.png"));
+    private static final Texture GRASS_TILE_TEXTURE_1 = new Texture(Gdx.files.internal("objects/tiles/grass-tile.png"));
+    private static final Texture GRASS_TILE_TEXTURE_2 = new Texture(Gdx.files.internal("objects/tiles/grass-tile-2.png"));
+    private static final Texture TREE_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/tree-tile.png"));
+    private static final Texture WATER_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/water-tile.png"));
 
 
     /** initialize tile attributes */
@@ -23,12 +22,8 @@ public class Tile{
     private final float X, Y;
     private final float SIZE;
 
-    private static final long ANIMATION_TIME = 500000000;
-    private long lastAnimation;
 
     private boolean transparent;
-    private boolean water;
-    private int waterState;
     private Texture texture;
 
     Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
@@ -49,31 +44,20 @@ public class Tile{
         Y = (float) (0.05 * screenHeight) + SIZE * this.ROW;
 
         // set texture
-        texture = DEFAULT_TILE_TEXTURE;
+        Random random = new Random();
+        if (random.nextBoolean()) texture = GRASS_TILE_TEXTURE_1;
+        else texture = GRASS_TILE_TEXTURE_2;
         transparent = true;
-        water = false;
-    }
-
-    Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column, boolean transparent) {
-        this(numberOfColumns, screenWidth, screenHeight, row, column);
-        this.transparent = transparent;
-        if (!transparent) {
-            texture = NOT_TRANSPARENT_TILE_TEXTURE;
-        }
     }
 
     public void render(SpriteBatch batch) {
-        animate();
         batch.draw(texture, X, Y,SIZE,SIZE);
     }
 
-    private void animate() {
-                if (water) texture = WATER_TEXTURE_0;
-    }
 
     public static void dispose() {
-        DEFAULT_TILE_TEXTURE.dispose();
-        NOT_TRANSPARENT_TILE_TEXTURE.dispose();
+        GRASS_TILE_TEXTURE_1.dispose();
+        TREE_TILE_TEXTURE.dispose();
     }
 
 
@@ -125,10 +109,10 @@ public class Tile{
 
     public void setTransparent(boolean transparent) {
         this.transparent = transparent;
-        if (!transparent) texture = NOT_TRANSPARENT_TILE_TEXTURE;
+        if (!transparent) texture = TREE_TILE_TEXTURE;
     }
 
-    public void setWater(boolean water) {
-        this.water = water;
+    public void setWaterTexture() {
+        texture = WATER_TILE_TEXTURE;
     }
 }
