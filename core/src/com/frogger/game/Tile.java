@@ -24,6 +24,10 @@ public class Tile{
 
 
     private boolean transparent;
+
+
+
+    private boolean isScore;
     private Texture texture;
 
     Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
@@ -115,4 +119,13 @@ public class Tile{
     public void setWaterTexture() {
         texture = WATER_TILE_TEXTURE;
     }
+
+    public void setScore(boolean score) {
+        isScore = score;
+    }
+
+    public boolean isScore() {
+        return isScore;
+    }
+
 }

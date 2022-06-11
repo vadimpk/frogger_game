@@ -17,7 +17,6 @@ public class LevelsGenerator implements Serializable{
 
     public LevelsGenerator() {
         createLevels();
-
     }
 
     public Level[] getLevels() {
@@ -50,6 +49,7 @@ public class LevelsGenerator implements Serializable{
         for (RowsParameters rowsParameter : levelParameter.rowsParameters) {
             for (TileParameters tileParameter : rowsParameter.tileParameters) {
                 if(!tileParameter.transparent) tiles[tileParameter.row][tileParameter.column].setTransparent(false);
+                if(tileParameter.isScore) tiles[tileParameter.row][tileParameter.column].setScore(true);
             }
         }
 
@@ -100,6 +100,10 @@ public class LevelsGenerator implements Serializable{
                 tiles[row][column] = new TileParameters(row, column);
             }
         }
+
+        tiles[0][6].isScore = true;
+        tiles[10][9].isScore = true;
+        tiles[14][1].isScore = true;
 
         for (int i = 0; i < rows.length; i++) {
             rows[i] = new RowsParameters(tiles[i], Util.TypeOfRow.STATIC, new MovingObjectParameters[]{});
@@ -206,11 +210,13 @@ public class LevelsGenerator implements Serializable{
         public int row;
         public int column;
         public Util.TypeOfTile type;
+        public boolean isScore;
 
         public TileParameters(int row, int column) {
             this.row = row;
             this.column = column;
             transparent = true;
+            isScore = false;
         }
     }
 

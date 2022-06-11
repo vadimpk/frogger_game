@@ -14,6 +14,7 @@ import java.io.Serializable;
 
 import static com.frogger.game.FroggerGame.*;
 import static com.frogger.game.FroggerGame.attributesBatch;
+import static com.frogger.game.screens.FroggerGameScreen.level;
 
 public class Map {
 
@@ -22,6 +23,7 @@ public class Map {
 
     private Row[] rows;
     private Tile[][] tiles;
+    private Score[] scores;
 
     private static Frog frog;
 
@@ -33,6 +35,7 @@ public class Map {
     float dt;
 
     public Map(Row[] rows, Tile[][] tiles) {
+        scores = new Score[3];
         t2 = new Texture(Gdx.files.internal("temp2.jpg"));
 
         nColumns = tiles[0].length;
@@ -45,6 +48,9 @@ public class Map {
         frog = Frog.get();
         frog.setStartingTile(tiles[0][nColumns / 2]);
 
+        int counter = 0;
+        for(Tile[] row: tiles)
+            for (Tile tile : row) if (tile.isScore()) scores[counter++] = new Score(tile);
     }
 
     public static Frog getFrog() {
@@ -86,6 +92,8 @@ public class Map {
         // calculate delta time for each frame
         last = TimeUtils.nanoTime();
 
+        for (Score s : scores) if(!s.isCollected()) s.render(gameBatch);
+
         // end game batch
         gameBatch.end();
 
@@ -113,5 +121,9 @@ public class Map {
 
     public Tile[][] getTiles() {
         return tiles;
+    }
+
+    public Score[] getScores() {
+        return scores;
     }
 }

@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class Level{
     private int number;
     private int scores;
-    private int lives;
     private Map map;
 
     public Level(int number, int scores, Map map) {
@@ -32,15 +31,6 @@ public class Level{
     public void setScores(int scores) {
         this.scores = scores;
     }
-
-    public int getLives() {
-        return lives;
-    }
-
-    public void setLives(int lives) {
-        this.lives = lives;
-    }
-
     public void setMap(Map map) {
         this.map = map;
     }

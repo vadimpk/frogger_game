@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.frogger.game.Frog;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.Level;
+import com.frogger.game.Score;
 
 import static com.frogger.game.Const.*;
 import static com.frogger.game.Const.BUTTON_HEIGHT;
@@ -44,6 +45,9 @@ public class DieScreen extends Screen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new FroggerGameScreen(game, currentLevel));
+                for (Score score : currentLevel.getMap().getScores()) {
+                    score.setUncollected();
+                }
             }
         });
 
