@@ -19,8 +19,11 @@ public class FroggerGameScreen extends ScreenAdapter {
         FroggerGameScreen.level = level;
         Frog.get().respawn(level.getMap().getTiles()[0][level.getMap().getnColumns() / 2]);
 
-        timer = new Timer(level.getMap().getTiles()[0][0].getX(), level.getMap().getTiles()[level.getMap().getnColumns()][0].getY() + level.getMap().getTiles()[0][0].getSize() / 1.5f);
-        scorer = new Scorer( level.getMap().getTiles()[0][level.getMap().getnColumns() - 1].getX() - 2f * level.getMap().getTiles()[0][0].getSize(), level.getMap().getTiles()[level.getMap().getnColumns()][0].getY(), level.getMap().getTiles()[0][0].getSize()*0.8f);
+
+        float mapWidth = level.getMap().getnColumns() * level.getMap().getTiles()[0][0].getSize();
+        float mapHeight = level.getMap().getnColumns() * level.getMap().getTiles()[0][0].getSize();
+        timer = new Timer(level.getMap().getTiles()[0][0].getX(), level.getMap().getTiles()[level.getMap().getnColumns() - 1][0].getY() + level.getMap().getTiles()[0][0].getSize() / 1.5f);
+        scorer = new Scorer( level.getMap().getTiles()[0][level.getMap().getnColumns() - 1].getX() - 2f * level.getMap().getTiles()[0][0].getSize(), level.getMap().getTiles()[level.getMap().getnColumns() - 1][0].getY(), level.getMap().getTiles()[0][0].getSize()*0.8f);
     }
 
     @Override
