@@ -69,7 +69,14 @@ public class Frog {
         this.tile = tile;
         x = tile.getX();
         y = tile.getY();
+        size = tile.getSize();
         alive = true;
+        texture = FROG_LOOKING_UP_TEXTURE;
+        onLog = false;
+        log = null;
+        logIndex = -1;
+        isMoving = false;
+        moveToTheWall = false;
     }
 
     public void render(SpriteBatch batch) {
@@ -120,7 +127,7 @@ public class Frog {
             if (!log.isSafe()) {
                 alive = false;
             }
-            if (x < tiles[0][0].getX() || x > tiles[0][nColumns - 1].getX()) {
+            if (x < tiles[0][0].getX() - tiles[0][0].getSize()*0.5f || x > tiles[0][nColumns - 1].getX() + tiles[0][0].getSize()*0.5f) {
                 alive = false;
             }
             if (log.getDirection() == Direction.RIGHT) {

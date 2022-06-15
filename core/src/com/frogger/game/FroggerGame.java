@@ -50,9 +50,6 @@ public class FroggerGame extends Game {
 		gameCamera.setToOrtho(false, screenWidth, screenHeight);
 		gameBatch = new SpriteBatch();
 
-		// create tiles (default)
-		// TODO: create levels and simplify creation of tiles in separate Java class
-
 		setScreen(new MainMenuScreen(this));
 	}
 

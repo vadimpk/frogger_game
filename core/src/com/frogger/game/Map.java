@@ -4,17 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.frogger.game.objects.Car;
-import com.frogger.game.objects.Log;
-import com.frogger.game.objects.MovingObject;
-import com.frogger.game.objects.Train;
-import jdk.internal.joptsimple.internal.Rows;
-
-import java.io.Serializable;
 
 import static com.frogger.game.FroggerGame.*;
 import static com.frogger.game.FroggerGame.attributesBatch;
-import static com.frogger.game.screens.FroggerGameScreen.level;
+
 
 public class Map {
 

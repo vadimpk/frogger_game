@@ -25,8 +25,6 @@ public class Tile{
 
     private boolean transparent;
 
-
-
     private boolean isScore;
     private Texture texture;
 

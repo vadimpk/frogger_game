@@ -54,12 +54,12 @@ public class MainMenuScreen extends Screen {
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new FroggerGameScreen(game, level));
             }
         });
-            levelsButton.addListener(new ClickListener(){
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    ((Game)Gdx.app.getApplicationListener()).setScreen(new LevelsScreen(game));
-                }
-            });
+        levelsButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new LevelsScreen(game));
+            }
+        });
 
         exitButton.addListener(new ClickListener(){
             @Override
