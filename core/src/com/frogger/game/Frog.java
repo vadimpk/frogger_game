@@ -395,7 +395,15 @@ public class Frog {
      * @return true if lands
      */
     private boolean checkIfLandsOnLog(MovingObject log, int i) {
-        if ((x + size / 2 >= log.getX() + i * size) && (x + size / 2 < log.getX() + (i + 1) * size)) {
+
+        boolean gotLog = false;
+
+        if (log.getDirection() == Direction.LEFT){
+            if ((x + size / 2 >= log.getX() + i * size - 0.4f*size) && (x + size / 2 < log.getX() + (i + 1) * size - 0.4f*size)) gotLog = true;
+        } else {
+            if ((x + size / 2 >= log.getX() + i * size  + 0.4f*size) && (x + size / 2 < log.getX() + (i + 1) * size + 0.4f*size)) gotLog = true;
+        }
+        if (gotLog) {
             onLog = true;
             this.log = log; //set new log
             logIndex = i; // set new part of the log

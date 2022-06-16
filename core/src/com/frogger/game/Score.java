@@ -72,7 +72,11 @@ public class Score {
     }
 
     public void dispose() {
-        texture.dispose();
+        STAR_1.dispose();
+        STAR_2.dispose();
+        STAR_3.dispose();
+        STAR_4.dispose();
+        STAR_5.dispose();
     }
 
     public boolean isCollected() {
