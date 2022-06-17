@@ -15,7 +15,6 @@ public class Tile{
     private static final Texture TREE_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/tree-tile.png"));
     private static final Texture WATER_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/water-tile.png"));
 
-
     /** initialize tile attributes */
     private final int ROW;
     private final int COLUMN;

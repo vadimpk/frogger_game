@@ -4,11 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.frogger.game.Util.Direction;
 import com.frogger.game.Util.TypeOfRow;
 import com.frogger.game.objects.MovingObject;
 import com.frogger.game.screens.FroggerGameScreen;
+
+import java.util.Objects;
 
 public class Frog {
 
@@ -18,17 +21,19 @@ public class Frog {
     private Tile tile;
     private float x,y,size;
     private boolean alive;
-    private Texture texture;
+    private TextureRegion texture;
+    private int textureRotation;
 
-    private static final Texture FROG_LOOKING_UP_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-looking-up.png"));
-    private static final Texture FROG_LOOKING_DOWN_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-looking-down.png"));
-    private static final Texture FROG_LOOKING_RIGHT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-looking-right.png"));
-    private static final Texture FROG_LOOKING_LEFT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-looking-left.png"));
+    private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog/frog.png"));
 
-    private static final Texture FROG_JUMPING_UP_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-up2.png"));
-    private static final Texture FROG_JUMPING_DOWN_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-down2.png"));
-    private static final Texture FROG_JUMPING_RIGHT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-right2.png"));
-    private static final Texture FROG_JUMPING_LEFT_TEXTURE = new Texture(Gdx.files.internal("characters/frog/frog-jumping-left2.png"));
+    private static final TextureRegion FROG_LOOKING_UP = new TextureRegion(FROG_PACK, 300, 150, 150, 150);
+    private static final TextureRegion FROG_JUMPING_UP = new TextureRegion(FROG_PACK, 150, 150, 150, 150);
+
+    private static final TextureRegion FROG_DROWNING_UP_1 = new TextureRegion(FROG_PACK, 0, 0, 150, 150);
+    private static final TextureRegion FROG_DROWNING_UP_2 = new TextureRegion(FROG_PACK, 150, 0, 150, 150);
+    private static final TextureRegion FROG_DROWNING_UP_3 = new TextureRegion(FROG_PACK, 300, 0, 150, 150);
+    private static final TextureRegion FROG_DROWNING_UP_4 = new TextureRegion(FROG_PACK, 0, 150, 150, 150);
+    private static final TextureRegion FROG_DROWNING_UP_5 = new TextureRegion(FROG_PACK, 0, 300, 150, 150);
 
 
     /** initialize fields for movement mechanic  */
@@ -39,7 +44,8 @@ public class Frog {
     private static final long MOVE_TIME = 200000000;
     private static final long MOVE_ANIMATION_TIME = 150000000;
     private int animationFrameCount = 0;
-    private boolean moveToTheWall;
+    private boolean moveToTheWall = false;
+    private boolean goingToDrown = false;
 
     /** initialize fields for movement mechanic on logs  */
     private boolean onLog = false;
@@ -55,7 +61,8 @@ public class Frog {
     
     private Frog() {
         alive = true;
-        texture = FROG_LOOKING_UP_TEXTURE;
+        texture = FROG_LOOKING_UP;
+        textureRotation = 0;
     }
     
     public void setStartingTile(Tile tile){
@@ -71,28 +78,22 @@ public class Frog {
         y = tile.getY();
         size = tile.getSize();
         alive = true;
-        texture = FROG_LOOKING_UP_TEXTURE;
+        texture = FROG_LOOKING_UP;
         onLog = false;
         log = null;
         logIndex = -1;
         isMoving = false;
         moveToTheWall = false;
+        goingToDrown = false;
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(texture, x, y, size, size);
+        batch.draw(texture, x, y, size/2, size/2 , size, size, 1, 1, textureRotation);
         update(0f);
     }
 
     public static void dispose() {
-        FROG_LOOKING_UP_TEXTURE.dispose();
-        FROG_LOOKING_DOWN_TEXTURE.dispose();
-        FROG_LOOKING_LEFT_TEXTURE.dispose();
-        FROG_LOOKING_RIGHT_TEXTURE.dispose();
-        FROG_JUMPING_UP_TEXTURE.dispose();
-        FROG_JUMPING_DOWN_TEXTURE.dispose();
-        FROG_JUMPING_LEFT_TEXTURE.dispose();
-        FROG_JUMPING_RIGHT_TEXTURE.dispose();
+        FROG_PACK.dispose();
     }
 
     /**
@@ -106,7 +107,7 @@ public class Frog {
         int nColumns = FroggerGameScreen.level.getMap().getnColumns();
 
         // check for collision with car
-        if (rows[tile.getROW()].getType() == TypeOfRow.CAR) {
+        if (rows[tile.getROW()].getType() == TypeOfRow.CAR && !isMoving) {
             for (MovingObject car: rows[tile.getROW()].getMovingObjects()) {
                 if (car.checkCollision(this)) alive = false;
             }
@@ -116,7 +117,7 @@ public class Frog {
         }
 
         // check for collision with train
-        if (rows[tile.getROW()].getType() == TypeOfRow.TRAIN) {
+        if (rows[tile.getROW()].getType() == TypeOfRow.TRAIN  && !isMoving) {
             for (MovingObject train: rows[tile.getROW()].getMovingObjects()) {
                 if (train.checkCollision(this)) alive = false;
             }
@@ -124,10 +125,16 @@ public class Frog {
 
         // if frog is on a log then move it with log speed (and check if not behind screen)
         if (onLog) {
-            if (!log.isSafe()) {
-                alive = false;
+            if (!log.isSafe() && !isMoving) {
+                if (!goingToDrown) {
+                    startedMovingTime = TimeUtils.nanoTime();
+                    animationFrameCount = 0;
+                    goingToDrown = true;
+                }
+
+                drown();
             }
-            if (x < tiles[0][0].getX() - tiles[0][0].getSize()*0.5f || x > tiles[0][nColumns - 1].getX() + tiles[0][0].getSize()*0.5f) {
+            if (x < tiles[0][0].getX() - tiles[0][0].getSize()*0.5f || x > tiles[0][nColumns - 1].getX() + tiles[0][0].getSize()*0.5f && !isMoving) {
                 alive = false;
             }
             if (log.getDirection() == Direction.RIGHT) {
@@ -184,8 +191,8 @@ public class Frog {
     private void moveRight() {
         Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
         int nColumns = FroggerGameScreen.level.getMap().getnColumns();
-        
-        texture = FROG_LOOKING_RIGHT_TEXTURE;
+
+        textureRotation = 270;
         // if not in the last column
         if (tile.getCOLUMN() < nColumns - 1) {
 
@@ -193,7 +200,7 @@ public class Frog {
             if (onLog) {
                 if (logIndex == log.getLength() - 1) {
                     onLog = false;
-                    alive = false;
+                    goingToDrown = true;
                 } else {
                     logIndex++;
                     tile = tiles[tile.getROW()][tile.getCOLUMN()];
@@ -215,8 +222,8 @@ public class Frog {
      */
     private void moveLeft() {
         Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
-        
-        texture = FROG_LOOKING_LEFT_TEXTURE;
+
+        textureRotation = 90;
         // if not in the first column
         if (tile.getCOLUMN() > 0) {
 
@@ -224,7 +231,7 @@ public class Frog {
             if (onLog) {
                 if (logIndex == 0) {
                     onLog = false;
-                    alive = false;
+                    goingToDrown = true;
                 } else {
                     logIndex--;
                     tile = tiles[tile.getROW()][tile.getCOLUMN()];
@@ -247,8 +254,8 @@ public class Frog {
         Row[] rows = FroggerGameScreen.level.getMap().getRows();
         Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
         int nRows = FroggerGameScreen.level.getMap().getnRows();
-        
-        texture = FROG_LOOKING_UP_TEXTURE;
+
+        textureRotation = 0;
         // if not in the last row
         if (tile.getROW() < nRows -1) {
 
@@ -263,11 +270,14 @@ public class Frog {
                     if (getLogWhenMovingUpOrDown(log)) {
                         tile = tiles[tile.getROW() + 1][tile.getCOLUMN()];
                         startMoving(Direction.UP);
-                        texture = FROG_LOOKING_UP_TEXTURE;
+                        textureRotation = 0;
                         break; // stop iterating as the log is already found
                     }
                 }
-                if (!onLog) alive = false; // if frog didn't land on the log then die
+                if (!onLog) { // if frog didn't land on the log then die
+                    startMoving(Direction.UP);
+                    goingToDrown = true;
+                }
             }
             else // if next row is NOT the row with logs
             {
@@ -305,7 +315,7 @@ public class Frog {
         Row[] rows = FroggerGameScreen.level.getMap().getRows();
         Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
 
-        texture = FROG_LOOKING_DOWN_TEXTURE;
+        textureRotation = 180;
         // if not in the first row
         if (tile.getROW() > 0) {
 
@@ -316,11 +326,14 @@ public class Frog {
                     if (getLogWhenMovingUpOrDown(log)) {
                         tile = tiles[tile.getROW() - 1][tile.getCOLUMN()];
                         startMoving(Direction.DOWN);
-                        texture = FROG_LOOKING_DOWN_TEXTURE;
+                        textureRotation = 180;
                         break;
                     }
                 }
-                if (!onLog) alive = false;
+                if (!onLog) { // if frog didn't land on the log then die
+                    startMoving(Direction.DOWN);
+                    goingToDrown = true;
+                }
             } else {
 
                 // from log to ground
@@ -396,14 +409,14 @@ public class Frog {
      */
     private boolean checkIfLandsOnLog(MovingObject log, int i) {
 
-        boolean gotLog = false;
+        float coef = 0f;
 
         if (log.getDirection() == Direction.LEFT){
-            if ((x + size / 2 >= log.getX() + i * size - 0.4f*size) && (x + size / 2 < log.getX() + (i + 1) * size - 0.4f*size)) gotLog = true;
+             coef = -0.3f*size;
         } else {
-            if ((x + size / 2 >= log.getX() + i * size  + 0.4f*size) && (x + size / 2 < log.getX() + (i + 1) * size + 0.4f*size)) gotLog = true;
+            coef = 0.3f*size;
         }
-        if (gotLog) {
+        if (x + size / 2 >= log.getX() + i * size + coef && x + size / 2 < log.getX() + (i + 1) * size + coef) {
             onLog = true;
             this.log = log; //set new log
             logIndex = i; // set new part of the log
@@ -446,18 +459,22 @@ public class Frog {
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false; // when time passes end moving
             if (onLog) log.setFlooded(false);
+            if (goingToDrown) {
+                alive = false;
+            }
         }
 
         // counter of frames (for animation)
         animationFrameCount++;
+        textureRotation = 0;
 
         float dy = 0f;
         float dx = 0f;
 
         if (moveToTheWall) {
-            texture = FROG_JUMPING_UP_TEXTURE;
+            texture = FROG_JUMPING_UP;
             if (animationFrameCount > 2) {
-                texture = FROG_LOOKING_UP_TEXTURE;
+                texture = FROG_LOOKING_UP;
                 moveToTheWall = false;
             }
         } else {
@@ -465,9 +482,11 @@ public class Frog {
             {
                 // when it's the last animation frame just set coordinates to what they have to be
                 if (rows[tile.getROW()].getType() != TypeOfRow.LOG) dx = tile.getX() - x;
-                else dx = log.getX() + log.getSize() * logIndex - x;
+                else if (!goingToDrown) dx = log.getX() + log.getSize() * logIndex - x;
+                else dx = distanceX / SPEED;
 
-                dy = tile.getY() - y;
+                if (!goingToDrown) dy = tile.getY() - y;
+                else dy = size / SPEED;
 
             }
             else if (animationFrameCount < (int) SPEED) // if not the last animation leap
@@ -485,13 +504,16 @@ public class Frog {
                 FroggerGame.gameCamera.translate(0,dy,0);
 
             // animate
-            if (animationFrameCount == 2) {
-                texture = FROG_JUMPING_UP_TEXTURE;
+            if (!goingToDrown) {
+                if (animationFrameCount == (int) SPEED / 4) {
+                    texture = FROG_JUMPING_UP;
+                }
+                if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
+                    texture = FROG_LOOKING_UP;
+                }
+            } else {
+                animateDrowning();
             }
-            if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
-                texture = FROG_LOOKING_UP_TEXTURE;
-            }
-
 
         }
     }
@@ -508,19 +530,21 @@ public class Frog {
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false; // when time passes end moving
             if (onLog) log.setFlooded(false);
+            if (goingToDrown) alive = false;
         }
 
         // counter of frames (for animation)
         animationFrameCount++;
+        textureRotation = 180;
 
         float dy = 0f;
         float dx = 0f;
 
 
         if (moveToTheWall) {
-            texture = FROG_JUMPING_DOWN_TEXTURE;
+            texture = FROG_JUMPING_UP;
             if (animationFrameCount > 2) {
-                texture = FROG_LOOKING_DOWN_TEXTURE;
+                texture = FROG_LOOKING_UP;
                 moveToTheWall = false;
             }
         }
@@ -532,7 +556,9 @@ public class Frog {
                 if (rows[tile.getROW()].getType() != TypeOfRow.LOG) dx = tile.getX() - x;
                 else dx = log.getX() + log.getSize() * logIndex - x;
 
-                dy = tile.getY() - y;
+                if (!goingToDrown) dy = tile.getY() - y;
+                else dy = -size / SPEED;
+
 
             }
             else if (animationFrameCount < (int) SPEED) // if not the last animation leap
@@ -550,10 +576,16 @@ public class Frog {
                 FroggerGame.gameCamera.translate(0,dy,0);
 
             // animate
-            if (animationFrameCount == 2) {
-                texture = FROG_JUMPING_DOWN_TEXTURE;
-            } if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
-                texture = FROG_LOOKING_DOWN_TEXTURE;
+            if (!goingToDrown) {
+                if (animationFrameCount == (int) SPEED / 4) {
+                    texture = FROG_JUMPING_UP;
+                    textureRotation = 180;
+                }
+                if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
+                    texture = FROG_LOOKING_UP;
+                }
+            } else {
+                animateDrowning();
             }
         }
     }
@@ -567,21 +599,24 @@ public class Frog {
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false;
             if (onLog) log.setFlooded(false);
+            if (goingToDrown) alive = false;
         }
 
         animationFrameCount++;
+        textureRotation = 270;
 
         if (moveToTheWall) {
-            texture = FROG_JUMPING_RIGHT_TEXTURE;
+            texture = FROG_JUMPING_UP;
             if (animationFrameCount > 2) {
-                texture = FROG_LOOKING_RIGHT_TEXTURE;
+                texture = FROG_LOOKING_UP;
                 moveToTheWall = false;
             }
         } else {
             if (animationFrameCount == (int) SPEED) {
                 // when it's the last animation frame just set coordinates to what they have to be
                 if (rows[tile.getROW()].getType() != TypeOfRow.LOG) x = tile.getX();
-                else x = log.getX() + log.getSize() * logIndex;
+                else if (!goingToDrown) x = log.getX() + log.getSize() * logIndex;
+                else x += size / SPEED;
 
             } else if (animationFrameCount < (int) SPEED) {
                 x += size / SPEED;
@@ -595,10 +630,15 @@ public class Frog {
                 }
             }
             // animate
-            if (animationFrameCount == 2) {
-                texture = FROG_JUMPING_RIGHT_TEXTURE;
-            } if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
-                texture = FROG_LOOKING_RIGHT_TEXTURE;
+            if (!goingToDrown) {
+                if (animationFrameCount == (int) SPEED / 4) {
+                    texture = FROG_JUMPING_UP;
+                }
+                if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
+                    texture = FROG_LOOKING_UP;
+                }
+            } else {
+                animateDrowning();
             }
         }
     }
@@ -612,20 +652,23 @@ public class Frog {
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false;
             if (onLog) log.setFlooded(false);
+            if (goingToDrown) alive = false;
         }
         animationFrameCount++;
+        textureRotation = 90;
 
         if (moveToTheWall) {
-            texture = FROG_JUMPING_LEFT_TEXTURE;
+            texture = FROG_JUMPING_UP;
             if (animationFrameCount > 2) {
-                texture = FROG_LOOKING_LEFT_TEXTURE;
+                texture = FROG_LOOKING_UP;
                 moveToTheWall = false;
             }
         } else {
             if (animationFrameCount == (int) SPEED) {
                 // when it's the last animation frame just set coordinates to what they have to be
                 if (rows[tile.getROW()].getType() != TypeOfRow.LOG) x = tile.getX();
-                else x = log.getX() + log.getSize() * logIndex;
+                else if (!goingToDrown) x = log.getX() + log.getSize() * logIndex;
+                else x -= size / SPEED;
 
             } else if (animationFrameCount < (int) SPEED) {
                 x -= size / SPEED;
@@ -639,12 +682,41 @@ public class Frog {
                 }
             }
             // animate
-            if (animationFrameCount == 2) {
-                texture = FROG_JUMPING_LEFT_TEXTURE;
-            } if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
-                texture = FROG_LOOKING_LEFT_TEXTURE;
+            if (!goingToDrown) {
+                if (animationFrameCount == (int) SPEED / 4) {
+                    texture = FROG_JUMPING_UP;
+                }
+                if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
+                    texture = FROG_LOOKING_UP;
+                }
+            } else {
+                animateDrowning();
             }
         }
+    }
+
+    private void animateDrowning() {
+        if (animationFrameCount <= (int) SPEED * 0.25f) {
+            texture = FROG_DROWNING_UP_1;
+        }
+        else if (animationFrameCount <= (int) SPEED * 0.5f) {
+            texture = FROG_DROWNING_UP_2;
+        }
+        else if (animationFrameCount <= (int) SPEED * 0.75f) {
+            texture = FROG_DROWNING_UP_3;
+        }
+        else if (animationFrameCount <= (int) SPEED) {
+            texture = FROG_DROWNING_UP_4;
+        }
+        else texture = FROG_DROWNING_UP_5;
+    }
+
+    private void drown() {
+        animationFrameCount ++;
+        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
+            alive = false;
+        }
+        animateDrowning();
     }
 
 
@@ -684,6 +756,10 @@ public class Frog {
 
     public void setTile(Tile tile) {
         this.tile = tile;
+    }
+
+    public boolean isGoingToDrown() {
+        return goingToDrown;
     }
 }
 

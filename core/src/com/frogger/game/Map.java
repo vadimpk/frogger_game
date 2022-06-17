@@ -76,11 +76,19 @@ public class Map {
 
         // render each row (if not static)
         for (Row row : rows) {
-            row.render(gameBatch);
+            if (!frog.isGoingToDrown())
+                if (row.getType() == Util.TypeOfRow.LOG) row.render(gameBatch);
         }
 
         // render frog
         if (frog.isAlive()) frog.render(gameBatch);
+
+        // render each row (if not static)
+        for (Row row : rows) {
+            if (frog.isGoingToDrown())
+               row.render(gameBatch);
+            else if (row.getType() != Util.TypeOfRow.LOG) row.render(gameBatch);
+        }
 
         // calculate delta time for each frame
         last = TimeUtils.nanoTime();
