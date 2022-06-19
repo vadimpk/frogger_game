@@ -25,13 +25,14 @@ public class Timer {
 
     public void render(float delta, SpriteBatch batch) {
         timer += delta;
+        font.draw(batch, "Time: " + getTime(), x, y);
+    }
 
+    public String getTime() {
         int minutes = (int) ((timer % 3600) / 60);
         int seconds = (int) (timer % 60);
 
-        String timeString = String.format("%02d:%02d", minutes, seconds);
-
-        font.draw(batch, "Time: " + timeString, x, y);
+        return String.format("%02d:%02d", minutes, seconds);
     }
 
     public void dispose() {

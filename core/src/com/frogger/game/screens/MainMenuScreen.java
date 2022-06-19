@@ -3,8 +3,12 @@ package com.frogger.game.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.frogger.game.FroggerGame;
@@ -16,9 +20,15 @@ import static com.frogger.game.Const.*;
 
 public class MainMenuScreen extends Screen {
 
-    private ImageButton playButton;
-    private ImageButton levelsButton;
-    private ImageButton exitButton;
+    private TextButton.TextButtonStyle textGreenButtonStyle;
+    private TextButton.TextButtonStyle textYellowButtonStyle;
+    private TextButton.TextButtonStyle textRedButtonStyle;
+    private BitmapFont font;
+    private Skin skin;
+    private TextureAtlas buttonAtlas;
+    private TextButton playButton;
+    private TextButton levelsButton;
+    private TextButton exitButton;
 
     public MainMenuScreen(FroggerGame game) {
         super(game);
@@ -38,13 +48,36 @@ public class MainMenuScreen extends Screen {
     }
 
     private void initButtons() {
+        font = new BitmapFont(Gdx.files.internal("fonts/Pixellari_36.fnt"));
+        skin = new Skin();
+        buttonAtlas = new TextureAtlas(Gdx.files.internal("buttons/buttons.atlas"));
+        skin.addRegions(buttonAtlas);
+        textGreenButtonStyle = new TextButton.TextButtonStyle();
+        textRedButtonStyle = new TextButton.TextButtonStyle();
+        textYellowButtonStyle = new TextButton.TextButtonStyle();
+        textGreenButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/Pixellari_36.fnt"), false);
+        textRedButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/Pixellari_36.fnt"), false);
+        textYellowButtonStyle.font = new BitmapFont(Gdx.files.internal("fonts/Pixellari_36.fnt"), false);
+
+        textGreenButtonStyle.up = skin.getDrawable("green-btn-up");
+        textGreenButtonStyle.down = skin.getDrawable("green-btn-down");
+        textGreenButtonStyle.over = skin.getDrawable("green-btn-over");
+
+        textRedButtonStyle.up = skin.getDrawable("red-btn-up");
+        textRedButtonStyle.down = skin.getDrawable("red-btn-down");
+        textRedButtonStyle.over = skin.getDrawable("red-btn-over");
+
+        textYellowButtonStyle.up = skin.getDrawable("yellow-btn-up");
+        textYellowButtonStyle.down = skin.getDrawable("yellow-btn-down");
+        textYellowButtonStyle.over = skin.getDrawable("yellow-btn-over");
+
         //Create buttons
-        playButton = new ImageButton(new TextureRegionDrawable(new Texture(Gdx.files.internal("buttons/play_btn.png"))));
-        playButton.setBounds((WINDOW_WIDTH / 2) - (BUTTON_WIDTH / 2), 0.6f * WINDOW_HEIGHT - BUTTON_HEIGHT *0.2f, BUTTON_WIDTH, BUTTON_HEIGHT);
-        levelsButton = new ImageButton(new TextureRegionDrawable(new Texture(Gdx.files.internal("buttons/level_btn.png"))));
-        levelsButton.setBounds(WINDOW_WIDTH / 2 - BUTTON_WIDTH /2,0.6f * WINDOW_HEIGHT - BUTTON_HEIGHT *1.2f , BUTTON_WIDTH, BUTTON_HEIGHT);
-        exitButton = new ImageButton(new TextureRegionDrawable(new Texture(Gdx.files.internal("buttons/exit_btn.png"))));
-        exitButton.setBounds(WINDOW_WIDTH / 2 - BUTTON_WIDTH /2, 0.6f * WINDOW_HEIGHT - BUTTON_HEIGHT *2.2f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        playButton =  new TextButton("Play", textGreenButtonStyle);
+        playButton.setBounds((WINDOW_WIDTH / 2) - (BUTTON_WIDTH / 2), 0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *0.1f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        levelsButton = new TextButton("Levels", textYellowButtonStyle);
+        levelsButton.setBounds(WINDOW_WIDTH / 2 - BUTTON_WIDTH /2,0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *1.7f , BUTTON_WIDTH, BUTTON_HEIGHT);
+        exitButton = new TextButton("Exit", textRedButtonStyle);
+        exitButton.setBounds(WINDOW_WIDTH / 2 - BUTTON_WIDTH /2, 0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *3.3f, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         //Add listeners to buttons
         playButton.addListener(new ClickListener(){
@@ -67,5 +100,13 @@ public class MainMenuScreen extends Screen {
                 Gdx.app.exit();
             }
         });
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        font.dispose();
+        skin.dispose();
+        buttonAtlas.dispose();
     }
 }

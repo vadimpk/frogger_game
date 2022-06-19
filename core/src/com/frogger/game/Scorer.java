@@ -8,8 +8,8 @@ import static com.frogger.game.screens.FroggerGameScreen.level;
 
 public class Scorer {
 
-    private static final Texture FILLED_STAR = new Texture(Gdx.files.internal("objects/stars/star.png"));
-    private static final Texture UNFILLED_STAR = new Texture(Gdx.files.internal("objects/stars/star-unfilled.png"));
+    public static final Texture FILLED_STAR = new Texture(Gdx.files.internal("objects/stars/star.png"));
+    public static final Texture UNFILLED_STAR = new Texture(Gdx.files.internal("objects/stars/star-unfilled.png"));
     private float x, y, size;
 
     public Scorer(float x, float y, float size) {
@@ -19,7 +19,6 @@ public class Scorer {
     }
 
     public void render(SpriteBatch batch) {
-        //TODO: make animation for this star
         int score = 0;
         for (Score s: level.getMap().getScores()) {
             if(s.isCollected()) score++;

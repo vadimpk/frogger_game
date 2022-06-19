@@ -38,6 +38,9 @@ public class FroggerGameScreen extends ScreenAdapter {
         if (!Frog.get().isAlive()) {
             ((Game)Gdx.app.getApplicationListener()).setScreen(new DieScreen(game, level));
         }
+        if (Frog.get().getY() >= (level.getMap().getnRows() - 1) * level.getMap().getTiles()[0][0].getSize()){
+            ((Game)Gdx.app.getApplicationListener()).setScreen(new WinScreen(game, level, timer.getTime()));
+        }
     }
 
     @Override
