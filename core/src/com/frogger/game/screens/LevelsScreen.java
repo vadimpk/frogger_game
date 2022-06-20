@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.Level;
+import com.frogger.game.LevelsGenerator;
 
 import static com.frogger.game.Const.*;
 
@@ -31,7 +32,7 @@ public class LevelsScreen extends Screen {
     public void show() {
         // creating levels array
 
-        final Level[] levels = FroggerGame.levels;
+        final Level[] levels = LevelsGenerator.getLevels();
 
         Gdx.input.setInputProcessor(stage);
 
@@ -69,7 +70,21 @@ public class LevelsScreen extends Screen {
         float distanceX = 0.8f * WINDOW_WIDTH / ((float)levels.length / 2);
         for (int i = 0; i < levels.length; i++) {
 
-            buttons[i]  =  new TextButton(String.valueOf(i+1), zeroStarsButonStyle);
+            switch (levels[i].getStarScore()) {
+                case 0:
+                    buttons[i] = new TextButton(String.valueOf(i + 1), zeroStarsButonStyle);
+                    break;
+                case 1:
+                    buttons[i] = new TextButton(String.valueOf(i + 1), oneStarsButtonStyle);
+                    break;
+                case 2:
+                    buttons[i] = new TextButton(String.valueOf(i + 1), twoStarsButtonStyle);
+                    break;
+                case 3:
+                    buttons[i] = new TextButton(String.valueOf(i + 1), threeStarsButtonStyle);
+                    break;
+            }
+
             float button_size = 0.15f * WINDOW_HEIGHT;
             if (i <= 4) buttons[i].setBounds(0.1f * WINDOW_WIDTH + distanceX * i, 0.65f * WINDOW_HEIGHT - 0.5f*button_size, button_size, button_size);
             else buttons[i].setBounds(0.1f * WINDOW_WIDTH + distanceX * (i - 5), 0.65f * WINDOW_HEIGHT - 2f*button_size, button_size, button_size);
