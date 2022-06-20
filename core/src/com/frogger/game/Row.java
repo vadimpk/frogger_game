@@ -20,9 +20,14 @@ public class Row  {
                 tile.setWaterTexture();
             }
         }
-        if (typeOfRow == TypeOfRow.CAR) {
+        else if (typeOfRow == TypeOfRow.CAR) {
             for (Tile tile: tiles) {
                 tile.setRoadTexture();
+            }
+        }
+        else if (typeOfRow == TypeOfRow.TRAIN) {
+            for (Tile tile: tiles) {
+                tile.setRailRoadTexture();
             }
         }
     }

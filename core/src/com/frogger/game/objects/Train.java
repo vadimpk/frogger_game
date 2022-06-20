@@ -17,8 +17,8 @@ public class Train extends MovingObject {
     private long startedMovingTime;
 
     private static final Direction MOVING_DIRECTION = Direction.LEFT;
-    private static final Texture HEAD_TEXTURE = new Texture(Gdx.files.internal("log.png"));
-    private static final Texture TEXTURE = new Texture(Gdx.files.internal("tile2.png"));
+    private static final Texture HEAD_TEXTURE = new Texture(Gdx.files.internal("objects/train/train-head.png"));
+    private static final Texture TEXTURE = new Texture(Gdx.files.internal("objects/train/train.png"));
 
     private static final long TIME_BEFORE_FIRST_MOVE = 40000000;
     private static final long TIME_BETWEEN_MOVES     = 400000000;

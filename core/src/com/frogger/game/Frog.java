@@ -135,7 +135,13 @@ public class Frog {
         // check for collision with train
         if (rows[tile.getROW()].getType() == TypeOfRow.TRAIN && !isMoving) {
             for (MovingObject train : rows[tile.getROW()].getMovingObjects()) {
-                if (train.checkCollision(this)) alive = false;
+                if (train.checkCollision(this)) {
+                    if (!goingToDie) {
+                        goingToDie = true;
+                        startedMovingTime = TimeUtils.nanoTime();
+                    }
+                    animateDying();
+                }
             }
         }
 

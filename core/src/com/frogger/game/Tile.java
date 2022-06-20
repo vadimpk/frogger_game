@@ -15,6 +15,7 @@ public class Tile{
     private static final Texture TREE_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/tree-tile.png"));
     private static final Texture WATER_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/water-tile.png"));
     private static final Texture ROAD_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/road-tile.png"));
+    private static final Texture RAIL_ROAD_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/rail-road-tile.png"));
     private static final Texture FINISH_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/finish-tile.png"));
 
     /** initialize tile attributes */
@@ -122,6 +123,9 @@ public class Tile{
     }
     public void setRoadTexture() {
         texture = ROAD_TILE_TEXTURE;
+    }
+    public void setRailRoadTexture() {
+        texture = RAIL_ROAD_TILE_TEXTURE;
     }
     public void setFinishTexture() {
         texture = FINISH_TILE_TEXTURE;
