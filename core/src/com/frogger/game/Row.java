@@ -20,6 +20,11 @@ public class Row  {
                 tile.setWaterTexture();
             }
         }
+        if (typeOfRow == TypeOfRow.CAR) {
+            for (Tile tile: tiles) {
+                tile.setRoadTexture();
+            }
+        }
     }
 
     public void render(SpriteBatch batch) {

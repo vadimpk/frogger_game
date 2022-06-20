@@ -4,12 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.frogger.game.Frog;
-import com.frogger.game.FroggerGame;
-import com.frogger.game.Map;
 import com.frogger.game.Util.Direction;
 import com.frogger.game.screens.FroggerGameScreen;
 
-import java.io.Serializable;
 
 
 public class MovingObject {
@@ -60,11 +57,8 @@ public class MovingObject {
     }
 
     public boolean checkCollision(Frog frog) {
-        if ((frog.getX() + frog.getSize()) >= x && frog.getX() <= (x + size*length) &&
-                 frog.getY() >= y && (frog.getY() + frog.getSize()) <= (y + size)) {
-            return true;
-        }
-        return false;
+        return (frog.getX() + frog.getSize()) >= x && frog.getX() <= (x + size * length) &&
+                frog.getY() >= y && (frog.getY() + frog.getSize()) <= (y + size);
     }
 
     public float getSpeed() {
