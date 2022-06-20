@@ -13,24 +13,44 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class LevelsGenerator implements Serializable{
+public class LevelsGenerator{
 
-    public LevelsGenerator() {
-        createLevels();
+    private static final String src = "levels.txt";
+    private static Level[] levels;
+    private static LevelParameters[] levelParameters;
+    
+    public static void updateLevel(int levelIndex, int bestScore, int starScore) {
+        Level level = levels[levelIndex];
+        boolean isChanging = false;
+        if(level.getBestScore() < bestScore) {
+            level.setBestScore(bestScore);
+            isChanging = true;
+        }
+        if(level.getStarScore() < starScore) {
+            level.setStarScore(starScore);
+            isChanging = true;
+        }
+        if(isChanging) {
+            levelParameters[levelIndex].starScore = starScore;
+            levelParameters[levelIndex].bestScore = bestScore;
+            loadToFile(levelParameters);
+        }
     }
 
-    public Level[] getLevels() {
-        LevelParameters[] levelParameters = loadFromFile("levels.txt");
-        Level[] levels = new Level[10];
+    public static Level[] getLevels() {
+        createLevels();
+        if(levels == null) {
+            levelParameters = loadFromFile();
+            levels = new Level[10];
 
-        for (int i = 0; i < levels.length; i++) {
-            levels[i] = convert(levelParameters[i]);
+            for (int i = 0; i < levels.length; i++) {
+                levels[i] = convertToLevel(levelParameters[i]);
+            }
         }
-
         return levels;
     }
-
-    private Level convert(LevelParameters levelParameter) {
+    
+    private static Level convertToLevel(LevelParameters levelParameter) {
         int screenWidth = Gdx.graphics.getWidth();
         int screenHeight = Gdx.graphics.getHeight();
 
@@ -86,10 +106,10 @@ public class LevelsGenerator implements Serializable{
         }
 
         Map map = new Map(rows, tiles);
-        return new Level(levelParameter.number, levelParameter.scores, map);
+        return new Level(levelParameter.number, levelParameter.bestScore, levelParameter.starScore, map);
     }
 
-    public void createLevels(){
+    public static void createLevels(){
         LevelParameters[] levelParameters = new LevelParameters[10];
 
         RowsParameters[] rows;
@@ -136,9 +156,8 @@ public class LevelsGenerator implements Serializable{
         for (TileParameters tile: nontransparentTiles) {
             tile.transparent = false;
         }
-
-        levelParameters[0] = new LevelParameters(1, nColumns, rows);
-
+        
+        levelParameters[0] = new LevelParameters(1, nColumns, rows, 0, 0);
         //Level 2
 
         nColumns = 11;
@@ -186,7 +205,7 @@ public class LevelsGenerator implements Serializable{
             tile.transparent = false;
         }
 
-        levelParameters[1] = new LevelParameters(2, nColumns, rows);
+        levelParameters[1] = new LevelParameters(2, nColumns, rows, 0, 0);
 
 
         // Level 3
@@ -251,7 +270,7 @@ public class LevelsGenerator implements Serializable{
             tile.transparent = false;
         }
 
-        levelParameters[2] = new LevelParameters(3, nColumns, rows);
+        levelParameters[2] = new LevelParameters(3, nColumns, rows, 0, 0);
 
         //Level 4
 
@@ -331,7 +350,7 @@ public class LevelsGenerator implements Serializable{
             tile.transparent = false;
         }
 
-        levelParameters[3] = new LevelParameters(4, nColumns, rows);
+        levelParameters[3] = new LevelParameters(4, nColumns, rows, 0, 0);
 
 
         // Level 5
@@ -439,7 +458,7 @@ public class LevelsGenerator implements Serializable{
             tile.transparent = false;
         }
 
-        levelParameters[4] = new LevelParameters(5, nColumns, rows);
+        levelParameters[4] = new LevelParameters(5, nColumns, rows, 0, 0);
 
 
         // Level 6
@@ -552,7 +571,7 @@ public class LevelsGenerator implements Serializable{
             tile.transparent = false;
         }
 
-        levelParameters[5] = new LevelParameters(6, nColumns, rows);
+        levelParameters[5] = new LevelParameters(6, nColumns, rows, 0, 0);
 
 
 
@@ -686,7 +705,7 @@ public class LevelsGenerator implements Serializable{
             tile.transparent = false;
         }
 
-        levelParameters[6] = new LevelParameters(7, nColumns, rows);
+        levelParameters[6] = new LevelParameters(7, nColumns, rows, 0, 0);
 
 
         // Level 8
@@ -814,7 +833,7 @@ public class LevelsGenerator implements Serializable{
             tile.transparent = false;
         }
 
-        levelParameters[7] = new LevelParameters(8, nColumns, rows);
+        levelParameters[7] = new LevelParameters(8, nColumns, rows, 0, 0);
 
 
 
@@ -874,13 +893,13 @@ public class LevelsGenerator implements Serializable{
         }
 
         for (int i = 8; i < 10; i++) {
-            levelParameters[i] = new LevelParameters(i + 1, nColumns, rows);
+            levelParameters[i] = new LevelParameters(i + 1, nColumns, rows, 0, 0);
         }
 
-        loadToFile("levels.txt", levelParameters);
+        loadToFile(levelParameters);
     }
 
-    public void loadToFile(String src, LevelParameters[] levels) {
+    public static void loadToFile(LevelParameters[] levels) {
         try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get(src)))) {
             out.writeObject(levels);
         } catch (IOException e) {
@@ -888,7 +907,7 @@ public class LevelsGenerator implements Serializable{
         }
     }
 
-    public LevelParameters[] loadFromFile(String src) {
+    public static LevelParameters[] loadFromFile() {
         LevelParameters[] levels;
         try(ObjectInputStream out = new ObjectInputStream(Files.newInputStream(Paths.get(src)))) {
             levels = (LevelParameters[]) out.readObject();
@@ -898,26 +917,30 @@ public class LevelsGenerator implements Serializable{
         return levels;
     }
 
-    class LevelParameters  implements Serializable {
+    static class LevelParameters  implements Serializable {
         public int nRows;
 
         private static final long serialVersionUID = 1L;
 
         public int number;
-        public int scores;
+        public int bestScore;
+        public int starScore;
         public  int nColumns;
         public  RowsParameters[] rowsParameters;
 
-        public LevelParameters(int number, int nColumns, RowsParameters[] rowsParameters) {
+        public LevelParameters(int number, int nColumns, RowsParameters[] rowsParameters, int bestScore, int starScore) {
             this.number = number;
             this.nColumns = nColumns;
             this.rowsParameters = rowsParameters;
             this.nRows = rowsParameters.length;
-            this.scores = 0;
+            this.starScore = starScore;
+            this.bestScore = bestScore;
         }
+        
+        
     }
 
-    class RowsParameters  implements Serializable {
+    static class RowsParameters  implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
@@ -933,7 +956,7 @@ public class LevelsGenerator implements Serializable{
         }
     }
 
-    class TileParameters  implements Serializable {
+    static class TileParameters  implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
@@ -951,7 +974,7 @@ public class LevelsGenerator implements Serializable{
         }
     }
 
-    class MovingObjectParameters  implements Serializable {
+    static class MovingObjectParameters  implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
@@ -982,7 +1005,5 @@ public class LevelsGenerator implements Serializable{
         }
 
     }
-
-
 }
 
