@@ -121,15 +121,6 @@ public class Frog {
                     animateDying();
                 }
             }
-            for (MovingObject car : rows[tile.getROW() - 1].getMovingObjects()) {
-                if (car.checkCollision(this)) {
-                    if (!goingToDie) {
-                        goingToDie = true;
-                        startedMovingTime = TimeUtils.nanoTime();
-                    }
-                    animateDying();
-                }
-            }
         }
 
         // check for collision with train
