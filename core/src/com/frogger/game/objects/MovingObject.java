@@ -57,7 +57,7 @@ public class MovingObject {
     }
 
     public boolean checkCollision(Frog frog) {
-        return (frog.getX() + frog.getSize()) >= x && frog.getX() <= (x + size * length) &&
+        return (frog.getX() + frog.getSize()) >= x + 0.3f*size && frog.getX() <= (x + size * length - 0.3f*size ) &&
                 frog.getY() >= y && (frog.getY() + frog.getSize()) <= (y + size);
     }
 

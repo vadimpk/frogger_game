@@ -26,6 +26,7 @@ public class Frog {
 
     private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog/frog.png"));
 
+
     private static final TextureRegion FROG_LOOKING_UP = new TextureRegion(FROG_PACK, 300, 150, 150, 150);
     private static final TextureRegion FROG_JUMPING_UP = new TextureRegion(FROG_PACK, 150, 150, 150, 150);
 
@@ -34,6 +35,7 @@ public class Frog {
     private static final TextureRegion FROG_DROWNING_UP_3 = new TextureRegion(FROG_PACK, 300, 0, 150, 150);
     private static final TextureRegion FROG_DROWNING_UP_4 = new TextureRegion(FROG_PACK, 0, 150, 150, 150);
     private static final TextureRegion FROG_DROWNING_UP_5 = new TextureRegion(FROG_PACK, 0, 300, 150, 150);
+    private static final TextureRegion FROG_DEAD = new TextureRegion(FROG_PACK, 150, 300, 150, 150);
 
 
     /** initialize fields for movement mechanic  */
@@ -46,6 +48,7 @@ public class Frog {
     private int animationFrameCount = 0;
     private boolean moveToTheWall = false;
     private boolean goingToDrown = false;
+    private boolean goingToDie = false;
 
     /** initialize fields for movement mechanic on logs  */
     private boolean onLog = false;
@@ -85,6 +88,7 @@ public class Frog {
         isMoving = false;
         moveToTheWall = false;
         goingToDrown = false;
+        goingToDie = false;
     }
 
     public void render(SpriteBatch batch) {
@@ -101,24 +105,36 @@ public class Frog {
      * @param dt delta time
      */
     public void update(float dt) {
-        
+
         Row[] rows = FroggerGameScreen.level.getMap().getRows();
         Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
         int nColumns = FroggerGameScreen.level.getMap().getnColumns();
 
         // check for collision with car
-        if (rows[tile.getROW()].getType() == TypeOfRow.CAR && !isMoving) {
-            for (MovingObject car: rows[tile.getROW()].getMovingObjects()) {
-                if (car.checkCollision(this)) alive = false;
+        if (rows[tile.getROW()].getType() == TypeOfRow.CAR) {
+            for (MovingObject car : rows[tile.getROW()].getMovingObjects()) {
+                if (car.checkCollision(this)) {
+                    if (!goingToDie) {
+                        goingToDie = true;
+                        startedMovingTime = TimeUtils.nanoTime();
+                    }
+                    animateDying();
+                }
             }
-            for (MovingObject car: rows[tile.getROW() - 1].getMovingObjects()) {
-                if (car.checkCollision(this)) alive = false;
+            for (MovingObject car : rows[tile.getROW() - 1].getMovingObjects()) {
+                if (car.checkCollision(this)) {
+                    if (!goingToDie) {
+                        goingToDie = true;
+                        startedMovingTime = TimeUtils.nanoTime();
+                    }
+                    animateDying();
+                }
             }
         }
 
         // check for collision with train
-        if (rows[tile.getROW()].getType() == TypeOfRow.TRAIN  && !isMoving) {
-            for (MovingObject train: rows[tile.getROW()].getMovingObjects()) {
+        if (rows[tile.getROW()].getType() == TypeOfRow.TRAIN && !isMoving) {
+            for (MovingObject train : rows[tile.getROW()].getMovingObjects()) {
                 if (train.checkCollision(this)) alive = false;
             }
         }
@@ -134,7 +150,7 @@ public class Frog {
 
                 drown();
             }
-            if (x < tiles[0][0].getX() - tiles[0][0].getSize()*0.5f || x > tiles[0][nColumns - 1].getX() + tiles[0][0].getSize()*0.5f && !isMoving) {
+            if (x < tiles[0][0].getX() - tiles[0][0].getSize() * 0.5f || x > tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() * 0.5f && !isMoving) {
                 alive = false;
             }
             if (log.getDirection() == Direction.RIGHT) {
@@ -145,42 +161,40 @@ public class Frog {
         }
 
         // movement mechanics
-        if (isMoving) {
+        if (!goingToDie) {
+            if (isMoving) {
 
-            if (movingDirection == Direction.UP) {
-                animateMovingUp();
-            } else if (movingDirection == Direction.DOWN) {
-                animateMovingDown();
-            } else if (movingDirection == Direction.RIGHT) {
-                animateMovingRight();
-            } else if (movingDirection == Direction.LEFT) {
-                animateMovingLeft();
-            }
+                if (movingDirection == Direction.UP) {
+                    animateMovingUp();
+                } else if (movingDirection == Direction.DOWN) {
+                    animateMovingDown();
+                } else if (movingDirection == Direction.RIGHT) {
+                    animateMovingRight();
+                } else if (movingDirection == Direction.LEFT) {
+                    animateMovingLeft();
+                }
 
-        } else {
+            } else {
 
-            // MOVE RIGHT
-            if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D))
-            {
-                moveRight();
-            }
+                // MOVE RIGHT
+                if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
+                    moveRight();
+                }
 
-            // MOVE LEFT
-            else if(Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A))
-            {
-                moveLeft();
-            }
+                // MOVE LEFT
+                else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+                    moveLeft();
+                }
 
-            // MOVE UP
-            else if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W))
-            {
-                moveUp();
-            }
+                // MOVE UP
+                else if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
+                    moveUp();
+                }
 
-            // MOVE DOWN
-            else if(Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S))
-            {
-                moveDown();
+                // MOVE DOWN
+                else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
+                    moveDown();
+                }
             }
         }
     }
@@ -409,7 +423,7 @@ public class Frog {
      */
     private boolean checkIfLandsOnLog(MovingObject log, int i) {
 
-        float coef = 0f;
+        float coef;
 
         if (log.getDirection() == Direction.LEFT){
              coef = -0.3f*size;
@@ -692,6 +706,13 @@ public class Frog {
             } else {
                 animateDrowning();
             }
+        }
+    }
+
+    private void animateDying(){
+        texture = FROG_DEAD;
+        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
+            alive = false;
         }
     }
 
