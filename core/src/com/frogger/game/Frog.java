@@ -782,5 +782,9 @@ public class Frog {
     public boolean isGoingToDrown() {
         return goingToDrown;
     }
+
+    public boolean isMoving() {
+        return isMoving;
+    }
 }
 

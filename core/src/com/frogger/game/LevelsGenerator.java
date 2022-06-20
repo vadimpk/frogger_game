@@ -101,7 +101,8 @@ public class LevelsGenerator{
 
                 rows[i] = new Row(tiles[i], rowsParameters.type, movingObjects);
 
-
+        for (Tile tile: tiles[nRows-1])
+            tile.setFinishTexture();
 
         }
 

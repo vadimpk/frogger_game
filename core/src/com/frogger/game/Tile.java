@@ -15,6 +15,7 @@ public class Tile{
     private static final Texture TREE_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/tree-tile.png"));
     private static final Texture WATER_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/water-tile.png"));
     private static final Texture ROAD_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/road-tile.png"));
+    private static final Texture FINISH_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/finish-tile.png"));
 
     /** initialize tile attributes */
     private final int ROW;
@@ -26,6 +27,7 @@ public class Tile{
     private boolean transparent;
 
     private boolean isScore;
+    private boolean finish;
     private Texture texture;
 
     Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
@@ -50,6 +52,7 @@ public class Tile{
         if (random.nextBoolean()) texture = GRASS_TILE_TEXTURE_1;
         else texture = GRASS_TILE_TEXTURE_2;
         transparent = true;
+        finish = false;
     }
 
     public void render(SpriteBatch batch) {
@@ -120,6 +123,10 @@ public class Tile{
     public void setRoadTexture() {
         texture = ROAD_TILE_TEXTURE;
     }
+    public void setFinishTexture() {
+        texture = FINISH_TILE_TEXTURE;
+        finish = true;
+    }
 
     public void setScore(boolean score) {
         isScore = score;
@@ -129,4 +136,7 @@ public class Tile{
         return isScore;
     }
 
+    public boolean isFinish() {
+        return finish;
+    }
 }

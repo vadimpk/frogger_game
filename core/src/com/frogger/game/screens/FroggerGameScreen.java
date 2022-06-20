@@ -10,7 +10,6 @@ public class FroggerGameScreen extends Screen {
     private FroggerGame game;
     private Timer timer;
     private Scorer scorer;
-    private int lives;
 
 
     public FroggerGameScreen(FroggerGame game, Level level) {
@@ -43,7 +42,7 @@ public class FroggerGameScreen extends Screen {
         if (!Frog.get().isAlive()) {
             ((Game)Gdx.app.getApplicationListener()).setScreen(new DieScreen(game, level));
         }
-        if (Frog.get().getY() >= (level.getMap().getnRows() - 1) * level.getMap().getTiles()[0][0].getSize()){
+        if (Frog.get().getTile().isFinish() && !Frog.get().isMoving()){
             ((Game)Gdx.app.getApplicationListener()).setScreen(new WinScreen(game, level, timer.getTime()));
         }
     }
