@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.Level;
+import com.frogger.game.LevelsGenerator;
 import com.frogger.game.Score;
 
 import static com.frogger.game.Const.*;
@@ -33,6 +34,11 @@ public class WinScreen extends Screen{
         super(game);
         this.currentLevel = currentLevel;
         this.time = time;
+
+        int starScore = 0;
+        for (Score score : currentLevel.getMap().getScores()) if (score.isCollected()) starScore++;
+        System.out.println(starScore);
+        LevelsGenerator.updateLevel(currentLevel.getNumber() - 1, 100 * starScore, starScore);
     }
 
     @Override
@@ -88,8 +94,8 @@ public class WinScreen extends Screen{
         stars[2].setBounds(WINDOW_WIDTH / 2 + 0.5f*size + distance, 0.55f*WINDOW_HEIGHT, size, size);
 
         Label.LabelStyle labelStyle = new Label.LabelStyle(font36, Color.BLACK);
-        Label yourScore = new Label("Your Score: ", labelStyle);
-        Label bestScore = new Label("The Best Score: ", labelStyle);
+        Label yourScore = new Label("Your Score: " , labelStyle);
+        Label bestScore = new Label("The Best Score: " + currentLevel.getBestScore(), labelStyle);
         Label timeLabel = new Label("Time: " + time, labelStyle);
         yourScore.setX(WINDOW_WIDTH / 2 - yourScore.getWidth() / 2);
         yourScore.setY(WINDOW_HEIGHT * 0.54f - yourScore.getHeight());
@@ -108,6 +114,9 @@ public class WinScreen extends Screen{
         backButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                for (Score score : currentLevel.getMap().getScores()) {
+                    score.setUncollected();
+                }
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
             }
         });

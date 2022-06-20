@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.frogger.game.screens.MainMenuScreen;
 import com.frogger.game.objects.*;
+import com.frogger.game.screens.SplashScreen;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,22 +23,12 @@ public class FroggerGame extends Game {
 	public static OrthographicCamera gameCamera;
 	public static SpriteBatch attributesBatch;
 
-	public static Level[] levels;
-
 	/**
 	 * Method create() runs on the start of the program.
 	 * Used to initialize all static objects
 	 */
 	@Override
 	public void create () {
-//		createLevelsTEMP();
-		try {
-			LevelsGenerator levelsGenerator = new LevelsGenerator();
-			levels = levelsGenerator.getLevels();
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-
 		// get screen size
 		int screenWidth = Gdx.graphics.getWidth();
 		int screenHeight = Gdx.graphics.getHeight();
@@ -50,7 +41,7 @@ public class FroggerGame extends Game {
 		gameCamera.setToOrtho(false, screenWidth, screenHeight);
 		gameBatch = new SpriteBatch();
 
-		setScreen(new MainMenuScreen(this));
+		setScreen(new SplashScreen(this));
 	}
 
 	/**

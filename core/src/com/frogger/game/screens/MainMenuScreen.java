@@ -83,8 +83,7 @@ public class MainMenuScreen extends Screen {
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Level level =  FroggerGame.levels[0];
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new FroggerGameScreen(game, level));
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new FroggerGameScreen(game, LevelsGenerator.getLevels()[0]));
             }
         });
         levelsButton.addListener(new ClickListener(){

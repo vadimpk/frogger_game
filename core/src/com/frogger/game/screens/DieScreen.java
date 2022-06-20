@@ -16,6 +16,7 @@ import com.frogger.game.FroggerGame;
 import com.frogger.game.Level;
 import com.frogger.game.Score;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
 import static com.frogger.game.Const.*;
 import static com.frogger.game.Const.BUTTON_HEIGHT;
 
@@ -36,6 +37,9 @@ public class DieScreen extends Screen{
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
+        stage.getRoot().getColor().a = 0;
+        stage.getRoot().addAction(fadeIn(0.5f));
 
         font36 = new BitmapFont(Gdx.files.internal("fonts/Pixellari_36.fnt"));
         skin = new Skin();
