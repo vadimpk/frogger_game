@@ -16,6 +16,10 @@ public class Scorer {
         this.x = x;
         this.y = y;
         this.size = size;
+
+        for (Score s: level.getMap().getScores()) {
+            s.setUncollected();
+        }
     }
 
     public void render(SpriteBatch batch) {

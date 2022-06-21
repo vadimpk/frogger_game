@@ -1,33 +1,22 @@
 package com.frogger.game.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.frogger.game.Frog;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.Level;
 import com.frogger.game.Score;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
 import static com.frogger.game.Const.*;
-import static com.frogger.game.Const.BUTTON_HEIGHT;
 
 public class DieScreen extends Screen{
 
     private final Level currentLevel;
-    private TextButton.TextButtonStyle textButtonStyle;
-    private BitmapFont font100;
-    private BitmapFont font36;
-    private Skin skin;
-    private TextureAtlas buttonAtlas;
+
 
     public DieScreen(FroggerGame game, Level currentLevel) {
         super(game);
@@ -36,17 +25,16 @@ public class DieScreen extends Screen{
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+       super.show();
 
-        stage.getRoot().getColor().a = 0;
-        stage.getRoot().addAction(fadeIn(0.5f));
+        Label gameOver = new Label("Game Over", new Label.LabelStyle(fonts.get("100"), Color.BLACK));
+        gameOver.setX(WINDOW_WIDTH / 2 - gameOver.getWidth() / 2);
+        gameOver.setY(WINDOW_HEIGHT * 0.7f);
+        gameOver.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(2f)));
+        stage.addActor(gameOver);
 
-        font36 = new BitmapFont(Gdx.files.internal("fonts/Pixellari_36.fnt"));
-        skin = new Skin();
-        buttonAtlas = new TextureAtlas(Gdx.files.internal("buttons/buttons.atlas"));
-        skin.addRegions(buttonAtlas);
-        textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.font = font36;
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = fonts.get("36");
         textButtonStyle.up = skin.getDrawable("green-btn-up");
         textButtonStyle.down = skin.getDrawable("green-btn-down");
         textButtonStyle.over = skin.getDrawable("green-btn-over");
@@ -61,13 +49,13 @@ public class DieScreen extends Screen{
         backButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
+                switchScreenWithFading(new MainMenuScreen(game), 0.3f);
             }
         });
         restartButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new FroggerGameScreen(game, currentLevel));
+                switchScreenWithFading(new FroggerGameScreen(game, currentLevel), 0.3f);
                 for (Score score : currentLevel.getMap().getScores()) {
                     score.setUncollected();
                 }
@@ -77,13 +65,5 @@ public class DieScreen extends Screen{
 
         stage.addActor(restartButton);
         stage.addActor(backButton);
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        skin.dispose();
-        font36.dispose();
-        buttonAtlas.dispose();
     }
 }

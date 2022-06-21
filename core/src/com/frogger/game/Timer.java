@@ -13,6 +13,7 @@ public class Timer {
     private BitmapFont font;
 
     private float x, y;
+    private boolean isStoped;
 
     public Timer(float x, float y) {
         this.x = x;
@@ -24,7 +25,7 @@ public class Timer {
     }
 
     public void render(float delta, SpriteBatch batch) {
-        timer += delta;
+        if (!isStoped) timer += delta;
         font.draw(batch, "Time: " + getTime(), x, y);
     }
 
@@ -37,5 +38,9 @@ public class Timer {
 
     public void dispose() {
         font.dispose();
+    }
+
+    public void stop() {
+        isStoped = true;
     }
 }
