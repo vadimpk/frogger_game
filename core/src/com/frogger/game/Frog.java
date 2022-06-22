@@ -105,92 +105,94 @@ public class Frog {
      * @param dt delta time
      */
     public void update(float dt) {
+        if(!FroggerGameScreen.isPaused) {
 
-        Row[] rows = FroggerGameScreen.level.getMap().getRows();
-        Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
-        int nColumns = FroggerGameScreen.level.getMap().getnColumns();
+            Row[] rows = FroggerGameScreen.level.getMap().getRows();
+            Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
+            int nColumns = FroggerGameScreen.level.getMap().getnColumns();
 
-        // check for collision with car
-        if (rows[tile.getROW()].getType() == TypeOfRow.CAR) {
-            for (MovingObject car : rows[tile.getROW()].getMovingObjects()) {
-                if (car.checkCollision(this)) {
-                    if (!goingToDie) {
-                        goingToDie = true;
-                        startedMovingTime = TimeUtils.nanoTime();
+            // check for collision with car
+            if (rows[tile.getROW()].getType() == TypeOfRow.CAR) {
+                for (MovingObject car : rows[tile.getROW()].getMovingObjects()) {
+                    if (car.checkCollision(this)) {
+                        if (!goingToDie) {
+                            goingToDie = true;
+                            startedMovingTime = TimeUtils.nanoTime();
+                        }
+                        animateDying();
                     }
-                    animateDying();
                 }
             }
-        }
 
-        // check for collision with train
-        if (rows[tile.getROW()].getType() == TypeOfRow.TRAIN && !isMoving) {
-            for (MovingObject train : rows[tile.getROW()].getMovingObjects()) {
-                if (train.checkCollision(this)) {
-                    if (!goingToDie) {
-                        goingToDie = true;
-                        startedMovingTime = TimeUtils.nanoTime();
+            // check for collision with train
+            if (rows[tile.getROW()].getType() == TypeOfRow.TRAIN && !isMoving) {
+                for (MovingObject train : rows[tile.getROW()].getMovingObjects()) {
+                    if (train.checkCollision(this)) {
+                        if (!goingToDie) {
+                            goingToDie = true;
+                            startedMovingTime = TimeUtils.nanoTime();
+                        }
+                        animateDying();
                     }
-                    animateDying();
                 }
             }
-        }
 
-        // if frog is on a log then move it with log speed (and check if not behind screen)
-        if (onLog) {
-            if (!log.isSafe() && !isMoving) {
-                if (!goingToDrown) {
-                    startedMovingTime = TimeUtils.nanoTime();
-                    animationFrameCount = 0;
-                    goingToDrown = true;
+            // if frog is on a log then move it with log speed (and check if not behind screen)
+            if (onLog) {
+                if (!log.isSafe() && !isMoving) {
+                    if (!goingToDrown) {
+                        startedMovingTime = TimeUtils.nanoTime();
+                        animationFrameCount = 0;
+                        goingToDrown = true;
+                    }
+
+                    drown();
                 }
-
-                drown();
+                if (x < tiles[0][0].getX() - tiles[0][0].getSize() * 0.5f || x > tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() * 0.5f && !isMoving) {
+                    alive = false;
+                }
+                if (log.getDirection() == Direction.RIGHT) {
+                    x += log.getSize() / log.getSpeed();
+                } else {
+                    x -= log.getSize() / log.getSpeed();
+                }
             }
-            if (x < tiles[0][0].getX() - tiles[0][0].getSize() * 0.5f || x > tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() * 0.5f && !isMoving) {
-                alive = false;
-            }
-            if (log.getDirection() == Direction.RIGHT) {
-                x += log.getSize() / log.getSpeed();
-            } else {
-                x -= log.getSize() / log.getSpeed();
-            }
-        }
 
-        // movement mechanics
-        if (!goingToDie) {
-            if (isMoving) {
+            // movement mechanics
+            if (!goingToDie) {
+                if (isMoving) {
 
-                if (movingDirection == Direction.UP) {
-                    animateMovingUp();
-                } else if (movingDirection == Direction.DOWN) {
-                    animateMovingDown();
-                } else if (movingDirection == Direction.RIGHT) {
-                    animateMovingRight();
-                } else if (movingDirection == Direction.LEFT) {
-                    animateMovingLeft();
-                }
+                    if (movingDirection == Direction.UP) {
+                        animateMovingUp();
+                    } else if (movingDirection == Direction.DOWN) {
+                        animateMovingDown();
+                    } else if (movingDirection == Direction.RIGHT) {
+                        animateMovingRight();
+                    } else if (movingDirection == Direction.LEFT) {
+                        animateMovingLeft();
+                    }
 
-            } else {
+                } else {
 
-                // MOVE RIGHT
-                if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
-                    moveRight();
-                }
+                    // MOVE RIGHT
+                    if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
+                        moveRight();
+                    }
 
-                // MOVE LEFT
-                else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
-                    moveLeft();
-                }
+                    // MOVE LEFT
+                    else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+                        moveLeft();
+                    }
 
-                // MOVE UP
-                else if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
-                    moveUp();
-                }
+                    // MOVE UP
+                    else if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
+                        moveUp();
+                    }
 
-                // MOVE DOWN
-                else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
-                    moveDown();
+                    // MOVE DOWN
+                    else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
+                        moveDown();
+                    }
                 }
             }
         }

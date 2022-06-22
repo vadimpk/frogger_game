@@ -108,6 +108,44 @@ public class Map {
         attributesBatch.end();
     }
 
+
+    public void pausedRender() {
+
+        // set up batch and camera for the game
+        gameCamera.update();
+        gameBatch.setProjectionMatrix(gameCamera.combined);
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_ALPHA_BITS);
+
+
+        // start game batch
+        gameBatch.begin();
+
+        // render tiles
+        for (int row = 0; row < nRows; row++)
+            for (int column = 0; column < nColumns; column++) tiles[row][column].render(gameBatch);
+
+        // render each row (if not static)
+        for (Row row : rows) if (row.getType() == Util.TypeOfRow.LOG) row.pausedRender(gameBatch);
+
+        // render frog
+        if (frog.isAlive()) frog.render(gameBatch);
+
+        for (Score s : scores) if(!s.isCollected()) s.render(gameBatch);
+
+        gameBatch.end();
+
+        // attributes batch setup
+        attributesBatch.begin();
+        attributesBatch.draw(t2, 0, 0, Gdx.graphics.getWidth(), tiles[0][0].getY());
+        attributesBatch.draw(t2, 0, tiles[nColumns - 1][0].getY() + tiles[0][0].getSize(), Gdx.graphics.getWidth(), tiles[0][0].getY());
+        attributesBatch.draw(t2, 0, 0, tiles[0][0].getX(), Gdx.graphics.getHeight());
+        attributesBatch.draw(t2, tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), 0, Gdx.graphics.getWidth() - tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), Gdx.graphics.getHeight());
+
+        attributesBatch.end();
+    }
+
     public int getnColumns() {
         return nColumns;
     }

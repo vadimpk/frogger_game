@@ -66,6 +66,13 @@ public class Train extends MovingObject {
 
     }
 
+    public void pausedRender(SpriteBatch batch) {
+        batch.draw(HEAD_TEXTURE, getX(), getY(), getSize(), getSize());
+        for (int i = 1; i < getLength(); i++) {
+            batch.draw(TEXTURE, getX() + i * getSize(), getY(), getSize(), getSize());
+        }
+    }
+
     @Override
     public void move() {
 

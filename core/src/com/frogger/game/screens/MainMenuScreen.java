@@ -16,9 +16,6 @@ import static com.frogger.game.Const.*;
 public class MainMenuScreen extends Screen {
 
     private final Map<String,  TextButton.TextButtonStyle> buttonStyles;
-    private TextButton playButton;
-    private TextButton levelsButton;
-    private TextButton exitButton;
 
     public MainMenuScreen(FroggerGame game) {
         super(game);
@@ -32,9 +29,9 @@ public class MainMenuScreen extends Screen {
         initButtons();
 
         //Add buttons to table
-        stage.addActor(playButton);
-        stage.addActor(levelsButton);
-        stage.addActor(exitButton);
+        stage.addActor(buttons.get("play"));
+        stage.addActor(buttons.get("levels"));
+        stage.addActor(buttons.get("exit"));
 
     }
 
@@ -52,28 +49,28 @@ public class MainMenuScreen extends Screen {
 
         //Create buttons
         float startingX = (WINDOW_WIDTH / 2) - (BUTTON_WIDTH / 2);
-        playButton =  new TextButton("Play", buttonStyles.get("green"));
-        playButton.setBounds(startingX, 0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *0.1f, BUTTON_WIDTH, BUTTON_HEIGHT);
-        levelsButton = new TextButton("Levels", buttonStyles.get("yellow"));
-        levelsButton.setBounds(startingX,0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *1.7f , BUTTON_WIDTH, BUTTON_HEIGHT);
-        exitButton = new TextButton("Exit", buttonStyles.get("red"));
-        exitButton.setBounds(startingX, 0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *3.3f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        buttons.put("play", new TextButton("Play", buttonStyles.get("green")));
+        buttons.get("play").setBounds(startingX, 0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *0.1f, BUTTON_WIDTH, BUTTON_HEIGHT);
+        buttons.put("levels", new TextButton("Levels", buttonStyles.get("yellow")));
+        buttons.get("levels").setBounds(startingX,0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *1.7f , BUTTON_WIDTH, BUTTON_HEIGHT);
+        buttons.put("exit",  new TextButton("Exit", buttonStyles.get("red")));
+        buttons.get("exit").setBounds(startingX, 0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *3.3f, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         //Add listeners to buttons
-        playButton.addListener(new ClickListener(){
+        buttons.get("play").addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 switchScreenWithFading(new FroggerGameScreen(game, LevelsGenerator.getLevels()[0]), 0.3f);
             }
         });
-        levelsButton.addListener(new ClickListener(){
+        buttons.get("levels").addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 switchScreenWithFading(new LevelsScreen(game), 0.3f);
             }
         });
 
-        exitButton.addListener(new ClickListener(){
+        buttons.get("exit").addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.exit();

@@ -836,7 +836,267 @@ public class LevelsGenerator{
 
         levelParameters[7] = new LevelParameters(8, nColumns, rows, 0, 0);
 
+        //Level 9
 
+        nColumns = 15;
+        nRows = 33;
+        rows = new RowsParameters[nRows];
+        tiles = new TileParameters[nRows][nColumns];
+
+        for (int row = 0; row < nRows; row++) {
+            for (int column = 0; column < nColumns; column++) {
+                tiles[row][column] = new TileParameters(row, column);
+            }
+        }
+
+        tiles[8][2].isScore = true;
+        tiles[30][12].isScore = true;
+        tiles[24][7].isScore = true;
+
+        for (int i = 0; i < rows.length; i++) {
+            rows[i] = new RowsParameters(tiles[i], Util.TypeOfRow.STATIC, new MovingObjectParameters[]{});
+        }
+
+        // create moving rows
+        rows[3] = new RowsParameters(tiles[3], Util.TypeOfRow.TRAIN, new MovingObjectParameters[] {
+                new MovingObjectParameters(tiles[3][0], 0, 0, null)
+        });
+
+        rows[4] = new RowsParameters(tiles[4], Util.TypeOfRow.TRAIN, new MovingObjectParameters[] {
+                new MovingObjectParameters(tiles[4][0], 0, 0, null)
+        });
+
+        rows[5] = new RowsParameters(tiles[5], Util.TypeOfRow.LOG, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[5][2], 9f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[5][7], 9f, 2, Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[5][5], 9f, 2, Util.Direction.RIGHT),
+        });
+
+        rows[6] = new RowsParameters(tiles[6], Util.TypeOfRow.LOG, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[6][2], 9f, 2,Util.Direction.LEFT),
+                new MovingObjectParameters(tiles[6][7], 9f, 2, Util.Direction.LEFT),
+                new MovingObjectParameters(tiles[6][7], 9f, 2, Util.Direction.LEFT),
+        });
+
+        rows[7] = new RowsParameters(tiles[7], Util.TypeOfRow.LOG, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[7][2], 9f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[7][7], 9f, 2, Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[7][12], 9f, 2, Util.Direction.RIGHT),
+        });
+
+        // TODO RIDGE 11
+//        rows[5] =
+
+        // TODO RIDGE 1
+//        rows[10] =
+
+        rows[11] = new RowsParameters(tiles[11], Util.TypeOfRow.CAR, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[11][1], 10f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[11][6], 10f, 2, Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[11][11], 10f, 2, Util.Direction.RIGHT),
+        });
+
+        rows[12] = new RowsParameters(tiles[12], Util.TypeOfRow.CAR, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[12][2], 9f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[12][7], 9f, 2, Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[12][12], 9f, 2, Util.Direction.RIGHT),
+        });
+
+        rows[14] = new RowsParameters(tiles[14], Util.TypeOfRow.CAR, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[14][0], 10f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[14][5], 10f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[14][10], 10f, 2, Util.Direction.RIGHT),
+        });
+
+        rows[15] = new RowsParameters(tiles[15], Util.TypeOfRow.CAR, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[15][2], 8f, 2,Util.Direction.LEFT),
+                new MovingObjectParameters(tiles[15][9], 8f, 2, Util.Direction.LEFT),
+        });
+
+        rows[19] = new RowsParameters(tiles[19], Util.TypeOfRow.TRAIN, new MovingObjectParameters[] {
+                new MovingObjectParameters(tiles[19][0], 0, 0, null)
+        });
+        rows[20] = new RowsParameters(tiles[20], Util.TypeOfRow.TRAIN, new MovingObjectParameters[] {
+                new MovingObjectParameters(tiles[20][0], 0, 0, null)
+        });
+        rows[21] = new RowsParameters(tiles[21], Util.TypeOfRow.TRAIN, new MovingObjectParameters[] {
+                new MovingObjectParameters(tiles[21][0], 0, 0, null)
+        });
+
+        rows[22] = new RowsParameters(tiles[22], Util.TypeOfRow.LOG, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[22][1], 9f, 1,Util.Direction.RIGHT, true, 150_000_000),
+                new MovingObjectParameters(tiles[22][4], 9f, 1, Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[22][7], 9f, 1, Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[22][10], 9f, 1, Util.Direction.RIGHT, true, 120_000_000),
+                new MovingObjectParameters(tiles[22][13], 9f, 1, Util.Direction.RIGHT),
+        });
+
+        rows[23] = new RowsParameters(tiles[23], Util.TypeOfRow.LOG, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[23][2], 11f, 2,Util.Direction.LEFT),
+                new MovingObjectParameters(tiles[23][7], 11f, 2, Util.Direction.LEFT, true, 180_000_000),
+                new MovingObjectParameters(tiles[23][12], 11f, 2, Util.Direction.LEFT),
+        });
+
+        rows[24] = new RowsParameters(tiles[24], Util.TypeOfRow.LOG, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[24][1], 10f, 3,Util.Direction.LEFT),
+                new MovingObjectParameters(tiles[24][7], 10f, 3,Util.Direction.LEFT, true, 110_000_000),
+        });
+
+        rows[26] = new RowsParameters(tiles[26], Util.TypeOfRow.TRAIN, new MovingObjectParameters[] {
+                new MovingObjectParameters(tiles[26][0], 0, 0, null)
+        });
+
+        rows[27] = new RowsParameters(tiles[27], Util.TypeOfRow.CAR, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[27][3], 9f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[27][7], 9f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[27][13], 9f, 2, Util.Direction.RIGHT),
+        });
+
+        rows[28] = new RowsParameters(tiles[28], Util.TypeOfRow.CAR, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[28][6], 8f, 2,Util.Direction.LEFT),
+                new MovingObjectParameters(tiles[28][12], 8f, 2, Util.Direction.LEFT),
+        });
+
+
+
+        nontransparentTiles = new TileParameters[] {tiles[0][1], tiles[0][13], tiles[1][2], tiles[1][5],
+                tiles[6][1], tiles[9][2], tiles[8][3], tiles[7][5], tiles[6][6],
+                tiles[8][8], tiles[9][9], tiles[6][10], tiles[9][12], tiles[7][13],
+                tiles[13][2], tiles[13][13], tiles[16][2], tiles[20][3], tiles[18][7], tiles[17][10], tiles[21][12],
+                tiles[25][2], tiles[29][4], tiles[30][13]};
+        for (TileParameters tile: nontransparentTiles) {
+            tile.transparent = false;
+        }
+
+        levelParameters[8] = new LevelParameters(9, nColumns, rows, 0, 0);
+
+        // Level 10
+
+
+        nColumns = 15;
+        nRows = 31;
+        rows = new RowsParameters[nRows];
+        tiles = new TileParameters[nRows][nColumns];
+
+        for (int row = 0; row < nRows; row++) {
+            for (int column = 0; column < nColumns; column++) {
+                tiles[row][column] = new TileParameters(row, column);
+            }
+        }
+
+        tiles[3][14].isScore = true;
+        tiles[14][14].isScore = true;
+        tiles[27][2].isScore = true;
+
+        for (int i = 0; i < rows.length; i++) {
+            rows[i] = new RowsParameters(tiles[i], Util.TypeOfRow.STATIC, new MovingObjectParameters[]{});
+        }
+
+        // create moving rows
+        rows[2] = new RowsParameters(tiles[2], Util.TypeOfRow.LOG, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[2][4], 10f, 2, Util.Direction.LEFT, true, 150_000_000),
+                new MovingObjectParameters(tiles[2][12], 10f, 2, Util.Direction.LEFT),
+        });
+
+        rows[3] = new RowsParameters(tiles[3], Util.TypeOfRow.LOG, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[3][1], 11f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[3][7], 11f, 2, Util.Direction.RIGHT, true, 170_000_000),
+                new MovingObjectParameters(tiles[3][12], 11f, 2, Util.Direction.RIGHT, true, 130_000_000),
+        });
+
+        rows[4] = new RowsParameters(tiles[4], Util.TypeOfRow.LOG, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[4][1], 9f, 1,Util.Direction.LEFT, true, 150_000_000),
+                new MovingObjectParameters(tiles[4][4], 9f, 1, Util.Direction.LEFT),
+                new MovingObjectParameters(tiles[4][7], 9f, 1, Util.Direction.LEFT, true, 120_000_000),
+                new MovingObjectParameters(tiles[4][10], 9f, 1, Util.Direction.LEFT),
+                new MovingObjectParameters(tiles[4][13], 9f, 1, Util.Direction.LEFT),
+        });
+
+        // TODO RIDGE 11
+//        rows[5] =
+
+        // TODO RIDGE 1
+//        rows[10] =
+
+        rows[11] = new RowsParameters(tiles[11], Util.TypeOfRow.CAR, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[11][1], 10f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[11][6], 10f, 2, Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[11][11], 10f, 2, Util.Direction.RIGHT),
+        });
+
+        rows[12] = new RowsParameters(tiles[12], Util.TypeOfRow.CAR, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[12][2], 9f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[12][7], 9f, 2, Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[12][12], 9f, 2, Util.Direction.RIGHT),
+        });
+
+        rows[14] = new RowsParameters(tiles[14], Util.TypeOfRow.CAR, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[14][0], 10f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[14][5], 10f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[14][10], 10f, 2, Util.Direction.RIGHT),
+        });
+
+        rows[15] = new RowsParameters(tiles[15], Util.TypeOfRow.CAR, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[15][2], 8f, 2,Util.Direction.LEFT),
+                new MovingObjectParameters(tiles[15][9], 8f, 2, Util.Direction.LEFT),
+        });
+
+        rows[19] = new RowsParameters(tiles[19], Util.TypeOfRow.TRAIN, new MovingObjectParameters[] {
+                new MovingObjectParameters(tiles[19][0], 0, 0, null)
+        });
+        rows[20] = new RowsParameters(tiles[20], Util.TypeOfRow.TRAIN, new MovingObjectParameters[] {
+                new MovingObjectParameters(tiles[20][0], 0, 0, null)
+        });
+        rows[21] = new RowsParameters(tiles[21], Util.TypeOfRow.TRAIN, new MovingObjectParameters[] {
+                new MovingObjectParameters(tiles[21][0], 0, 0, null)
+        });
+
+        rows[22] = new RowsParameters(tiles[22], Util.TypeOfRow.LOG, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[22][1], 9f, 1,Util.Direction.RIGHT, true, 150_000_000),
+                new MovingObjectParameters(tiles[22][4], 9f, 1, Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[22][7], 9f, 1, Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[22][10], 9f, 1, Util.Direction.RIGHT, true, 120_000_000),
+                new MovingObjectParameters(tiles[22][13], 9f, 1, Util.Direction.RIGHT),
+        });
+
+        rows[23] = new RowsParameters(tiles[23], Util.TypeOfRow.LOG, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[23][2], 11f, 2,Util.Direction.LEFT),
+                new MovingObjectParameters(tiles[23][7], 11f, 2, Util.Direction.LEFT, true, 180_000_000),
+                new MovingObjectParameters(tiles[23][12], 11f, 2, Util.Direction.LEFT),
+        });
+
+        rows[24] = new RowsParameters(tiles[24], Util.TypeOfRow.LOG, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[24][1], 10f, 3,Util.Direction.LEFT),
+                new MovingObjectParameters(tiles[24][7], 10f, 3,Util.Direction.LEFT, true, 110_000_000),
+        });
+
+        rows[26] = new RowsParameters(tiles[26], Util.TypeOfRow.TRAIN, new MovingObjectParameters[] {
+                new MovingObjectParameters(tiles[26][0], 0, 0, null)
+        });
+
+        rows[27] = new RowsParameters(tiles[27], Util.TypeOfRow.CAR, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[27][3], 9f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[27][7], 9f, 2,Util.Direction.RIGHT),
+                new MovingObjectParameters(tiles[27][13], 9f, 2, Util.Direction.RIGHT),
+        });
+
+        rows[28] = new RowsParameters(tiles[28], Util.TypeOfRow.CAR, new MovingObjectParameters[]{
+                new MovingObjectParameters(tiles[28][6], 8f, 2,Util.Direction.LEFT),
+                new MovingObjectParameters(tiles[28][12], 8f, 2, Util.Direction.LEFT),
+        });
+
+
+
+        nontransparentTiles = new TileParameters[] {tiles[0][1], tiles[0][13], tiles[1][2], tiles[1][5],
+                tiles[6][1], tiles[9][2], tiles[8][3], tiles[7][5], tiles[6][6],
+                tiles[8][8], tiles[9][9], tiles[6][10], tiles[9][12], tiles[7][13],
+                tiles[13][2], tiles[13][13], tiles[16][2], tiles[20][3], tiles[18][7], tiles[17][10], tiles[21][12],
+                tiles[25][2], tiles[29][4], tiles[30][13]};
+        for (TileParameters tile: nontransparentTiles) {
+            tile.transparent = false;
+        }
+
+        levelParameters[9] = new LevelParameters(10, nColumns, rows, 0, 0);
 
         // Other levels
         nColumns = 15;

@@ -58,10 +58,19 @@ public class Car extends MovingObject {
         } else {
             batch.draw(textureTail, getX(), getY(), getSize()/2, getSize()/2, getSize(), getSize(),1,1, textureRotation);
             batch.draw(textureHead, getX()+ getSize(), getY(), getSize()/2, getSize()/2, getSize(), getSize(),1,1, textureRotation);
-
         }
     }
 
+    @Override
+    public void pausedRender(SpriteBatch batch) {
+        if (getDirection() == Util.Direction.LEFT) {
+            batch.draw(textureHead, getX(), getY(), getSize()/2, getSize()/2, getSize(), getSize(),1,1, textureRotation);
+            batch.draw(textureTail, getX()+ getSize(), getY(), getSize()/2, getSize()/2, getSize(), getSize(),1,1, textureRotation);
+        } else {
+            batch.draw(textureTail, getX(), getY(), getSize()/2, getSize()/2, getSize(), getSize(),1,1, textureRotation);
+            batch.draw(textureHead, getX()+ getSize(), getY(), getSize()/2, getSize()/2, getSize(), getSize(),1,1, textureRotation);
+        }
+    }
 
     public static void dispose() {
         CAR_PACK.dispose();

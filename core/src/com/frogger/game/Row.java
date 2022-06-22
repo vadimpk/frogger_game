@@ -33,10 +33,17 @@ public class Row  {
     }
 
     public void render(SpriteBatch batch) {
-
         if (movingObjects != null && movingObjects.length > 0) {
             for (MovingObject object : movingObjects) {
                 if (object != null) object.render(batch);
+            }
+        }
+    }
+
+    public void pausedRender(SpriteBatch batch) {
+        if (movingObjects != null && movingObjects.length > 0) {
+            for (MovingObject object : movingObjects) {
+                if (object != null) object.pausedRender(batch);
             }
         }
     }

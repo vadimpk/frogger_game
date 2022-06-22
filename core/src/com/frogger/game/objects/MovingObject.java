@@ -33,6 +33,10 @@ public class MovingObject {
 
     }
 
+    public void pausedRender(SpriteBatch batch) {
+
+    }
+
     public void move() {
 
         if (direction == Direction.LEFT) {
@@ -123,5 +127,4 @@ public class MovingObject {
     }
 
     public void setFlooded(boolean flooded) {}
-
 }

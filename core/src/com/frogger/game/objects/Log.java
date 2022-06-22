@@ -149,6 +149,68 @@ public class Log extends MovingObject {
         }
     }
 
+    @Override
+    public void pausedRender(SpriteBatch batch) {
+        for (int i = 0; i < getLength(); i++) {
+
+            switch (state) {
+                case 0:
+                    if (getLength() == 1) {
+                        texture = SINGLE_LOG_TEXTURE_1;
+                        if (flooded) texture = FLO0DED_SINGLE_LOG_TEXTURE_1;
+                    } else if (i == 0) {
+                        texture = DEFAULT_LOG_TEXTURE_2;
+                        if (flooded) texture = FLO0DED_DEFAULT_LOG_TEXTURE_2;
+                    } else if (i == getLength() - 1) {
+                        texture = DEFAULT_LOG_TEXTURE_3;
+                        if (flooded) texture = FLO0DED_DEFAULT_LOG_TEXTURE_3;
+                    } else {
+                        texture = DEFAULT_LOG_TEXTURE_1;
+                        if (flooded) texture = FLO0DED_DEFAULT_LOG_TEXTURE_1;
+                    }
+                    batch.draw(texture, getX() + i * getSize(), getY(), getSize(), getSize());
+                    setSafe(true);
+                    break;
+                case 1:
+                    if (getLength() == 1) {
+                        texture = SINGLE_LOG_TEXTURE_2;
+                        if (flooded) texture = FLO0DED_SINGLE_LOG_TEXTURE_2;
+                    } else if (i == 0) {
+                        texture = BREAKING_LOG_TEXTURE_2;
+                        if (flooded) texture = FLO0DED_BREAKING_LOG_TEXTURE_2;
+                    } else if (i == getLength() - 1) {
+                        texture = BREAKING_LOG_TEXTURE_3;
+                        if (flooded) texture = FLO0DED_BREAKING_LOG_TEXTURE_3;
+                    } else {
+                        texture = BREAKING_LOG_TEXTURE_1;
+                        if (flooded) texture = FLO0DED_BREAKING_LOG_TEXTURE_1;
+                    }
+                    batch.draw(texture, getX() + i * getSize(), getY(), getSize(), getSize());
+                    setSafe(true);
+                    break;
+                case 2:
+                    if (getLength() == 1) {
+                        texture = SINGLE_LOG_TEXTURE_3;
+                        if (flooded) texture = FLO0DED_SINGLE_LOG_TEXTURE_3;
+                    } else if (i == 0) {
+                        texture = BREAKING_LOG_TEXTURE2_2;
+                        if (flooded) texture = FLO0DED_BREAKING_LOG_TEXTURE2_2;
+                    } else if (i == getLength() - 1) {
+                        texture = BREAKING_LOG_TEXTURE2_3;
+                        if (flooded) texture = FLO0DED_BREAKING_LOG_TEXTURE2_3;
+                    } else {
+                        texture = BREAKING_LOG_TEXTURE2_1;
+                        if (flooded) texture = FLO0DED_BREAKING_LOG_TEXTURE2_1;
+                    }
+                    batch.draw(texture, getX() + i * getSize(), getY(), getSize(), getSize());
+                    setSafe(true);
+                    break;
+                case 3:
+                    setSafe(false);
+                    break;
+            }
+        }
+    }
 
     public static void dispose() {
         LOG_PACK.dispose();
