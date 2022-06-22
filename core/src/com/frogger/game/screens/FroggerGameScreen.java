@@ -49,20 +49,19 @@ public class FroggerGameScreen extends Screen {
     public void render(float delta) {
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             isPaused = !isPaused;
+            if(timer.isStopped()) timer.start();
+            else timer.stop();
             switchScreenWithFading(new PauseScreen(game, this), 0.1f);
         }
 
         if(isPaused){
-            timer.stop();
             level.pausedRender();
 
             FroggerGame.attributesBatch.begin();
             timer.render(delta, FroggerGame.attributesBatch);
             scorer.render(FroggerGame.attributesBatch);
             FroggerGame.attributesBatch.end();
-
         }else {
-            timer.start();
             level.render(delta);
 
             FroggerGame.attributesBatch.begin();

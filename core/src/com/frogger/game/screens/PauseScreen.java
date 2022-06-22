@@ -3,21 +3,20 @@ package com.frogger.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.FroggerGame;
-import sun.jvm.hotspot.ui.MonitorCacheDumpPanel;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static com.frogger.game.Const.*;
 
 public class PauseScreen extends Screen{
-    private final Map<String,  TextButton.TextButtonStyle> buttonStyles;
-
-    private FroggerGameScreen gameScreen;
+    private final FroggerGameScreen gameScreen;
+    Texture bgTexture;
     public PauseScreen(FroggerGame game, FroggerGameScreen gameScreen) {
         super(game);
         this.gameScreen = gameScreen;
@@ -28,16 +27,7 @@ public class PauseScreen extends Screen{
     public void show() {
         Gdx.input.setInputProcessor(stage);
 
-        buttonStyles.put("green", new TextButton.TextButtonStyle());
-        buttonStyles.put("yellow", new TextButton.TextButtonStyle());
-        buttonStyles.put("red", new TextButton.TextButtonStyle());
-        for (String key : buttonStyles.keySet()) {
-            TextButton.TextButtonStyle buttonStyle = buttonStyles.get(key);
-            buttonStyle.font = fonts.get("36");
-            buttonStyle.up = skin.getDrawable(key + "-btn-up");
-            buttonStyle.down = skin.getDrawable(key + "-btn-down");
-            buttonStyle.over = skin.getDrawable(key + "-btn-over");
-        }
+        createMenuButtons();
 
         //Create buttons
         float startingX = (WINDOW_WIDTH / 2) - (BUTTON_WIDTH / 2);
@@ -70,6 +60,11 @@ public class PauseScreen extends Screen{
             }
         });
 
+        bgTexture = new Texture(Gdx.files.internal("bg.png"));
+        Image bg = new Image(bgTexture);
+        bg.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        stage.addActor(bg);
         stage.addActor(buttons.get("resume"));
         stage.addActor(buttons.get("restart"));
         stage.addActor(buttons.get("back"));
@@ -79,7 +74,7 @@ public class PauseScreen extends Screen{
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_ALPHA_BITS);
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -89,5 +84,11 @@ public class PauseScreen extends Screen{
 
         stage.act();
         stage.draw();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        bgTexture.dispose();
     }
 }

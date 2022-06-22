@@ -31,6 +31,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
     protected Map<String, BitmapFont> fonts;
     protected Skin skin;
     protected TextureAtlas buttonAtlas;
+    protected Map<String, TextButton.TextButtonStyle> buttonStyles;
     protected Map<String, TextButton> buttons;
     protected boolean isSwitching;
 
@@ -55,6 +56,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         skin = new Skin();
         buttonAtlas = new TextureAtlas(Gdx.files.internal("buttons/buttons.atlas"));
         skin.addRegions(buttonAtlas);
+        buttonStyles = new HashMap<>();
 
         isSwitching = false;
     }
@@ -118,4 +120,17 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
 
     }
 
+
+    public void createMenuButtons(){
+        buttonStyles.put("green", new TextButton.TextButtonStyle());
+        buttonStyles.put("yellow", new TextButton.TextButtonStyle());
+        buttonStyles.put("red", new TextButton.TextButtonStyle());
+        for (String key : buttonStyles.keySet()) {
+            TextButton.TextButtonStyle buttonStyle = buttonStyles.get(key);
+            buttonStyle.font = fonts.get("36");
+            buttonStyle.up = skin.getDrawable(key + "-btn-up");
+            buttonStyle.down = skin.getDrawable(key + "-btn-down");
+            buttonStyle.over = skin.getDrawable(key + "-btn-over");
+        }
+    }
 }
