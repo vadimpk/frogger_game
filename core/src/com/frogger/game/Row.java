@@ -42,6 +42,7 @@ public class Row  {
             for (int index: lilyIndexes) {
                 if (index >= 0 && index < nColumns) {
                     tiles[index].setLily();
+                    tiles[index].setRandomRotation();
                 }
             }
         }

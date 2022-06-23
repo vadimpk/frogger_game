@@ -3,21 +3,24 @@ package com.frogger.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import static com.frogger.game.Map.getFrog;
 
 public class Score {
 
-    private static final Texture STAR_1 = new Texture(Gdx.files.internal("objects/stars/star-small-1.png"));
-    private static final Texture STAR_2 = new Texture(Gdx.files.internal("objects/stars/star.png"));
-    private static final Texture STAR_3 = new Texture(Gdx.files.internal("objects/stars/star-big-1.png"));
-    private static final Texture STAR_4 = new Texture(Gdx.files.internal("objects/stars/star-big-2.png"));
-    private static final Texture STAR_5 = new Texture(Gdx.files.internal("objects/stars/star-big-3.png"));
+    private static final Texture STARS_PACK = new Texture(Gdx.files.internal("objects/stars/stars.png"));
+
+    private static final TextureRegion STAR_1 = new TextureRegion(STARS_PACK, 0, 280,289,280);
+    private static final TextureRegion STAR_2 = new TextureRegion(STARS_PACK, 289, 560,289,280);
+    private static final TextureRegion STAR_3 = new TextureRegion(STARS_PACK, 0, 0,289,280);
+    private static final TextureRegion STAR_4 = new TextureRegion(STARS_PACK, 289, 0,289,280);
+    private static final TextureRegion STAR_5 = new TextureRegion(STARS_PACK, 578, 0,289,280);
 
 
     private Tile tile;
-    private Texture texture;
+    private TextureRegion texture;
     private boolean isCollected;
 
     private int animationState;
@@ -72,11 +75,7 @@ public class Score {
     }
 
     public void dispose() {
-        STAR_1.dispose();
-        STAR_2.dispose();
-        STAR_3.dispose();
-        STAR_4.dispose();
-        STAR_5.dispose();
+        STARS_PACK.dispose();
     }
 
     public boolean isCollected() {

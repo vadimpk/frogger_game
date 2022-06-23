@@ -11,7 +11,6 @@ import com.frogger.game.screens.FroggerGameScreen;
 
 public class MovingObject {
 
-    private static final Texture DEFAULT_MOVING_OBJECT_TEXTURE = new Texture(Gdx.files.internal("tile2.png"));
 
     private float x,y,size;
     private float speed;
@@ -56,9 +55,6 @@ public class MovingObject {
         }
     }
 
-    public static void dispose(){
-        DEFAULT_MOVING_OBJECT_TEXTURE.dispose();
-    }
 
     public boolean checkCollision(Frog frog) {
         if (direction == Direction.LEFT) {
@@ -110,20 +106,8 @@ public class MovingObject {
         this.y = y;
     }
 
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
     public void setSize(float size) {
         this.size = size;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
     }
 
     public void setFlooded(boolean flooded) {}

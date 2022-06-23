@@ -110,6 +110,7 @@ public class Frog {
             Row[] rows = FroggerGameScreen.level.getMap().getRows();
             Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
             int nColumns = FroggerGameScreen.level.getMap().getnColumns();
+            int nRows = FroggerGameScreen.level.getMap().getnRows();
 
             // check for collision with car
             if (rows[tile.getROW()].getType() == TypeOfRow.CAR) {
@@ -169,35 +170,35 @@ public class Frog {
                 if (isMoving) {
 
                     if (movingDirection == Direction.UP) {
-                        animateMovingUp();
+                        animateMovingUp(rows, nColumns, nRows);
                     } else if (movingDirection == Direction.DOWN) {
-                        animateMovingDown();
+                        animateMovingDown(rows, nColumns, nRows);
                     } else if (movingDirection == Direction.RIGHT) {
-                        animateMovingRight();
+                        animateMovingRight(rows);
                     } else if (movingDirection == Direction.LEFT) {
-                        animateMovingLeft();
+                        animateMovingLeft(rows);
                     }
 
                 } else {
 
                     // MOVE RIGHT
                     if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
-                        moveRight();
+                        moveRight(tiles, nColumns);
                     }
 
                     // MOVE LEFT
                     else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
-                        moveLeft();
+                        moveLeft(tiles);
                     }
 
                     // MOVE UP
                     else if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
-                        moveUp();
+                        moveUp(rows, tiles, nRows);
                     }
 
                     // MOVE DOWN
                     else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
-                        moveDown();
+                        moveDown(rows, tiles);
                     }
                 }
             }
@@ -207,9 +208,7 @@ public class Frog {
     /**
      * Method that handles moving right action when player pressed "D" or "->" button.
      */
-    private void moveRight() {
-        Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
-        int nColumns = FroggerGameScreen.level.getMap().getnColumns();
+    private void moveRight(Tile[][] tiles, int nColumns) {
 
         textureRotation = 270;
         // if not in the last column
@@ -239,8 +238,7 @@ public class Frog {
     /**
      * Method that handles moving left action when player pressed "A" or "<-" button.
      */
-    private void moveLeft() {
-        Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
+    private void moveLeft(Tile[][] tiles) {
 
         textureRotation = 90;
         // if not in the first column
@@ -269,10 +267,7 @@ public class Frog {
     /**
      * Method that handles moving up action when player pressed "W" or "^" button.
      */
-    private void moveUp() {
-        Row[] rows = FroggerGameScreen.level.getMap().getRows();
-        Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
-        int nRows = FroggerGameScreen.level.getMap().getnRows();
+    private void moveUp(Row[] rows, Tile[][] tiles, int nRows) {
 
         textureRotation = 0;
         // if not in the last row
@@ -330,9 +325,7 @@ public class Frog {
     /**
      * Method that handles moving left action when player pressed "S" or "down" button.
      */
-    private void moveDown() {
-        Row[] rows = FroggerGameScreen.level.getMap().getRows();
-        Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
+    private void moveDown(Row[] rows, Tile[][] tiles) {
 
         textureRotation = 180;
         // if not in the first row
@@ -469,10 +462,7 @@ public class Frog {
     /**
      * Method to move up. Runs every frame
      */
-    public void animateMovingUp() {
-        Row[] rows = FroggerGameScreen.level.getMap().getRows();
-        int nColumns = FroggerGameScreen.level.getMap().getnColumns();
-        int nRows = FroggerGameScreen.level.getMap().getnRows();
+    public void animateMovingUp(Row[] rows, int nColumns, int nRows) {
 
         // don't let next move until time passes
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
@@ -488,11 +478,7 @@ public class Frog {
         float dx = 0f;
 
         if (moveToTheWall) {
-            texture = FROG_JUMPING_UP;
-            if (animationFrameCount > 2) {
-                texture = FROG_LOOKING_UP;
-                moveToTheWall = false;
-            }
+            animateMovingToTheWall();
         } else {
             if (animationFrameCount == (int) SPEED) // check if it's the last animation leap (total is SPEED)
             {
@@ -526,10 +512,7 @@ public class Frog {
     /**
      * Method to move down. Runs every frame
      */
-    public void animateMovingDown() {
-        Row[] rows = FroggerGameScreen.level.getMap().getRows();
-        int nColumns = FroggerGameScreen.level.getMap().getnColumns();
-        int nRows = FroggerGameScreen.level.getMap().getnRows();
+    public void animateMovingDown(Row[] rows, int nColumns, int nRows) {
 
         // don't let next move until time passes
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
@@ -546,14 +529,8 @@ public class Frog {
 
 
         if (moveToTheWall) {
-            texture = FROG_JUMPING_UP;
-            if (animationFrameCount > 2) {
-                texture = FROG_LOOKING_UP;
-                moveToTheWall = false;
-            }
-        }
-        else
-        {
+            animateMovingToTheWall();
+        } else {
             if (animationFrameCount == (int) SPEED) // check if it's the last animation leap (total is SPEED)
             {
                 // when it's the last animation frame just set coordinates to what they have to be
@@ -586,8 +563,7 @@ public class Frog {
     /**
      * Method to move right. Runs every frame
      */
-    private void animateMovingRight() {
-        Row[] rows = FroggerGameScreen.level.getMap().getRows();
+    private void animateMovingRight(Row[] rows) {
 
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false;
@@ -598,11 +574,7 @@ public class Frog {
         textureRotation = 270;
 
         if (moveToTheWall) {
-            texture = FROG_JUMPING_UP;
-            if (animationFrameCount > 2) {
-                texture = FROG_LOOKING_UP;
-                moveToTheWall = false;
-            }
+            animateMovingToTheWall();
         } else {
             if (animationFrameCount == (int) SPEED) {
                 // when it's the last animation frame just set coordinates to what they have to be
@@ -628,8 +600,7 @@ public class Frog {
     /**
      * Method to move left. Runs every frame
      */
-    public void animateMovingLeft() {
-        Row[] rows = FroggerGameScreen.level.getMap().getRows();
+    public void animateMovingLeft(Row[] rows) {
 
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             isMoving = false;
@@ -639,11 +610,7 @@ public class Frog {
         textureRotation = 90;
 
         if (moveToTheWall) {
-            texture = FROG_JUMPING_UP;
-            if (animationFrameCount > 2) {
-                texture = FROG_LOOKING_UP;
-                moveToTheWall = false;
-            }
+            animateMovingToTheWall();
         } else {
             if (animationFrameCount == (int) SPEED) {
                 // when it's the last animation frame just set coordinates to what they have to be
@@ -688,6 +655,14 @@ public class Frog {
         if (goingToDrown) alive = false;
         if (tile.isLily()) {
             tile.setLily();
+        }
+    }
+
+    private void animateMovingToTheWall() {
+        texture = FROG_JUMPING_UP;
+        if (animationFrameCount > 2) {
+            texture = FROG_LOOKING_UP;
+            moveToTheWall = false;
         }
     }
 

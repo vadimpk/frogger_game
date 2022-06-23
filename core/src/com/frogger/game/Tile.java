@@ -3,22 +3,24 @@ package com.frogger.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.Random;
 
 
 public class Tile{
 
-    // TODO: add different textures
-    private static final Texture GRASS_TILE_TEXTURE_1 = new Texture(Gdx.files.internal("objects/tiles/grass-tile.png"));
-    private static final Texture GRASS_TILE_TEXTURE_2 = new Texture(Gdx.files.internal("objects/tiles/grass-tile-2.png"));
-    private static final Texture TREE_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/tree-tile.png"));
-    private static final Texture WATER_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/water-tile.png"));
-    private static final Texture ROAD_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/road-tile.png"));
-    private static final Texture RAIL_ROAD_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/rail-road-tile.png"));
-    private static final Texture FINISH_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/finish-tile.png"));
-    private static final Texture LILY_PAD_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/lily-pad.png"));
-    private static final Texture LILY_PAD_SMALL_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/lily-pad-small.png"));
+    private static final Texture TILES_PACK = new Texture(Gdx.files.internal("objects/tiles/tiles.png"));
+
+    private static final TextureRegion GRASS_TILE_TEXTURE_1 = new TextureRegion(TILES_PACK, 300, 0, 300, 300);
+    private static final TextureRegion GRASS_TILE_TEXTURE_2 = new TextureRegion(TILES_PACK, 600, 0, 300, 300);
+    private static final TextureRegion TREE_TILE_TEXTURE = new TextureRegion(TILES_PACK, 300, 600, 300, 300);
+    private static final TextureRegion WATER_TILE_TEXTURE = new TextureRegion(TILES_PACK, 600, 600, 300, 300);
+    private static final TextureRegion ROAD_TILE_TEXTURE = new TextureRegion(TILES_PACK, 0, 600, 300, 300);
+    private static final TextureRegion RAIL_ROAD_TILE_TEXTURE = new TextureRegion(TILES_PACK, 600, 300, 300, 300);
+    private static final TextureRegion FINISH_TILE_TEXTURE = new TextureRegion(TILES_PACK, 0, 0, 300, 300);
+    private static final TextureRegion LILY_PAD_TEXTURE = new TextureRegion(TILES_PACK, 300, 300, 300, 300);
+    private static final TextureRegion LILY_PAD_SMALL_TEXTURE = new TextureRegion(TILES_PACK, 0, 300, 300, 300);
 
     /** initialize tile attributes */
     private final int ROW;
@@ -31,7 +33,8 @@ public class Tile{
     private boolean safe;
     private boolean isScore;
     private boolean finish;
-    private Texture texture;
+    private TextureRegion texture;
+    private int textureRotation;
 
     Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
 
@@ -57,16 +60,16 @@ public class Tile{
         transparent = true;
         finish = false;
         safe = true;
+        textureRotation = 0;
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(texture, X, Y,SIZE,SIZE);
+        batch.draw(texture, X, Y, SIZE/2, SIZE/2 , SIZE, SIZE, 1, 1, textureRotation);
     }
 
 
     public static void dispose() {
-        GRASS_TILE_TEXTURE_1.dispose();
-        TREE_TILE_TEXTURE.dispose();
+        TILES_PACK.dispose();
     }
 
 
@@ -104,7 +107,7 @@ public class Tile{
      * Get texture of a tile
      * @return texture
      */
-    public Texture getTexture() {return texture;}
+    public TextureRegion getTexture() {return texture;}
 
     public boolean isTransparent() {
         return transparent;
@@ -114,7 +117,7 @@ public class Tile{
      * Set texture of a tile
      * @param texture new texture
      */
-    public void setTexture(Texture texture) {this.texture = texture;}
+    public void setTexture(TextureRegion texture) {this.texture = texture;}
 
     public void setTransparent(boolean transparent) {
         this.transparent = transparent;
@@ -138,6 +141,18 @@ public class Tile{
     public void setLily() {
         safe = true;
         texture = LILY_PAD_TEXTURE;
+    }
+
+    public void setRandomRotation() {
+        Random rand = new Random();
+        if (rand.nextBoolean())
+            textureRotation = 90;
+            if (rand.nextBoolean())
+                textureRotation = 0;
+        else
+            textureRotation = 180;
+            if (rand.nextBoolean())
+                textureRotation = 270;
     }
 
     public void setSmallLily() {

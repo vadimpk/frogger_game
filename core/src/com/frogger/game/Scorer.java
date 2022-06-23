@@ -3,13 +3,17 @@ package com.frogger.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import static com.frogger.game.screens.FroggerGameScreen.level;
 
 public class Scorer {
 
-    public static final Texture FILLED_STAR = new Texture(Gdx.files.internal("objects/stars/star.png"));
-    public static final Texture UNFILLED_STAR = new Texture(Gdx.files.internal("objects/stars/star-unfilled.png"));
+    private static final Texture STARS_PACK = new Texture(Gdx.files.internal("objects/stars/stars.png"));
+
+    public static final TextureRegion FILLED_STAR = new TextureRegion(STARS_PACK, 289, 560,289,280);
+    public static final TextureRegion UNFILLED_STAR = new TextureRegion(STARS_PACK, 0, 560,289,280);
+
     private float x, y, size;
 
     public Scorer(float x, float y, float size) {
@@ -57,7 +61,6 @@ public class Scorer {
     }
 
     public static void dispose(){
-        FILLED_STAR.dispose();
-        UNFILLED_STAR.dispose();
+       STARS_PACK.dispose();
     }
 }
