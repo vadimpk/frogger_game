@@ -77,7 +77,9 @@ public class LevelsGenerator{
 
         for (int i = 0; i < rows.length; i++) {
             RowsParameters rowsParameters = levelParameter.rowsParameters[i];
-            MovingObject[] movingObjects = new MovingObject[rowsParameters.movingObjectParameters.length];
+
+            if (rowsParameters.movingObjectParameters != null) {
+                MovingObject[] movingObjects = new MovingObject[rowsParameters.movingObjectParameters.length];
 
 
                 for (int j = 0; j < movingObjects.length; j++) {
@@ -101,9 +103,14 @@ public class LevelsGenerator{
 
                 rows[i] = new Row(tiles[i], rowsParameters.type, movingObjects);
 
+            } else {
+                int[] lilyIndexes = rowsParameters.lilyIndexes;
+                rows[i] = new Row(tiles[i], rowsParameters.type, lilyIndexes, nColumns);
+            }
+
+
         for (Tile tile: tiles[nRows-1])
             tile.setFinishTexture();
-
         }
 
         Map map = new Map(rows, tiles);
@@ -997,9 +1004,11 @@ public class LevelsGenerator{
 
         // TODO BRIDGE 7
 //        rows[0] =
+        rows[0] = new RowsParameters(tiles[0], Util.TypeOfRow.LILY, new int[]{0,4,6,7,8,9,11});
 
         // TODO BRIDGE 7 + 2
 //        rows[1] =
+        rows[1] = new RowsParameters(tiles[1], Util.TypeOfRow.LILY, new int[]{1,2,3,5,6,9,10,11});
 
         // TODO BRIDGE 7 + 3
 //        rows[2] =
@@ -1205,7 +1214,7 @@ public class LevelsGenerator{
         return levels;
     }
 
-    static class LevelParameters  implements Serializable {
+    static class LevelParameters implements Serializable {
         public int nRows;
 
         private static final long serialVersionUID = 1L;
@@ -1213,8 +1222,8 @@ public class LevelsGenerator{
         public int number;
         public int bestScore;
         public int starScore;
-        public  int nColumns;
-        public  RowsParameters[] rowsParameters;
+        public int nColumns;
+        public RowsParameters[] rowsParameters;
 
         public LevelParameters(int number, int nColumns, RowsParameters[] rowsParameters, int bestScore, int starScore) {
             this.number = number;
@@ -1236,15 +1245,22 @@ public class LevelsGenerator{
         public int rowIndex;
         public Util.TypeOfRow type;
         public MovingObjectParameters[] movingObjectParameters;
+        public int[] lilyIndexes;
 
         public RowsParameters(TileParameters[] tileParameters, Util.TypeOfRow type, MovingObjectParameters[] movingObjectParameters) {
             this.tileParameters = tileParameters;
             this.type = type;
             this.movingObjectParameters = movingObjectParameters;
         }
+
+        public RowsParameters(TileParameters[] tileParameters, Util.TypeOfRow type, int[] lilyIndexes) {
+            this.tileParameters = tileParameters;
+            this.type = type;
+            this.lilyIndexes = lilyIndexes;
+        }
     }
 
-    static class TileParameters  implements Serializable {
+    static class TileParameters implements Serializable {
 
         private static final long serialVersionUID = 1L;
 

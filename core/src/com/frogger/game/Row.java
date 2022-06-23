@@ -32,6 +32,21 @@ public class Row  {
         }
     }
 
+    protected Row(Tile[] tiles, TypeOfRow typeOfRow, int[] lilyIndexes, int nColumns){
+        type = typeOfRow;
+
+        if (typeOfRow == TypeOfRow.LILY) {
+            for (Tile tile: tiles) {
+                tile.setWaterTexture();
+            }
+            for (int index: lilyIndexes) {
+                if (index >= 0 && index < nColumns) {
+                    tiles[index].setLily();
+                }
+            }
+        }
+    }
+
     public void render(SpriteBatch batch) {
         if (movingObjects != null && movingObjects.length > 0) {
             for (MovingObject object : movingObjects) {

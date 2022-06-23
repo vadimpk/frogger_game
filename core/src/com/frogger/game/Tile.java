@@ -17,6 +17,8 @@ public class Tile{
     private static final Texture ROAD_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/road-tile.png"));
     private static final Texture RAIL_ROAD_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/rail-road-tile.png"));
     private static final Texture FINISH_TILE_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/finish-tile.png"));
+    private static final Texture LILY_PAD_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/lily-pad.png"));
+    private static final Texture LILY_PAD_SMALL_TEXTURE = new Texture(Gdx.files.internal("objects/tiles/lily-pad-small.png"));
 
     /** initialize tile attributes */
     private final int ROW;
@@ -26,7 +28,7 @@ public class Tile{
 
 
     private boolean transparent;
-
+    private boolean safe;
     private boolean isScore;
     private boolean finish;
     private Texture texture;
@@ -54,6 +56,7 @@ public class Tile{
         else texture = GRASS_TILE_TEXTURE_2;
         transparent = true;
         finish = false;
+        safe = true;
     }
 
     public void render(SpriteBatch batch) {
@@ -120,6 +123,7 @@ public class Tile{
 
     public void setWaterTexture() {
         texture = WATER_TILE_TEXTURE;
+        safe = false;
     }
     public void setRoadTexture() {
         texture = ROAD_TILE_TEXTURE;
@@ -130,6 +134,19 @@ public class Tile{
     public void setFinishTexture() {
         texture = FINISH_TILE_TEXTURE;
         finish = true;
+    }
+    public void setLily() {
+        safe = true;
+        texture = LILY_PAD_TEXTURE;
+    }
+
+    public void setSmallLily() {
+        safe = true;
+        texture = LILY_PAD_SMALL_TEXTURE;
+    }
+
+    public boolean isLily() {
+        return texture == LILY_PAD_TEXTURE || texture == LILY_PAD_SMALL_TEXTURE;
     }
 
     public void setScore(boolean score) {
@@ -142,5 +159,9 @@ public class Tile{
 
     public boolean isFinish() {
         return finish;
+    }
+
+    public boolean isSafe() {
+        return safe;
     }
 }
