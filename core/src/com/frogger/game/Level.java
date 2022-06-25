@@ -4,13 +4,17 @@ public class Level{
     private int number;
     private int bestScore;
     private int starScore;
+    private int time;
     private Map map;
+    private boolean isBig;
 
-    public Level(int number, int bestScore, int starScore, Map map) {
+    public Level(int number, int bestScore, int starScore, Map map, int time) {
         this.number = number;
         this.bestScore = bestScore;
         this.starScore = starScore;
         this.map = map;
+        this.time = time;
+        isBig = false;
     }
 
     public Map getMap() {
@@ -52,5 +56,17 @@ public class Level{
 
     public void pausedRender() {
         map.pausedRender();
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public boolean isBig() {
+        return isBig;
+    }
+
+    public void setBig(boolean big) {
+        isBig = big;
     }
 }

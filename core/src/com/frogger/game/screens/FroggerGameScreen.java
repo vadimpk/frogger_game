@@ -21,12 +21,14 @@ public class FroggerGameScreen extends Screen {
         super(game);
         FroggerGameScreen.level = level;
         Frog.get().respawn(level.getMap().getTiles()[0][level.getMap().getnColumns() / 2]);
+        FroggerGame.gameCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-
-//        float mapWidth = level.getMap().getnColumns() * level.getMap().getTiles()[0][0].getSize();
-//        float mapHeight = level.getMap().getnColumns() * level.getMap().getTiles()[0][0].getSize();
-        timer = new Timer(level.getMap().getTiles()[0][0].getX(), level.getMap().getTiles()[level.getMap().getnColumns() - 1][0].getY() + 1.5f*level.getMap().getTiles()[0][0].getSize());
-        scorer = new Scorer( level.getMap().getTiles()[0][level.getMap().getnColumns() - 1].getX() - 2f * WINDOW_HEIGHT*0.08f, WINDOW_HEIGHT*0.932f, WINDOW_HEIGHT*0.08f);
+        timer = new Timer((float) (level.getMap().getTiles()[0][0].getX() + 0.1 * level.getMap().getTiles()[0][0].getSize()),
+                level.getMap().getTiles()[level.getMap().getnColumns() - 1][0].getY() + 1.65f*level.getMap().getTiles()[0][0].getSize(),
+                level.getTime());
+        if(level.isBig()) timer.setReversed(true);
+        scorer = new Scorer(level.getMap().getTiles()[0][level.getMap().getnColumns() - 1].getX() - 2f * WINDOW_HEIGHT*0.08f, WINDOW_HEIGHT*0.932f, WINDOW_HEIGHT*0.08f);
+        if(level.isBig()) scorer.setForBigLevel(true);
 
         isPaused = false;
     }
@@ -35,14 +37,15 @@ public class FroggerGameScreen extends Screen {
     public void show() {
         super.show();
 
+        if(!level.isBig()) {
+            float startingY = level.getMap().getTiles()[level.getMap().getnColumns() - 1][0].getY() + level.getMap().getTiles()[0][0].getSize();
 
-        float startingY = level.getMap().getTiles()[level.getMap().getnColumns() - 1][0].getY() + level.getMap().getTiles()[0][0].getSize();
+            Label levelLabel = new Label("Level " + level.getNumber(), new Label.LabelStyle(fonts.get("36"), Color.BLACK));
+            levelLabel.setX(Const.WINDOW_WIDTH / 2 - levelLabel.getWidth() / 2);
+            levelLabel.setY(startingY);
 
-        Label levelLabel = new Label("Level " + level.getNumber(), new Label.LabelStyle(fonts.get("36"), Color.BLACK));
-        levelLabel.setX(Const.WINDOW_WIDTH  / 2 - levelLabel.getWidth() / 2);
-        levelLabel.setY(startingY);
-
-        stage.addActor(levelLabel);
+            stage.addActor(levelLabel);
+        }
     }
 
     @Override
@@ -71,13 +74,21 @@ public class FroggerGameScreen extends Screen {
 
             if (!Frog.get().isAlive() && !isSwitching) {
                 isSwitching = true;
-                switchScreenWithFading(new DieScreen(game, level), 3f);
+                switchScreenWithFading(new DieScreen(game, level), 2f);
                 timer.stop();
             }
             if (Frog.get().getTile().isFinish() && !Frog.get().isMoving() && !isSwitching) {
                 isSwitching = true;
-                switchScreenWithFading(new WinScreen(game, level, timer.getTime()), 1f);
+                switchScreenWithFading(new WinScreen(game, level, timer.getTimer()), 1f);
                 timer.stop();
+            }
+
+            if (timer.getTimer() == 0 && !isSwitching) {
+                isSwitching = true;
+                switchScreenWithFading(new DieScreen(game, level), 2f);
+                isPaused = !isPaused;
+                timer.stop();
+
             }
         }
 

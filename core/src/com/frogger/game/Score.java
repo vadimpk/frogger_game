@@ -41,7 +41,8 @@ public class Score {
     }
 
     private void update() {
-        if (getFrog().getTile() == tile) isCollected = true;
+        if (tile.getX() - getFrog().getSize() / 2 <= getFrog().getX() && getFrog().getX() + 0.5*getFrog().getSize() <= tile.getX() + tile.getSize() &&
+                tile.getY() - getFrog().getSize() / 2 <= getFrog().getY() && getFrog().getY()  + 0.5*getFrog().getSize()<= tile.getY() + tile.getSize()) isCollected = true;
 
         if (TimeUtils.nanoTime() - startTime > 10 * ANIMATION_TIME) {
             animationState = (animationState > 9) ? 0 : animationState + 1;

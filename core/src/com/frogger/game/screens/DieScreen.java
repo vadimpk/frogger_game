@@ -59,7 +59,6 @@ public class DieScreen extends Screen{
                 for (Score score : currentLevel.getMap().getScores()) {
                     score.setUncollected();
                 }
-                FroggerGame.gameCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             }
         });
 

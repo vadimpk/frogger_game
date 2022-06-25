@@ -1,16 +1,12 @@
 package com.frogger.game.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.frogger.game.FroggerGame;
-import com.frogger.game.Level;
-import com.frogger.game.LevelsGenerator;
-import com.frogger.game.Score;
+import com.frogger.game.*;
 
 import static com.frogger.game.Const.*;
 import static com.frogger.game.Scorer.FILLED_STAR;
@@ -20,17 +16,18 @@ import static com.frogger.game.screens.FroggerGameScreen.level;
 public class WinScreen extends Screen{
 
     private final Level currentLevel;
-    private String time;
+    private float timer;
+    private int score;
 
-    public WinScreen(FroggerGame game, Level currentLevel, String time) {
+    public WinScreen(FroggerGame game, Level currentLevel, float timer) {
         super(game);
         this.currentLevel = currentLevel;
-        this.time = time;
+        this.timer = timer;
 
         int starScore = 0;
         for (Score score : currentLevel.getMap().getScores()) if (score.isCollected()) starScore++;
-        System.out.println(starScore);
-        LevelsGenerator.updateLevel(currentLevel.getNumber() - 1, 100 * starScore, starScore);
+        score = (int) (121 * starScore + 1256 * (1 - (timer / currentLevel.getTime())));
+        LevelsGenerator.updateLevel(currentLevel.getNumber() - 1, score, starScore);
     }
 
     @Override
@@ -47,10 +44,10 @@ public class WinScreen extends Screen{
         label.setX(WINDOW_WIDTH / 2 - label.getWidth() / 2);
         label.setY(WINDOW_HEIGHT * 0.7f);
 
-        int score = 0;
-        for (Score s: level.getMap().getScores()) if (s.isCollected()) score++;
+        int starScore = 0;
+        for (Score s: level.getMap().getScores()) if (s.isCollected()) starScore++;
         Image[] stars = new Image[3];
-        switch (score) {
+        switch (starScore) {
             case 0:
                 stars[0] = new Image(UNFILLED_STAR);
                 stars[1] = new Image(UNFILLED_STAR);
@@ -79,9 +76,9 @@ public class WinScreen extends Screen{
         stars[2].setBounds(WINDOW_WIDTH / 2 + 0.5f*size + distance, 0.55f*WINDOW_HEIGHT, size, size);
 
         Label.LabelStyle labelStyle = new Label.LabelStyle(fonts.get("36"), Color.BLACK);
-        Label yourScore = new Label("Your Score: " , labelStyle);
+        Label yourScore = new Label("Your Score: " + score, labelStyle);
         Label bestScore = new Label("The Best Score: " + currentLevel.getBestScore(), labelStyle);
-        Label timeLabel = new Label("Time: " + time, labelStyle);
+        Label timeLabel = new Label("Time: " + Timer.convert(level.getTime() - timer) , labelStyle);
         yourScore.setX(WINDOW_WIDTH / 2 - yourScore.getWidth() / 2);
         yourScore.setY(WINDOW_HEIGHT * 0.54f - yourScore.getHeight());
         bestScore.setX(WINDOW_WIDTH / 2 - bestScore.getWidth() / 2);
@@ -112,7 +109,6 @@ public class WinScreen extends Screen{
                 for (Score score : currentLevel.getMap().getScores()) {
                     score.setUncollected();
                 }
-                FroggerGame.gameCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             }
         });
 

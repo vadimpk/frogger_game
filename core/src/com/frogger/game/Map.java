@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.frogger.game.FroggerGame.*;
 import static com.frogger.game.FroggerGame.attributesBatch;
 
@@ -41,9 +44,10 @@ public class Map {
         frog = Frog.get();
         frog.setStartingTile(tiles[0][nColumns / 2]);
 
-        int counter = 0;
+        List<Score> scoreList = new ArrayList<>();
         for(Tile[] row: tiles)
-            for (Tile tile : row) if (tile.isScore()) scores[counter++] = new Score(tile);
+            for (Tile tile : row) if (tile.isScore()) scoreList.add(new Score(tile));
+        scores = scoreList.toArray(new Score[0]);
     }
 
     public static Frog getFrog() {

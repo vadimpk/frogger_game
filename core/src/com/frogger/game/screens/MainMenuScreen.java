@@ -1,6 +1,7 @@
 package com.frogger.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -10,6 +11,8 @@ import com.frogger.game.LevelsGenerator;
 import static com.frogger.game.Const.*;
 
 public class MainMenuScreen extends Screen {
+
+    private Texture bgTexture;
 
     public MainMenuScreen(FroggerGame game) {
         super(game);
@@ -44,7 +47,7 @@ public class MainMenuScreen extends Screen {
         buttons.get("play").addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                switchScreenWithFading(new FroggerGameScreen(game, LevelsGenerator.getLevels()[0]), 0.3f);
+                switchScreenWithFading(new FroggerGameScreen(game, LevelsGenerator.getBigLevel()), 0.3f);
             }
         });
         buttons.get("levels").addListener(new ClickListener(){
