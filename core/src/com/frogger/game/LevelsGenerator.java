@@ -43,12 +43,20 @@ public class LevelsGenerator{
         }
     }
 
+    public static void updateBigLevel(int score) {
+        if(bigLevel.getBestScore() < score) {
+            bigLevel.setBestScore(score);
+            bigLevelParameters.bestScore = score;
+            loadToFile(new LevelParameters[]{bigLevelParameters}, "big-level.txt");
+        }
+    }
+
+
     public static Level[] getLevels() {
         createLevels();
         if(levels == null) {
             levelParameters = loadFromFile("levels.txt");
             levels = new Level[10];
-
             for (int i = 0; i < levels.length; i++) {
                 levels[i] = convertToLevel(levelParameters[i]);
             }
@@ -71,8 +79,6 @@ public class LevelsGenerator{
     }
 
     private static void createBigLevel() {
-        LevelParameters BigLevelParameters;
-
         int nColumns = 15;
         int nRows = 280;
 
@@ -116,7 +122,7 @@ public class LevelsGenerator{
         //Level 2
 
         nRows = 12;
-        startingX =+ 11;
+        startingX += 11;
 
         tiles[2 + startingX][2].isScore = true;
         tiles[4 + startingX][0].isScore = true;
@@ -144,7 +150,7 @@ public class LevelsGenerator{
         });
 
 
-        addAll(nontransparentTiles, tiles[startingX][8], tiles[1 + startingX][3], tiles[2 + startingX][7], tiles[4 + startingX][1], tiles[5 + startingX][8], tiles[6 + startingX][4], tiles[10 + startingX][8]);
+        addAll(nontransparentTiles, tiles[startingX][8], tiles[1 + startingX][3], tiles[4 + startingX][1], tiles[5 + startingX][8], tiles[6 + startingX][4], tiles[10 + startingX][8]);
 
 
 
@@ -192,9 +198,9 @@ public class LevelsGenerator{
         });
 
 
-        addAll(nontransparentTiles, tiles[2 + startingX][0], tiles[2 + startingX][2], tiles[2 + startingX][4], tiles[2 + startingX][6], tiles[2 + startingX][8], tiles[2 + startingX][10], tiles[2 + startingX][12],
-                tiles[6 + startingX][3], tiles[6 + startingX][6], tiles[6 + startingX][9],
-                tiles[7 + startingX][0], tiles[7 + startingX][4], tiles[7 + startingX][8], tiles[7 + startingX][12]);
+        addAll(nontransparentTiles, tiles[2 + startingX][0], tiles[2 + startingX][8],
+                tiles[6 + startingX][3], tiles[6 + startingX][12],
+                tiles[7 + startingX][0], tiles[7 + startingX][12]);
 
         //Level 4
 
@@ -445,7 +451,7 @@ public class LevelsGenerator{
 
         addAll(nontransparentTiles, tiles[startingX][4], tiles[5 + startingX][3], tiles[5 + startingX][10], tiles[6 + startingX][7],
                 tiles[7 + startingX][1], tiles[7 + startingX][12], tiles[13 + startingX][2], tiles[13 + startingX][11], tiles[13 + startingX][14],
-                tiles[18 + startingX][1], tiles[18 + startingX][7], tiles[18 + startingX][12], tiles[19 + startingX][10], tiles[20 + startingX][5], tiles[21 + startingX][2]);
+                tiles[18 + startingX][1], tiles[18 + startingX][7], tiles[18 + startingX][12], tiles[19 + startingX][10]);
 
 
         // Level 7
@@ -662,8 +668,8 @@ public class LevelsGenerator{
         addAll(nontransparentTiles, tiles[startingX][1], tiles[startingX][13], tiles[1 + startingX][2], tiles[1 + startingX][5],
                 tiles[6 + startingX][1], tiles[9 + startingX][2], tiles[8 + startingX][3], tiles[7 + startingX][5], tiles[6 + startingX][6],
                 tiles[8 + startingX][8], tiles[9 + startingX][9], tiles[6 + startingX][10], tiles[9 + startingX][12], tiles[7 + startingX][13],
-                tiles[13 + startingX][5], tiles[13 + startingX][13], tiles[16 + startingX][2], tiles[20 + startingX][3], tiles[18 + startingX][7], tiles[17 + startingX][10], tiles[21 + startingX][12],
-                tiles[25 + startingX][2], tiles[29][4], tiles[30 + startingX][13]);
+                tiles[13 + startingX][5], tiles[13 + startingX][13], tiles[16 + startingX][2], tiles[18 + startingX][7], tiles[17 + startingX][10], tiles[21 + startingX][12],
+                tiles[29][4], tiles[30 + startingX][13]);
 
 
         //Level 9
@@ -960,7 +966,7 @@ public class LevelsGenerator{
 
         rows[43 + startingX] =   new RowsParameters(tiles[43 + startingX], Util.TypeOfRow.LILY, new int[]{3, 7});
 
-        addAll(nontransparentTiles, tiles[2 + startingX][7], tiles[7 + startingX][1], tiles[7 + startingX][13], tiles[8 + startingX][10], tiles[21 + startingX][1], tiles[21 + startingX][9],
+        addAll(nontransparentTiles, tiles[7 + startingX][1], tiles[7 + startingX][13], tiles[8 + startingX][10], tiles[21 + startingX][1], tiles[21 + startingX][9],
                 tiles[22 + startingX][7], tiles[25 + startingX][3]);
 
 
@@ -1048,8 +1054,6 @@ public class LevelsGenerator{
         RowsParameters[] rows;
         TileParameters[][] tiles;
         TileParameters[] nontransparentTiles;
-        int screenWidth = Gdx.graphics.getWidth();
-        int screenHeight = Gdx.graphics.getHeight();
         int nColumns;
         int nRows;
 
@@ -1133,7 +1137,7 @@ public class LevelsGenerator{
         });
 
 
-        nontransparentTiles = new TileParameters[] {tiles[0][8], tiles[1][3], tiles[2][7], tiles[4][1], tiles[5][8], tiles[6][4], tiles[10][8]};
+        nontransparentTiles = new TileParameters[] {tiles[0][8], tiles[1][3], tiles[4][1], tiles[5][8], tiles[6][4], tiles[10][8]};
         for (TileParameters tile: nontransparentTiles) {
             tile.transparent = false;
         }
@@ -1499,7 +1503,7 @@ public class LevelsGenerator{
 
         nontransparentTiles = new TileParameters[] {tiles[0][4], tiles[5][3], tiles[5][10], tiles[6][7],
                 tiles[7][1], tiles[7][12], tiles[13][2], tiles[13][11], tiles[13][14],
-                tiles[18][1], tiles[18][7], tiles[18][12], tiles[19][10], tiles[20][5], tiles[21][2]};
+                tiles[18][1], tiles[18][7], tiles[18][12], tiles[19][10]};
         for (TileParameters tile: nontransparentTiles) {
             tile.transparent = false;
         }
@@ -1752,7 +1756,7 @@ public class LevelsGenerator{
         nontransparentTiles = new TileParameters[] {tiles[0][1], tiles[0][13], tiles[1][2], tiles[1][5],
                 tiles[6][1], tiles[9][2], tiles[8][3], tiles[7][5], tiles[6][6],
                 tiles[8][8], tiles[9][9], tiles[6][10], tiles[9][12], tiles[7][13],
-                tiles[13][5], tiles[13][13], tiles[16][2], tiles[20][3], tiles[18][7], tiles[17][10], tiles[21][12],
+                tiles[13][5], tiles[13][13], tiles[16][2], tiles[18][7], tiles[17][10],
                 tiles[25][2], tiles[29][4], tiles[30][13]};
         for (TileParameters tile: nontransparentTiles) {
             tile.transparent = false;
@@ -2085,7 +2089,7 @@ public class LevelsGenerator{
 
         rows[43] =   new RowsParameters(tiles[43], Util.TypeOfRow.LILY, new int[]{3, 7});
 
-        nontransparentTiles = new TileParameters[] {tiles[2][7], tiles[7][1], tiles[7][13], tiles[8][10], tiles[21][1], tiles[21][9],
+        nontransparentTiles = new TileParameters[] {tiles[7][1], tiles[7][13], tiles[8][10], tiles[21][1], tiles[21][9],
         tiles[22][7], tiles[25][3]};
         for (TileParameters tile: nontransparentTiles) {
             tile.transparent = false;
@@ -2144,7 +2148,6 @@ public class LevelsGenerator{
         private static final long serialVersionUID = 1L;
 
         public TileParameters[] tileParameters;
-        public int rowIndex;
         public Util.TypeOfRow type;
         public MovingObjectParameters[] movingObjectParameters;
         public int[] lilyIndexes;
@@ -2169,7 +2172,6 @@ public class LevelsGenerator{
         public boolean transparent;
         public int row;
         public int column;
-        public Util.TypeOfTile type;
         public boolean isScore;
 
         public TileParameters(int row, int column) {
@@ -2189,7 +2191,6 @@ public class LevelsGenerator{
         public float speed;
         public int length;
         public Util.Direction direction;
-        public boolean safe;
         public TileParameters startingTile;
 
         public MovingObjectParameters(TileParameters startingTile, float speed, int length, Util.Direction direction) {
@@ -2209,7 +2210,6 @@ public class LevelsGenerator{
             this.isFading =isFading;
             this.deltaTime = deltaTime;
         }
-
     }
 }
 

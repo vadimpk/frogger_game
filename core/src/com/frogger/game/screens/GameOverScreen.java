@@ -9,25 +9,33 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.*;
 
 import static com.frogger.game.Const.*;
+import static com.frogger.game.Const.BUTTON_HEIGHT;
 import static com.frogger.game.Scorer.FILLED_STAR;
 import static com.frogger.game.Scorer.UNFILLED_STAR;
 import static com.frogger.game.screens.FroggerGameScreen.level;
 
-public class WinScreen extends Screen{
+public class GameOverScreen extends Screen{
 
     private final Level currentLevel;
     private float timer;
     private int score;
+    private boolean isWon;
 
-    public WinScreen(FroggerGame game, Level currentLevel, float timer) {
+    public GameOverScreen(FroggerGame game, Level currentLevel, float timer, boolean isWon) {
         super(game);
         this.currentLevel = currentLevel;
         this.timer = timer;
+        this.isWon = isWon;
 
         int starScore = 0;
         for (Score score : currentLevel.getMap().getScores()) if (score.isCollected()) starScore++;
-        score = (int) (121 * starScore + 1256 * (1 - (timer / currentLevel.getTime())));
-        LevelsGenerator.updateLevel(currentLevel.getNumber() - 1, score, starScore);
+        if(currentLevel.isBig()) {
+            score = (int) (121 * starScore + 1256 * (1 - (timer / 330)));
+            LevelsGenerator.updateBigLevel(score);
+        }else {
+            score = (int) (121 * starScore + 1256 * (timer / currentLevel.getTime()));
+            LevelsGenerator.updateLevel(currentLevel.getNumber() - 1, score, starScore);
+        }
     }
 
     @Override
@@ -40,51 +48,60 @@ public class WinScreen extends Screen{
         textButtonStyle.down = skin.getDrawable("green-btn-down");
         textButtonStyle.over = skin.getDrawable("green-btn-over");
 
-        Label label = new Label("YOU WIN!", new Label.LabelStyle(fonts.get("100"), Color.BLACK));
+        Label label = new Label(isWon ? "You Won" : "Game Over", new Label.LabelStyle(fonts.get("100"), Color.BLACK));
         label.setX(WINDOW_WIDTH / 2 - label.getWidth() / 2);
         label.setY(WINDOW_HEIGHT * 0.7f);
 
-        int starScore = 0;
-        for (Score s: level.getMap().getScores()) if (s.isCollected()) starScore++;
-        Image[] stars = new Image[3];
-        switch (starScore) {
-            case 0:
-                stars[0] = new Image(UNFILLED_STAR);
-                stars[1] = new Image(UNFILLED_STAR);
-                stars[2] = new Image(UNFILLED_STAR);
-                break;
-            case 1:
-                stars[0] = new Image(FILLED_STAR);
-                stars[1] = new Image(UNFILLED_STAR);
-                stars[2] = new Image(UNFILLED_STAR);
-                break;
-            case 2:
-                stars[0] = new Image(FILLED_STAR);
-                stars[1] = new Image(FILLED_STAR);
-                stars[2] = new Image(UNFILLED_STAR);
-                break;
-            case 3:
-                stars[0] = new Image(FILLED_STAR);
-                stars[1] = new Image(FILLED_STAR);
-                stars[2] = new Image(FILLED_STAR);
-                break;
+        float deltaY = 0f;
+        if(!currentLevel.isBig() && isWon) {
+            int starScore = 0;
+            for (Score s : level.getMap().getScores()) if (s.isCollected()) starScore++;
+            Image[] stars = new Image[3];
+            switch (starScore) {
+                case 0:
+                    stars[0] = new Image(UNFILLED_STAR);
+                    stars[1] = new Image(UNFILLED_STAR);
+                    stars[2] = new Image(UNFILLED_STAR);
+                    break;
+                case 1:
+                    stars[0] = new Image(FILLED_STAR);
+                    stars[1] = new Image(UNFILLED_STAR);
+                    stars[2] = new Image(UNFILLED_STAR);
+                    break;
+                case 2:
+                    stars[0] = new Image(FILLED_STAR);
+                    stars[1] = new Image(FILLED_STAR);
+                    stars[2] = new Image(UNFILLED_STAR);
+                    break;
+                case 3:
+                    stars[0] = new Image(FILLED_STAR);
+                    stars[1] = new Image(FILLED_STAR);
+                    stars[2] = new Image(FILLED_STAR);
+                    break;
+            }
+            float size = 0.15f * WINDOW_HEIGHT;
+            float distance = 0.05f * WINDOW_HEIGHT;
+            stars[0].setBounds(WINDOW_WIDTH / 2 - 1.5f * size - distance, 0.55f * WINDOW_HEIGHT, size, size);
+            stars[1].setBounds(WINDOW_WIDTH / 2 - 0.5f * size, 0.57f * WINDOW_HEIGHT, size, size);
+            stars[2].setBounds(WINDOW_WIDTH / 2 + 0.5f * size + distance, 0.55f * WINDOW_HEIGHT, size, size);
+
+            stage.addActor(stars[0]);
+            stage.addActor(stars[1]);
+            stage.addActor(stars[2]);
+
+            deltaY = -0.06f;
         }
-        float size = 0.15f * WINDOW_HEIGHT;
-        float distance = 0.05f * WINDOW_HEIGHT;
-        stars[0].setBounds(WINDOW_WIDTH / 2 - 1.5f*size - distance, 0.55f*WINDOW_HEIGHT, size, size);
-        stars[1].setBounds(WINDOW_WIDTH / 2 - 0.5f*size, 0.57f*WINDOW_HEIGHT, size, size);
-        stars[2].setBounds(WINDOW_WIDTH / 2 + 0.5f*size + distance, 0.55f*WINDOW_HEIGHT, size, size);
 
         Label.LabelStyle labelStyle = new Label.LabelStyle(fonts.get("36"), Color.BLACK);
         Label yourScore = new Label("Your Score: " + score, labelStyle);
         Label bestScore = new Label("The Best Score: " + currentLevel.getBestScore(), labelStyle);
-        Label timeLabel = new Label("Time: " + Timer.convert(level.getTime() - timer) , labelStyle);
+        Label timeLabel = new Label("Time: " + Timer.convert((currentLevel.isBig() ? timer: level.getTime() - timer)) , labelStyle);
         yourScore.setX(WINDOW_WIDTH / 2 - yourScore.getWidth() / 2);
-        yourScore.setY(WINDOW_HEIGHT * 0.54f - yourScore.getHeight());
+        yourScore.setY(WINDOW_HEIGHT * (0.6f + deltaY) - yourScore.getHeight());
         bestScore.setX(WINDOW_WIDTH / 2 - bestScore.getWidth() / 2);
-        bestScore.setY(WINDOW_HEIGHT * 0.52f - 2f*bestScore.getHeight());
+        bestScore.setY(WINDOW_HEIGHT * (0.58f + deltaY) - 2f*bestScore.getHeight());
         timeLabel.setX(WINDOW_WIDTH / 2 - timeLabel.getWidth() / 2);
-        timeLabel.setY(WINDOW_HEIGHT * 0.5f - 3f*bestScore.getHeight());
+        timeLabel.setY(WINDOW_HEIGHT * (0.56f + deltaY) - 3f*bestScore.getHeight());
 
         float distanceX = 0.1f * WINDOW_WIDTH;
         float startingX = (WINDOW_WIDTH - 2 * BUTTON_WIDTH - distanceX) / 2;
@@ -115,13 +132,9 @@ public class WinScreen extends Screen{
         stage.addActor(restartButton);
         stage.addActor(backButton);
 
-        stage.addActor(stars[0]);
-        stage.addActor(stars[1]);
-        stage.addActor(stars[2]);
         stage.addActor(label);
         stage.addActor(yourScore);
         stage.addActor(bestScore);
         stage.addActor(timeLabel);
     }
-
 }
