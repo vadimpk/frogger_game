@@ -1,5 +1,7 @@
 package com.frogger.game.screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -21,6 +23,9 @@ public class GameOverScreen extends Screen{
     private int score;
     private boolean isWon;
 
+    private static Sound clickedSound = Gdx.audio.newSound(Gdx.files.internal("sounds/click-sound.mp3"));
+    private static boolean soundPlaying = false;
+
     public GameOverScreen(FroggerGame game, Level currentLevel, float timer, boolean isWon) {
         super(game);
         this.currentLevel = currentLevel;
@@ -41,6 +46,7 @@ public class GameOverScreen extends Screen{
     @Override
     public void show() {
         super.show();
+        soundPlaying = false;
 
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = fonts.get("36");
@@ -117,6 +123,10 @@ public class GameOverScreen extends Screen{
                     score.setUncollected();
                 }
                 switchScreenWithFading(new MainMenuScreen(game), 0.3f);
+                if (!soundPlaying) {
+                    clickedSound.play(1.0f);
+                    soundPlaying = true;
+                }
             }
         });
         restartButton.addListener(new ClickListener(){
@@ -125,6 +135,10 @@ public class GameOverScreen extends Screen{
                 switchScreenWithFading(new FroggerGameScreen(game, currentLevel), 0.3f);
                 for (Score score : currentLevel.getMap().getScores()) {
                     score.setUncollected();
+                }
+                if (!soundPlaying) {
+                    clickedSound.play(1.0f);
+                    soundPlaying = true;
                 }
             }
         });

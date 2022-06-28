@@ -1,12 +1,15 @@
 package com.frogger.game.objects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.Map;
 import com.frogger.game.Util.Direction;
+
+import java.sql.Time;
 
 import static com.frogger.game.screens.FroggerGameScreen.level;
 
@@ -15,10 +18,15 @@ public class Train extends MovingObject {
     private boolean moving;
     private long deltaTime;
     private long startedMovingTime;
+    private long startedMovingTime2;
 
     private static final Direction MOVING_DIRECTION = Direction.LEFT;
     private static final Texture HEAD_TEXTURE = new Texture(Gdx.files.internal("objects/train/train-head.png"));
     private static final Texture TEXTURE = new Texture(Gdx.files.internal("objects/train/train.png"));
+
+    private Sound trainSound = Gdx.audio.newSound(Gdx.files.internal("sounds/train.mp3"));
+    private boolean soundPlaying = false;
+
 
     private static final long TIME_BEFORE_FIRST_MOVE = 40000000;
     private static final long TIME_BETWEEN_MOVES     = 400000000;
@@ -54,12 +62,19 @@ public class Train extends MovingObject {
 
         if (moving) {
             if (TimeUtils.nanoTime() - startedMovingTime > 10 * deltaTime) {
+                if (!soundPlaying) {
+                    startedMovingTime2 = TimeUtils.nanoTime();
+                    soundPlaying = true;
+                    trainSound.play(0.5f);
+                }
 
-                move();
+                if (TimeUtils.nanoTime() - startedMovingTime2 > 2 * deltaTime) {
+                    move();
 
-                batch.draw(HEAD_TEXTURE, getX(), getY(), getSize(), getSize());
-                for (int i = 1; i < getLength(); i++) {
-                    batch.draw(TEXTURE, getX() + i * getSize(), getY(), getSize(), getSize());
+                    batch.draw(HEAD_TEXTURE, getX(), getY(), getSize(), getSize());
+                    for (int i = 1; i < getLength(); i++) {
+                        batch.draw(TEXTURE, getX() + i * getSize(), getY(), getSize(), getSize());
+                    }
                 }
             }
         }
@@ -78,6 +93,7 @@ public class Train extends MovingObject {
 
         if ((getX() + getSize()*getLength()) < level.getMap().getTiles()[0][0].getX()) {
             startedMovingTime = TimeUtils.nanoTime();
+            soundPlaying = false;
             deltaTime = TIME_BETWEEN_MOVES;
             setX(level.getMap().getTiles()[0][level.getMap().getnColumns() -1].getX() + level.getMap().getTiles()[0][0].getSize());
         } else

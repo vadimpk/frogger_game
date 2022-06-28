@@ -2,12 +2,14 @@ package com.frogger.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.frogger.game.Util.Direction;
 import com.frogger.game.Util.TypeOfRow;
+import com.frogger.game.objects.Car;
 import com.frogger.game.objects.MovingObject;
 import com.frogger.game.screens.FroggerGameScreen;
 
@@ -37,6 +39,11 @@ public class Frog {
     private static final TextureRegion FROG_DROWNING_UP_5 = new TextureRegion(FROG_PACK, 0, 300, 150, 150);
     private static final TextureRegion FROG_DEAD = new TextureRegion(FROG_PACK, 150, 300, 150, 150);
 
+    private Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/frog-jumping.mp3"));
+    private Sound sound2 = Gdx.audio.newSound(Gdx.files.internal("sounds/splash.mp3"));
+    private Sound sound4 = Gdx.audio.newSound(Gdx.files.internal("sounds/dead.mp3"));
+    private Sound sound5 = Gdx.audio.newSound(Gdx.files.internal("sounds/log.mp3"));
+
 
     /** initialize fields for movement mechanic  */
     private long startedMovingTime;
@@ -49,6 +56,8 @@ public class Frog {
     private boolean moveToTheWall = false;
     private boolean goingToDrown = false;
     private boolean goingToDie = false;
+    private boolean soundPlaying = false;
+    private boolean dyingSoundPlaying = false;
 
     /** initialize fields for movement mechanic on logs  */
     private boolean onLog = false;
@@ -89,6 +98,7 @@ public class Frog {
         moveToTheWall = false;
         goingToDrown = false;
         goingToDie = false;
+        dyingSoundPlaying = false;
     }
 
     public void render(SpriteBatch batch) {
@@ -112,10 +122,23 @@ public class Frog {
             int nColumns = FroggerGameScreen.level.getMap().getnColumns();
             int nRows = FroggerGameScreen.level.getMap().getnRows();
 
-            // check for collision with car
-            if (rows[tile.getROW()].getType() == TypeOfRow.CAR) {
-                for (MovingObject car : rows[tile.getROW()].getMovingObjects()) {
-                    if (car.checkCollision(this)) {
+
+            if (tile.getROW() == nRows - 1 && !isMoving) {
+                isMoving = true;
+                movingDirection = Direction.NONE;
+                Car.stopSound();
+            }
+
+
+            // check for collision with car or train
+            if (rows[tile.getROW()].getType() == TypeOfRow.CAR || rows[tile.getROW()].getType() == TypeOfRow.TRAIN) {
+                for (MovingObject carOrTrain : rows[tile.getROW()].getMovingObjects()) {
+                    if (carOrTrain.checkCollision(this)) {
+                        if (!dyingSoundPlaying) {
+                            sound4.play(1.0f);
+                            dyingSoundPlaying = true;
+                            Car.stopSound();
+                        }
                         if (!goingToDie) {
                             goingToDie = true;
                             startedMovingTime = TimeUtils.nanoTime();
@@ -125,22 +148,22 @@ public class Frog {
                 }
             }
 
-            // check for collision with train
-            if (rows[tile.getROW()].getType() == TypeOfRow.TRAIN && !isMoving) {
-                for (MovingObject train : rows[tile.getROW()].getMovingObjects()) {
-                    if (train.checkCollision(this)) {
-                        if (!goingToDie) {
-                            goingToDie = true;
-                            startedMovingTime = TimeUtils.nanoTime();
-                        }
-                        animateDying();
-                    }
-                }
-            }
+
+            if (tile.getROW() >= 1 && rows.length - tile.getROW() >= 2) {
+                if (rows[tile.getROW() + 1].getType() == TypeOfRow.CAR ||
+                        rows[tile.getROW()].getType() == TypeOfRow.CAR ||
+                        rows[tile.getROW() - 1].getType() == TypeOfRow.CAR && alive) {
+                    Car.playSound();
+                } else Car.stopSound();
+            } else Car.stopSound();
 
             if (rows[tile.getROW()].getType() == TypeOfRow.LILY) {
                 if (!tile.isSafe()) {
                     goingToDrown = true;
+                    if (!soundPlaying) {
+                        sound2.play(1.0f);
+                        soundPlaying = true;
+                    }
                 }
             }
 
@@ -151,12 +174,19 @@ public class Frog {
                         startedMovingTime = TimeUtils.nanoTime();
                         animationFrameCount = 0;
                         goingToDrown = true;
+                        sound2.play(1.0f);
+                        soundPlaying = true;
                     }
 
                     drown();
                 }
                 if (x < tiles[0][0].getX() - tiles[0][0].getSize() * 0.5f || x > tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() * 0.5f && !isMoving) {
                     alive = false;
+                    if (!dyingSoundPlaying) {
+                        sound4.play(1.0f);
+                        dyingSoundPlaying = true;
+                        Car.stopSound();
+                    }
                 }
                 if (log.getDirection() == Direction.RIGHT) {
                     x += log.getSize() / log.getSpeed();
@@ -179,7 +209,16 @@ public class Frog {
                         animateMovingLeft(rows);
                     }
 
+                    if (!soundPlaying) {
+                        sound.play(0.4f);
+                        soundPlaying = true;
+                        if (onLog) {
+                            sound5.play(1.0f);
+                        }
+                    }
+
                 } else {
+                    soundPlaying = false;
 
                     // MOVE RIGHT
                     if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
@@ -219,6 +258,8 @@ public class Frog {
                 if (logIndex == log.getLength() - 1) {
                     onLog = false;
                     goingToDrown = true;
+                    sound2.play(1.0f);
+                    soundPlaying = true;
                 } else {
                     logIndex++;
                     tile = tiles[tile.getROW()][tile.getCOLUMN()];
@@ -249,6 +290,8 @@ public class Frog {
                 if (logIndex == 0) {
                     onLog = false;
                     goingToDrown = true;
+                    sound2.play(1.0f);
+                    soundPlaying = true;
                 } else {
                     logIndex--;
                     tile = tiles[tile.getROW()][tile.getCOLUMN()];
@@ -291,6 +334,8 @@ public class Frog {
                 if (!onLog) { // if frog didn't land on the log then die
                     startMoving(Direction.UP);
                     goingToDrown = true;
+                    sound2.play(1.0f);
+                    soundPlaying = true;
                 }
             }
             else // if next row is NOT the row with logs
@@ -345,6 +390,8 @@ public class Frog {
                 if (!onLog) { // if frog didn't land on the log then die
                     startMoving(Direction.DOWN);
                     goingToDrown = true;
+                    sound2.play(1.0f);
+                    soundPlaying = true;
                 }
             } else {
 
