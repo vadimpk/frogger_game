@@ -1,6 +1,7 @@
 package com.frogger.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,6 +18,8 @@ public class Score {
     private static final TextureRegion STAR_3 = new TextureRegion(STARS_PACK, 0, 0,289,280);
     private static final TextureRegion STAR_4 = new TextureRegion(STARS_PACK, 289, 0,289,280);
     private static final TextureRegion STAR_5 = new TextureRegion(STARS_PACK, 578, 0,289,280);
+
+    private Sound collectedSound = Gdx.audio.newSound(Gdx.files.internal("sounds/collect-star.mp3"));
 
 
     private Tile tile;
@@ -41,8 +44,17 @@ public class Score {
     }
 
     private void update() {
-        if (tile.getX() - getFrog().getSize() / 2 <= getFrog().getX() && getFrog().getX() + 0.5*getFrog().getSize() <= tile.getX() + tile.getSize() &&
-                tile.getY() - getFrog().getSize() / 2 <= getFrog().getY() && getFrog().getY()  + 0.5*getFrog().getSize()<= tile.getY() + tile.getSize()) isCollected = true;
+
+        if (getFrog().getX() + getFrog().getSize() >= tile.getX() + 0.3*tile.getSize() &&
+                getFrog().getX() <= tile.getX() + 0.7*tile.getSize() &&
+                getFrog().getY() + getFrog().getSize() >= tile.getY() + 0.3*tile.getSize() &&
+                getFrog().getY() <= tile.getY() + 0.7*tile.getSize()) {
+            isCollected = true;
+            collectedSound.play(1.0f);
+        }
+
+        //if (tile.getX() - getFrog().getSize() / 2 <= getFrog().getX() && getFrog().getX() + 0.5*getFrog().getSize() <= tile.getX() + tile.getSize() &&
+        //        tile.getY() - getFrog().getSize() / 2 <= getFrog().getY() && getFrog().getY()  + 0.5*getFrog().getSize()<= tile.getY() + tile.getSize())
 
         if (TimeUtils.nanoTime() - startTime > 10 * ANIMATION_TIME) {
             animationState = (animationState > 9) ? 0 : animationState + 1;

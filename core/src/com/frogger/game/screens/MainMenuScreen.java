@@ -1,6 +1,7 @@
 package com.frogger.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -17,6 +18,8 @@ public class MainMenuScreen extends Screen {
 
     private Texture bgTexture;
     private Button soundsButton;
+    private static Sound clickedSound = Gdx.audio.newSound(Gdx.files.internal("sounds/click-sound.mp3"));
+    private static boolean soundPlaying = false;
 
     public MainMenuScreen(FroggerGame game) {
         super(game);
@@ -37,7 +40,10 @@ public class MainMenuScreen extends Screen {
     }
 
     private void initButtons() {
-       createMenuButtons();
+
+        createMenuButtons();
+        soundPlaying = false;
+
         //Create buttons
         float startingX = (WINDOW_WIDTH / 2) - (BUTTON_WIDTH / 2);
         soundsButton = new Button(buttonStyles.get("sounds"));
@@ -55,12 +61,21 @@ public class MainMenuScreen extends Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 switchScreenWithFading(new FroggerGameScreen(game, LevelsGenerator.getBigLevel()), 0.3f);
+                if (!soundPlaying) {
+                    clickedSound.play(1.0f);
+                    soundPlaying = true;
+                }
             }
         });
         buttons.get("levels").addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 switchScreenWithFading(new LevelsScreen(game), 0.3f);
+                if (!soundPlaying) {
+                    clickedSound.play(1.0f);
+                    soundPlaying = true;
+                }
+
             }
         });
 
@@ -68,6 +83,10 @@ public class MainMenuScreen extends Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.exit();
+                if (!soundPlaying) {
+                    clickedSound.play(1.0f);
+                    soundPlaying = true;
+                }
             }
         });
         soundsButton.addListener(new ClickListener(){
