@@ -20,7 +20,7 @@ public class PauseScreen extends Screen{
     public PauseScreen(FroggerGame game, FroggerGameScreen gameScreen) {
         super(game);
         this.gameScreen = gameScreen;
-        buttonStyles = new HashMap<>();
+        textButtonStyles = new HashMap<>();
     }
 
     @Override
@@ -31,11 +31,11 @@ public class PauseScreen extends Screen{
 
         //Create buttons
         float startingX = (WINDOW_WIDTH / 2) - (BUTTON_WIDTH / 2);
-        buttons.put("resume", new TextButton("Resume", buttonStyles.get("green")));
+        buttons.put("resume", new TextButton("Resume", textButtonStyles.get("green")));
         buttons.get("resume").setBounds(startingX, 0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *0.1f, BUTTON_WIDTH, BUTTON_HEIGHT);
-        buttons.put("restart", new TextButton("Restart", buttonStyles.get("yellow")));
+        buttons.put("restart", new TextButton("Restart", textButtonStyles.get("yellow")));
         buttons.get("restart").setBounds(startingX,0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *1.7f , BUTTON_WIDTH, BUTTON_HEIGHT);
-        buttons.put("back",  new TextButton("Back", buttonStyles.get("red")));
+        buttons.put("back",  new TextButton("Back", textButtonStyles.get("red")));
         buttons.get("back").setBounds(startingX, 0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *3.3f, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         //Add listeners to buttons

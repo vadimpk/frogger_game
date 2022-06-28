@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -31,7 +32,8 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
     protected Map<String, BitmapFont> fonts;
     protected Skin skin;
     protected TextureAtlas buttonAtlas;
-    protected Map<String, TextButton.TextButtonStyle> buttonStyles;
+    protected Map<String, TextButton.TextButtonStyle> textButtonStyles;
+    protected Map<String, Button.ButtonStyle> buttonStyles;
     protected Map<String, TextButton> buttons;
     protected boolean isSwitching;
 
@@ -56,6 +58,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         skin = new Skin();
         buttonAtlas = new TextureAtlas(Gdx.files.internal("buttons/buttons.atlas"));
         skin.addRegions(buttonAtlas);
+        textButtonStyles = new HashMap<>();
         buttonStyles = new HashMap<>();
 
         isSwitching = false;
@@ -122,15 +125,24 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
 
 
     public void createMenuButtons(){
-        buttonStyles.put("green", new TextButton.TextButtonStyle());
-        buttonStyles.put("yellow", new TextButton.TextButtonStyle());
-        buttonStyles.put("red", new TextButton.TextButtonStyle());
-        for (String key : buttonStyles.keySet()) {
-            TextButton.TextButtonStyle buttonStyle = buttonStyles.get(key);
+        textButtonStyles.put("green", new TextButton.TextButtonStyle());
+        textButtonStyles.put("yellow", new TextButton.TextButtonStyle());
+        textButtonStyles.put("red", new TextButton.TextButtonStyle());
+        for (String key : new String[]{"green", "yellow", "red"}) {
+            TextButton.TextButtonStyle buttonStyle = textButtonStyles.get(key);
             buttonStyle.font = fonts.get("36");
             buttonStyle.up = skin.getDrawable(key + "-btn-up");
             buttonStyle.down = skin.getDrawable(key + "-btn-down");
             buttonStyle.over = skin.getDrawable(key + "-btn-over");
         }
+
+        Button.ButtonStyle soundsStyle = new Button.ButtonStyle();
+        soundsStyle.up = skin.getDrawable("sound-on-btn-up");
+        soundsStyle.down = skin.getDrawable("sound-on-btn-down");
+        soundsStyle.over = skin.getDrawable("sound-on-btn-over");
+        soundsStyle.checked = skin.getDrawable("sound-off-btn-up");
+        soundsStyle.checkedOver = skin.getDrawable("sound-off-btn-over");
+        soundsStyle.checkedDown = skin.getDrawable("sound-off-btn-down");
+        buttonStyles.put("sounds", soundsStyle);
     }
 }
