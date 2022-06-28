@@ -42,6 +42,7 @@ public class Frog {
     private boolean moveToTheWall = false;
     private boolean goingToDrown = false;
     private boolean goingToDie = false;
+    private boolean moveCamera = true;
 
     /** initialize fields for movement mechanic on logs  */
     private boolean onLog = false;
@@ -497,6 +498,7 @@ public class Frog {
         movingDirection = direction;
         animationFrameCount = 0;
         moveToTheWall = toTheWall;
+        moveCamera = !toTheWall;
     }
 
     /**
@@ -518,7 +520,6 @@ public class Frog {
 
         // don't let next move until time passes
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
-            isMoving = false; // when time passes end moving
             endAnimation();
         }
 
@@ -553,7 +554,7 @@ public class Frog {
             x += dx;
 
             // move camera
-            if (tile.getROW() > (nColumns / 2) && tile.getROW() < (nRows - (nColumns / 2)) && !moveToTheWall)
+            if (tile.getROW() > (nColumns / 2) && tile.getROW() < (nRows - (nColumns / 2)) && moveCamera)
                 FroggerGame.gameCamera.translate(0,dy,0);
 
             animate();
@@ -567,7 +568,6 @@ public class Frog {
 
         // don't let next move until time passes
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
-            isMoving = false; // when time passes end moving
             endAnimation();
         }
 
@@ -603,7 +603,7 @@ public class Frog {
             y += dy;
 
             // move camera
-            if (tile.getROW() >= nColumns / 2 && tile.getROW() < (nRows - (nColumns / 2) - 1) && !moveToTheWall)
+            if (tile.getROW() >= nColumns / 2 && tile.getROW() < (nRows - (nColumns / 2) - 1) && moveCamera)
                 FroggerGame.gameCamera.translate(0,dy,0);
 
             animate();
@@ -616,7 +616,6 @@ public class Frog {
     private void animateMovingRight(Row[] rows) {
 
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
-            isMoving = false;
             endAnimation();
         }
 
@@ -652,7 +651,6 @@ public class Frog {
     public void animateMovingLeft(Row[] rows) {
 
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
-            isMoving = false;
             endAnimation();
         }
         animationFrameCount++;
@@ -708,6 +706,8 @@ public class Frog {
     private void endAnimation() {
         if (onLog) log.setFlooded(false);
         if (goingToDrown) alive = false;
+        isMoving = false;
+        moveCamera = true;
         if (tile.isLily()) {
             tile.setLily();
         }
@@ -833,7 +833,7 @@ class CharacterTexture {
     public TextureRegion dead;
 
     CharacterTexture() {
-        setCharacter(Util.Character.EGG);
+        setCharacter(Util.Character.FROG);
     }
 
     public void setCharacter(Util.Character character) {
