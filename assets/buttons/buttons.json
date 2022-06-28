@@ -39,6 +39,14 @@
 		"up": "level-btn-up-0-stars",
 		"down": "level-btn-down-0-stars",
 		"over": "level-btn-over-0-stars"
+	},
+	"sounds": {
+		"up": "sound-on-btn-up",
+		"down": "sound-on-btn-down",
+		"over": "sound-on-btn-over",
+		"checked": "sound-off-btn-up",
+		"checkedOver": "sound-off-btn-over",
+		"checkedDown": "sound-off-btn-down"
 	}
 }
 }

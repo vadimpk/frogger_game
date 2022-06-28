@@ -4,149 +4,197 @@ size: 2048, 2048
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
-green-btn-down
-  rotate: false
-  xy: 1, 168
-  size: 452, 165
-  orig: 452, 165
-  offset: 0, 0
-  index: -1
-green-btn-over
-  rotate: false
-  xy: 1447, 1398
-  size: 450, 165
-  orig: 450, 165
-  offset: 0, 0
-  index: -1
-green-btn-up
-  rotate: false
-  xy: 965, 578
-  size: 450, 165
-  orig: 450, 165
-  offset: 0, 0
-  index: -1
 level-btn-down-0-stars
   rotate: false
-  xy: 965, 1155
+  xy: 965, 1107
   size: 480, 408
   orig: 480, 408
   offset: 0, 0
   index: -1
 level-btn-down-1-stars
   rotate: false
-  xy: 1447, 1565
+  xy: 1447, 1517
   size: 480, 408
   orig: 480, 408
   offset: 0, 0
   index: -1
 level-btn-down-2-stars
   rotate: false
-  xy: 483, 335
+  xy: 483, 287
   size: 480, 408
   orig: 480, 408
   offset: 0, 0
   index: -1
 level-btn-down-3-stars
   rotate: false
-  xy: 965, 745
+  xy: 965, 697
   size: 480, 408
   orig: 480, 408
   offset: 0, 0
   index: -1
 level-btn-over-0-stars
   rotate: false
-  xy: 1, 1565
+  xy: 1, 1517
   size: 480, 408
   orig: 480, 408
   offset: 0, 0
   index: -1
 level-btn-over-1-stars
   rotate: false
-  xy: 1, 1155
+  xy: 1, 1107
   size: 480, 408
   orig: 480, 408
   offset: 0, 0
   index: -1
 level-btn-over-2-stars
   rotate: false
-  xy: 483, 1565
+  xy: 483, 1517
   size: 480, 408
   orig: 480, 408
   offset: 0, 0
   index: -1
 level-btn-over-3-stars
   rotate: false
-  xy: 1, 745
+  xy: 1, 697
   size: 480, 408
   orig: 480, 408
   offset: 0, 0
   index: -1
 level-btn-up-0-stars
   rotate: false
-  xy: 483, 1155
+  xy: 483, 1107
   size: 480, 408
   orig: 480, 408
   offset: 0, 0
   index: -1
 level-btn-up-1-stars
   rotate: false
-  xy: 965, 1565
+  xy: 965, 1517
   size: 480, 408
   orig: 480, 408
   offset: 0, 0
   index: -1
 level-btn-up-2-stars
   rotate: false
-  xy: 1, 335
+  xy: 1, 287
   size: 480, 408
   orig: 480, 408
   offset: 0, 0
   index: -1
 level-btn-up-3-stars
   rotate: false
-  xy: 483, 745
+  xy: 483, 697
   size: 480, 408
   orig: 480, 408
   offset: 0, 0
   index: -1
+sound-off-btn-down
+  rotate: false
+  xy: 1447, 1035
+  size: 480, 480
+  orig: 480, 480
+  offset: 0, 0
+  index: -1
+sound-off-btn-over
+  rotate: false
+  xy: 965, 215
+  size: 480, 480
+  orig: 480, 480
+  offset: 0, 0
+  index: -1
+sound-off-btn-up
+  rotate: false
+  xy: 1447, 553
+  size: 480, 480
+  orig: 480, 480
+  offset: 0, 0
+  index: -1
+sound-on-btn-down
+  rotate: false
+  xy: 1447, 71
+  size: 480, 480
+  orig: 480, 480
+  offset: 0, 0
+  index: -1
+
+buttons2.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+green-btn-down
+  rotate: false
+  xy: 483, 1672
+  size: 452, 165
+  orig: 452, 165
+  offset: 0, 0
+  index: -1
+green-btn-over
+  rotate: false
+  xy: 1, 708
+  size: 450, 165
+  orig: 450, 165
+  offset: 0, 0
+  index: -1
+green-btn-up
+  rotate: false
+  xy: 483, 1505
+  size: 450, 165
+  orig: 450, 165
+  offset: 0, 0
+  index: -1
 red-btn-down
   rotate: false
-  xy: 965, 411
+  xy: 935, 1505
   size: 450, 165
   orig: 450, 165
   offset: 0, 0
   index: -1
 red-btn-over
   rotate: false
-  xy: 453, 1
+  xy: 1389, 1672
   size: 450, 165
   orig: 450, 165
   offset: 0, 0
   index: -1
 red-btn-up
   rotate: false
-  xy: 1447, 1064
+  xy: 1, 374
   size: 450, 165
   orig: 450, 165
   offset: 0, 0
   index: -1
+sound-on-btn-over
+  rotate: false
+  xy: 1, 1357
+  size: 480, 480
+  orig: 480, 480
+  offset: 0, 0
+  index: -1
+sound-on-btn-up
+  rotate: false
+  xy: 1, 875
+  size: 480, 480
+  orig: 480, 480
+  offset: 0, 0
+  index: -1
 yellow-btn-down
   rotate: false
-  xy: 1, 1
+  xy: 937, 1672
   size: 450, 165
   orig: 450, 165
   offset: 0, 0
   index: -1
 yellow-btn-over
   rotate: false
-  xy: 455, 168
+  xy: 1, 541
   size: 450, 165
   orig: 450, 165
   offset: 0, 0
   index: -1
 yellow-btn-up
   rotate: false
-  xy: 1447, 1231
+  xy: 483, 1338
   size: 450, 165
   orig: 450, 165
   offset: 0, 0

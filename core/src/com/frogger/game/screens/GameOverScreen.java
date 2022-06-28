@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.*;
 
 import static com.frogger.game.Const.*;
-import static com.frogger.game.Const.BUTTON_HEIGHT;
 import static com.frogger.game.Scorer.FILLED_STAR;
 import static com.frogger.game.Scorer.UNFILLED_STAR;
 import static com.frogger.game.screens.FroggerGameScreen.level;
@@ -19,9 +18,9 @@ import static com.frogger.game.screens.FroggerGameScreen.level;
 public class GameOverScreen extends Screen{
 
     private final Level currentLevel;
-    private float timer;
-    private int score;
-    private boolean isWon;
+    private final float timer;
+    private final int score;
+    private final boolean isWon;
 
     private static Sound clickedSound = Gdx.audio.newSound(Gdx.files.internal("sounds/click-sound.mp3"));
     private static boolean soundPlaying = false;
@@ -35,11 +34,11 @@ public class GameOverScreen extends Screen{
         int starScore = 0;
         for (Score score : currentLevel.getMap().getScores()) if (score.isCollected()) starScore++;
         if(currentLevel.isBig()) {
-            score = (int) (121 * starScore + 1256 * (1 - (timer / 330)));
-            LevelsGenerator.updateBigLevel(score);
+            score = (int) (329 * starScore + 456 * (1 - (timer / 330)));
+            if(isWon) LevelsGenerator.updateBigLevel(score);
         }else {
-            score = (int) (121 * starScore + 1256 * (timer / currentLevel.getTime()));
-            LevelsGenerator.updateLevel(currentLevel.getNumber() - 1, score, starScore);
+            score = (int) (((isWon) ? 2 : 1) * (329 * starScore + 456 * (timer / currentLevel.getTime())));
+            if(isWon) LevelsGenerator.updateLevel(currentLevel.getNumber() - 1, score, starScore);
         }
     }
 
@@ -48,11 +47,7 @@ public class GameOverScreen extends Screen{
         super.show();
         soundPlaying = false;
 
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.font = fonts.get("36");
-        textButtonStyle.up = skin.getDrawable("green-btn-up");
-        textButtonStyle.down = skin.getDrawable("green-btn-down");
-        textButtonStyle.over = skin.getDrawable("green-btn-over");
+        createMenuButtons();
 
         Label label = new Label(isWon ? "You Won" : "Game Over", new Label.LabelStyle(fonts.get("100"), Color.BLACK));
         label.setX(WINDOW_WIDTH / 2 - label.getWidth() / 2);
@@ -99,6 +94,12 @@ public class GameOverScreen extends Screen{
         }
 
         Label.LabelStyle labelStyle = new Label.LabelStyle(fonts.get("36"), Color.BLACK);
+        Label levelLabel = null;
+        if (!currentLevel.isBig()) {
+            levelLabel = new Label("Level " + currentLevel.getNumber(), labelStyle);
+            levelLabel.setX(WINDOW_WIDTH / 2 - levelLabel.getWidth() / 2);
+            levelLabel.setY(label.getY() + label.getHeight() + 0.05f* WINDOW_HEIGHT);
+        }
         Label yourScore = new Label("Your Score: " + score, labelStyle);
         Label bestScore = new Label("The Best Score: " + currentLevel.getBestScore(), labelStyle);
         Label timeLabel = new Label("Time: " + Timer.convert((currentLevel.isBig() ? timer: level.getTime() - timer)) , labelStyle);
@@ -111,10 +112,10 @@ public class GameOverScreen extends Screen{
 
         float distanceX = 0.1f * WINDOW_WIDTH;
         float startingX = (WINDOW_WIDTH - 2 * BUTTON_WIDTH - distanceX) / 2;
-        TextButton backButton = new TextButton("Back", textButtonStyle);
-        backButton.setBounds(startingX, 0.9f*timeLabel.getY() - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
-        TextButton restartButton = new TextButton("Restart", textButtonStyle);
-        restartButton.setBounds(startingX + BUTTON_WIDTH + distanceX, 0.9f*timeLabel.getY() - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+        TextButton backButton = new TextButton("Back", textButtonStyles.get("red"));
+        TextButton restartButton = new TextButton("Restart", textButtonStyles.get("yellow"));
+        restartButton.setBounds(startingX, 0.9f*timeLabel.getY() - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+        backButton.setBounds(startingX + BUTTON_WIDTH + distanceX, 0.9f*timeLabel.getY() - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         backButton.addListener(new ClickListener(){
             @Override
@@ -146,6 +147,7 @@ public class GameOverScreen extends Screen{
         stage.addActor(restartButton);
         stage.addActor(backButton);
 
+        if(!currentLevel.isBig()) stage.addActor(levelLabel);
         stage.addActor(label);
         stage.addActor(yourScore);
         stage.addActor(bestScore);

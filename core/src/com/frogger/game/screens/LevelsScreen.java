@@ -5,28 +5,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.Level;
 import com.frogger.game.LevelsGenerator;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.frogger.game.Const.WINDOW_HEIGHT;
-import static com.frogger.game.Const.WINDOW_WIDTH;
+import static com.frogger.game.Const.*;
 
 public class LevelsScreen extends Screen {
 
-    private final Map<String,  TextButton.TextButtonStyle> buttonStyles;
     private static Sound clickedSound = Gdx.audio.newSound(Gdx.files.internal("sounds/click-sound.mp3"));
     private static boolean soundPlaying = false;
 
     public LevelsScreen(FroggerGame game) {
         super(game);
-        buttonStyles = new HashMap<>();
     }
 
     @Override
@@ -38,16 +31,19 @@ public class LevelsScreen extends Screen {
         initButtons();
 
         TextButton[] buttons = new TextButton[levels.length];
-        float distanceX = 0.8f * WINDOW_WIDTH / ((float)levels.length / 2);
+        float distanceX = 0.08f*WINDOW_WIDTH;
+        float buttonSize = 0.15f * WINDOW_HEIGHT;
+        float startingX = WINDOW_WIDTH * 0.5f - 2.5f*buttonSize - 2f*distanceX;
         for (int i = 0; i < levels.length; i++) {
 
-            buttons[i] = new TextButton(String.valueOf(i + 1), buttonStyles.get(String.valueOf(levels[i].getStarScore())));
+            buttons[i] = new TextButton(String.valueOf(i + 1), textButtonStyles.get(String.valueOf(levels[i].getStarScore())));
 
-            float button_size = 0.15f * WINDOW_HEIGHT;
-            if (i <= 4) buttons[i].setBounds(0.1f * WINDOW_WIDTH + distanceX * i, 0.65f * WINDOW_HEIGHT - 0.5f*button_size, button_size, button_size);
-            else buttons[i].setBounds(0.1f * WINDOW_WIDTH + distanceX * (i - 5), 0.65f * WINDOW_HEIGHT - 2f*button_size, button_size, button_size);
+            if (i <= 4)
+                buttons[i].setBounds(startingX + (distanceX + buttonSize) * i, 0.7f * WINDOW_HEIGHT - 0.5f * buttonSize, buttonSize, buttonSize);
+            else
+                buttons[i].setBounds(startingX + (distanceX + buttonSize) * (i - 5), 0.7f * WINDOW_HEIGHT - 2f * buttonSize, buttonSize, buttonSize);
             final int finalI = i;
-            buttons[i].addListener(new ClickListener(){
+            buttons[i].addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     switchScreenWithFading(new FroggerGameScreen(game, levels[finalI]), 0.3f);
@@ -59,16 +55,28 @@ public class LevelsScreen extends Screen {
             });
             stage.addActor(buttons[i]);
         }
+
+        createMenuButtons();
+        TextButton backButton = new TextButton("Back", textButtonStyles.get("red"));
+        backButton.setBounds(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 0.15f*WINDOW_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+        backButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                switchScreenWithFading(new MainMenuScreen(game), 0.3f);
+            }
+        });
+
+        stage.addActor(backButton);
     }
 
     private void initButtons() {
-        soundPlaying = false;
-        buttonStyles.put("0", new TextButton.TextButtonStyle());
-        buttonStyles.put("1", new TextButton.TextButtonStyle());
-        buttonStyles.put("2", new TextButton.TextButtonStyle());
-        buttonStyles.put("3", new TextButton.TextButtonStyle());
-        for (String key : buttonStyles.keySet()) {
-            TextButton.TextButtonStyle buttonStyle = buttonStyles.get(key);
+        textButtonStyles.put("0", new TextButton.TextButtonStyle());
+        textButtonStyles.put("1", new TextButton.TextButtonStyle());
+        textButtonStyles.put("2", new TextButton.TextButtonStyle());
+        textButtonStyles.put("3", new TextButton.TextButtonStyle());
+                soundPlaying = false;
+        for (String key : new String[]{"0", "1", "2", "3"}) {
+            TextButton.TextButtonStyle buttonStyle = textButtonStyles.get(key);
             buttonStyle.font = fonts.get("36");
             buttonStyle.up = skin.getDrawable("level-btn-up-" + key + "-stars");
             buttonStyle.down = skin.getDrawable("level-btn-down-" + key + "-stars");
