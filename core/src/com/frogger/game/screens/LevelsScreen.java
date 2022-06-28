@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.frogger.game.Audio;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.Level;
 import com.frogger.game.LevelsGenerator;
@@ -14,9 +15,6 @@ import com.frogger.game.LevelsGenerator;
 import static com.frogger.game.Const.*;
 
 public class LevelsScreen extends Screen {
-
-    private static Sound clickedSound = Gdx.audio.newSound(Gdx.files.internal("sounds/click-sound.mp3"));
-    private static boolean soundPlaying = false;
 
     public LevelsScreen(FroggerGame game) {
         super(game);
@@ -46,11 +44,8 @@ public class LevelsScreen extends Screen {
             buttons[i].addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    Audio.playClickedSound();
                     switchScreenWithFading(new FroggerGameScreen(game, levels[finalI]), 0.3f);
-                    if (!soundPlaying) {
-                        clickedSound.play(1.0f);
-                        soundPlaying = true;
-                    }
                 }
             });
             stage.addActor(buttons[i]);
@@ -62,6 +57,7 @@ public class LevelsScreen extends Screen {
         backButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Audio.playClickedSound();
                 switchScreenWithFading(new MainMenuScreen(game), 0.3f);
             }
         });
@@ -74,7 +70,6 @@ public class LevelsScreen extends Screen {
         textButtonStyles.put("1", new TextButton.TextButtonStyle());
         textButtonStyles.put("2", new TextButton.TextButtonStyle());
         textButtonStyles.put("3", new TextButton.TextButtonStyle());
-                soundPlaying = false;
         for (String key : new String[]{"0", "1", "2", "3"}) {
             TextButton.TextButtonStyle buttonStyle = textButtonStyles.get(key);
             buttonStyle.font = fonts.get("36");

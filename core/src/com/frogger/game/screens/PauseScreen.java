@@ -2,21 +2,25 @@ package com.frogger.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.frogger.game.Audio;
 import com.frogger.game.FroggerGame;
 
 import java.util.HashMap;
 
 import static com.frogger.game.Const.*;
 
-public class PauseScreen extends Screen{
+public class PauseScreen extends Screen {
+
     private final FroggerGameScreen gameScreen;
     Texture bgTexture;
+
     public PauseScreen(FroggerGame game, FroggerGameScreen gameScreen) {
         super(game);
         this.gameScreen = gameScreen;
@@ -43,12 +47,14 @@ public class PauseScreen extends Screen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 FroggerGameScreen.isPaused = !FroggerGameScreen.isPaused;
+                Audio.playClickedSound();
                 switchScreenWithFading(gameScreen, 0f);
             }
         });
         buttons.get("restart").addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Audio.playClickedSound();
                 switchScreenWithFading(new FroggerGameScreen(game, FroggerGameScreen.level), 0.3f);
             }
         });
@@ -56,6 +62,7 @@ public class PauseScreen extends Screen{
         buttons.get("back").addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Audio.playClickedSound();
                 switchScreenWithFading(new MainMenuScreen(game), 0.3f);
             }
         });

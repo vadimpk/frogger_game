@@ -1,12 +1,12 @@
 package com.frogger.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.frogger.game.Audio;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.LevelsGenerator;
 
@@ -18,8 +18,6 @@ public class MainMenuScreen extends Screen {
 
     private Texture bgTexture;
     private Button soundsButton;
-    private static Sound clickedSound = Gdx.audio.newSound(Gdx.files.internal("sounds/click-sound.mp3"));
-    private static boolean soundPlaying = false;
 
     public MainMenuScreen(FroggerGame game) {
         super(game);
@@ -42,7 +40,6 @@ public class MainMenuScreen extends Screen {
     private void initButtons() {
 
         createMenuButtons();
-        soundPlaying = false;
 
         //Create buttons
         float startingX = (WINDOW_WIDTH / 2) - (BUTTON_WIDTH / 2);
@@ -60,38 +57,29 @@ public class MainMenuScreen extends Screen {
         buttons.get("play").addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Audio.playClickedSound();
                 switchScreenWithFading(new FroggerGameScreen(game, LevelsGenerator.getBigLevel()), 0.3f);
-                if (!soundPlaying) {
-                    clickedSound.play(1.0f);
-                    soundPlaying = true;
-                }
             }
         });
         buttons.get("levels").addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Audio.playClickedSound();
                 switchScreenWithFading(new LevelsScreen(game), 0.3f);
-                if (!soundPlaying) {
-                    clickedSound.play(1.0f);
-                    soundPlaying = true;
-                }
-
             }
         });
 
         buttons.get("exit").addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Audio.playClickedSound();
                 Gdx.app.exit();
-                if (!soundPlaying) {
-                    clickedSound.play(1.0f);
-                    soundPlaying = true;
-                }
             }
         });
         soundsButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Audio.playClickedSound();
                 IS_SOUNDS_ON = !IS_SOUNDS_ON;
             }
         });

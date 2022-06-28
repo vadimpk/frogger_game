@@ -22,9 +22,6 @@ public class GameOverScreen extends Screen{
     private final int score;
     private final boolean isWon;
 
-    private static Sound clickedSound = Gdx.audio.newSound(Gdx.files.internal("sounds/click-sound.mp3"));
-    private static boolean soundPlaying = false;
-
     public GameOverScreen(FroggerGame game, Level currentLevel, float timer, boolean isWon) {
         super(game);
         this.currentLevel = currentLevel;
@@ -45,7 +42,6 @@ public class GameOverScreen extends Screen{
     @Override
     public void show() {
         super.show();
-        soundPlaying = false;
 
         createMenuButtons();
 
@@ -120,27 +116,21 @@ public class GameOverScreen extends Screen{
         backButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Audio.playClickedSound();
                 for (Score score : currentLevel.getMap().getScores()) {
                     score.setUncollected();
                 }
                 switchScreenWithFading(new MainMenuScreen(game), 0.3f);
-                if (!soundPlaying) {
-                    clickedSound.play(1.0f);
-                    soundPlaying = true;
-                }
             }
         });
         restartButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                switchScreenWithFading(new FroggerGameScreen(game, currentLevel), 0.3f);
+                Audio.playClickedSound();
                 for (Score score : currentLevel.getMap().getScores()) {
                     score.setUncollected();
                 }
-                if (!soundPlaying) {
-                    clickedSound.play(1.0f);
-                    soundPlaying = true;
-                }
+                switchScreenWithFading(new FroggerGameScreen(game, currentLevel), 0.3f);
             }
         });
 

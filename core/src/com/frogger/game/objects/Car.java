@@ -1,7 +1,6 @@
 package com.frogger.game.objects;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -19,9 +18,6 @@ public class Car extends MovingObject {
     private static final TextureRegion CAR_TAIL_TEXTURE_2 = new TextureRegion(CAR_PACK, 0, 225, 60, 75);
     private static final TextureRegion CAR_HEAD_TEXTURE_3 = new TextureRegion(CAR_PACK, 0, 300, 60, 75);
     private static final TextureRegion CAR_TAIL_TEXTURE_3 = new TextureRegion(CAR_PACK, 0, 375, 60, 75);
-
-    private static Sound sound3 = Gdx.audio.newSound(Gdx.files.internal("sounds/traffic-sound.mp3"));
-    private static boolean carSoundPlaying = false;
 
 
     private static final boolean SAFE = false;
@@ -80,16 +76,4 @@ public class Car extends MovingObject {
         CAR_PACK.dispose();
     }
 
-    public static void playSound() {
-        if (!carSoundPlaying) {
-            sound3.play(1.0f);
-            carSoundPlaying = true;
-        }
-    }
-    public static void stopSound() {
-        if (carSoundPlaying) {
-            sound3.stop();
-            carSoundPlaying = false;
-        }
-    }
 }

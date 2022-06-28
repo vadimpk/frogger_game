@@ -2,18 +2,22 @@ package com.frogger.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.frogger.game.Util.Direction;
 import com.frogger.game.Util.TypeOfRow;
-import com.frogger.game.objects.Car;
 import com.frogger.game.objects.MovingObject;
 import com.frogger.game.screens.FroggerGameScreen;
 
-import java.util.Objects;
+/**
+ * Frog.java
+ * @author vadympolishchuk
+ * This is a class of the main character of the game - Frog.
+ * This class implements movement mechanichs of the main character, default animations and its sounds.
+ * Method update() runs every frame of the application and is responsible for character changes.
+ */
 
 public class Frog {
 
@@ -21,29 +25,11 @@ public class Frog {
     
     /** initialize frog attributes */
     private Tile tile;
-    private float x,y,size;
+    private float x, y, size;
     private boolean alive;
     private TextureRegion texture;
     private int textureRotation;
-
-    private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog/frog.png"));
-
-
-    private static final TextureRegion FROG_LOOKING_UP = new TextureRegion(FROG_PACK, 300, 150, 150, 150);
-    private static final TextureRegion FROG_JUMPING_UP = new TextureRegion(FROG_PACK, 150, 150, 150, 150);
-
-    private static final TextureRegion FROG_DROWNING_UP_1 = new TextureRegion(FROG_PACK, 0, 0, 150, 150);
-    private static final TextureRegion FROG_DROWNING_UP_2 = new TextureRegion(FROG_PACK, 150, 0, 150, 150);
-    private static final TextureRegion FROG_DROWNING_UP_3 = new TextureRegion(FROG_PACK, 300, 0, 150, 150);
-    private static final TextureRegion FROG_DROWNING_UP_4 = new TextureRegion(FROG_PACK, 0, 150, 150, 150);
-    private static final TextureRegion FROG_DROWNING_UP_5 = new TextureRegion(FROG_PACK, 0, 300, 150, 150);
-    private static final TextureRegion FROG_DEAD = new TextureRegion(FROG_PACK, 150, 300, 150, 150);
-
-    private Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/frog-jumping.mp3"));
-    private Sound sound2 = Gdx.audio.newSound(Gdx.files.internal("sounds/splash.mp3"));
-    private Sound sound4 = Gdx.audio.newSound(Gdx.files.internal("sounds/dead.mp3"));
-    private Sound sound5 = Gdx.audio.newSound(Gdx.files.internal("sounds/log.mp3"));
-
+    private CharacterTexture character = new CharacterTexture();
 
     /** initialize fields for movement mechanic  */
     private long startedMovingTime;
@@ -56,8 +42,6 @@ public class Frog {
     private boolean moveToTheWall = false;
     private boolean goingToDrown = false;
     private boolean goingToDie = false;
-    private boolean soundPlaying = false;
-    private boolean dyingSoundPlaying = false;
 
     /** initialize fields for movement mechanic on logs  */
     private boolean onLog = false;
@@ -66,17 +50,27 @@ public class Frog {
     private float distanceX = 0f;
 
 
+    /**
+     * Get instance of a frog
+     */
     public static Frog get() {
         if(instance == null) instance = new Frog();
         return instance;
     }
-    
+
+    /**
+     * Constructor of a frog
+     */
     private Frog() {
         alive = true;
-        texture = FROG_LOOKING_UP;
+        texture = character.standing;
         textureRotation = 0;
     }
-    
+
+    /**
+     * Method to set a starting tile of a frog
+     * @param tile tile to spawn at
+     */
     public void setStartingTile(Tile tile){
         this.tile = tile;
         x = tile.getX();
@@ -84,13 +78,14 @@ public class Frog {
         size = tile.getSize();
     }
 
+    /**
+     * Method that changes parameters of a frog when it is respawned
+     * @param tile tile to respawn at
+     */
     public void respawn(Tile tile) {
-        this.tile = tile;
-        x = tile.getX();
-        y = tile.getY();
-        size = tile.getSize();
+        setStartingTile(tile);
         alive = true;
-        texture = FROG_LOOKING_UP;
+        texture = character.standing;
         onLog = false;
         log = null;
         logIndex = -1;
@@ -98,7 +93,11 @@ public class Frog {
         moveToTheWall = false;
         goingToDrown = false;
         goingToDie = false;
-        dyingSoundPlaying = false;
+        Audio.setPlayingFrogSplashing(false);
+        Audio.setPlayingFrogDying(false);
+        Audio.setPlayingFrogJumping(false);
+        Audio.setPlayingFrogOnLog(false);
+        Audio.setPlayingTraffic(false);
     }
 
     public void render(SpriteBatch batch) {
@@ -107,7 +106,7 @@ public class Frog {
     }
 
     public static void dispose() {
-        FROG_PACK.dispose();
+        CharacterTexture.dispose();
     }
 
     /**
@@ -122,23 +121,20 @@ public class Frog {
             int nColumns = FroggerGameScreen.level.getMap().getnColumns();
             int nRows = FroggerGameScreen.level.getMap().getnRows();
 
-
+            // if frog is on the last row (finish line) - don't let it move
             if (tile.getROW() == nRows - 1 && !isMoving) {
                 isMoving = true;
                 movingDirection = Direction.NONE;
-                Car.stopSound();
+                Audio.stopPlayingTrafficSound();
             }
 
 
-            // check for collision with car or train
+            // check for collision with car or train (if frog is on row with cars or train)
+            // if collided, play sound of dying and set frog to animate death
             if (rows[tile.getROW()].getType() == TypeOfRow.CAR || rows[tile.getROW()].getType() == TypeOfRow.TRAIN) {
                 for (MovingObject carOrTrain : rows[tile.getROW()].getMovingObjects()) {
                     if (carOrTrain.checkCollision(this)) {
-                        if (!dyingSoundPlaying) {
-                            sound4.play(1.0f);
-                            dyingSoundPlaying = true;
-                            Car.stopSound();
-                        }
+                        Audio.playFrogDyingSound();
                         if (!goingToDie) {
                             goingToDie = true;
                             startedMovingTime = TimeUtils.nanoTime();
@@ -148,46 +144,40 @@ public class Frog {
                 }
             }
 
+            // if frog is on a row with lily pads and frog is not on a lily pad, make it drown
+            if (rows[tile.getROW()].getType() == TypeOfRow.LILY) {
+                if (!tile.isSafe()) {
+                    goingToDrown = true;
+                    Audio.playFrogSplashingSound();
+                }
+            }
 
+            // if next or current or previous row is a row with cars, play sound of traffic
             if (tile.getROW() >= 1 && rows.length - tile.getROW() >= 2) {
                 if (rows[tile.getROW() + 1].getType() == TypeOfRow.CAR ||
                         rows[tile.getROW()].getType() == TypeOfRow.CAR ||
                         rows[tile.getROW() - 1].getType() == TypeOfRow.CAR && alive) {
-                    Car.playSound();
-                } else Car.stopSound();
-            } else Car.stopSound();
-
-            if (rows[tile.getROW()].getType() == TypeOfRow.LILY) {
-                if (!tile.isSafe()) {
-                    goingToDrown = true;
-                    if (!soundPlaying) {
-                        sound2.play(1.0f);
-                        soundPlaying = true;
-                    }
-                }
-            }
+                    Audio.startPlayingTrafficSound();
+                } else Audio.stopPlayingTrafficSound();
+            } else Audio.stopPlayingTrafficSound();
 
             // if frog is on a log then move it with log speed (and check if not behind screen)
             if (onLog) {
-                if (!log.isSafe() && !isMoving) {
+                if (!log.isSafe() && !isMoving) { // if log broke and became not safe then make frog drown
                     if (!goingToDrown) {
                         startedMovingTime = TimeUtils.nanoTime();
                         animationFrameCount = 0;
                         goingToDrown = true;
-                        sound2.play(1.0f);
-                        soundPlaying = true;
+                        Audio.playFrogSplashingSound();
                     }
-
                     drown();
                 }
+                // if out of screen
                 if (x < tiles[0][0].getX() - tiles[0][0].getSize() * 0.5f || x > tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() * 0.5f && !isMoving) {
                     alive = false;
-                    if (!dyingSoundPlaying) {
-                        sound4.play(1.0f);
-                        dyingSoundPlaying = true;
-                        Car.stopSound();
-                    }
+                    Audio.playFrogDyingSound();
                 }
+                // move with log speed
                 if (log.getDirection() == Direction.RIGHT) {
                     x += log.getSize() / log.getSpeed();
                 } else {
@@ -209,16 +199,16 @@ public class Frog {
                         animateMovingLeft(rows);
                     }
 
-                    if (!soundPlaying) {
-                        sound.play(0.4f);
-                        soundPlaying = true;
-                        if (onLog) {
-                            sound5.play(1.0f);
-                        }
+                    // play sound if moving (plays once for a move)
+                    Audio.playFrogJumpingSound();
+                    if (onLog) {
+                        Audio.playFrogOnLogSound();
                     }
 
                 } else {
-                    soundPlaying = false;
+                    // stop playing sound after finished moving
+                    Audio.setPlayingFrogJumping(false);
+                    Audio.setPlayingFrogOnLog(false);
 
                     // MOVE RIGHT
                     if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
@@ -249,23 +239,24 @@ public class Frog {
      */
     private void moveRight(Tile[][] tiles, int nColumns) {
 
+        // rotate the texture of a frog to face right
         textureRotation = 270;
-        // if not in the last column
+        // check if can move right (if not in the last column)
         if (tile.getCOLUMN() < nColumns - 1) {
 
-            // if on a log then check if won't land in water (if yes then die)
+            // if on a log then check if won't land in water (if yes then make frog die)
             if (onLog) {
                 if (logIndex == log.getLength() - 1) {
                     onLog = false;
                     goingToDrown = true;
-                    sound2.play(1.0f);
-                    soundPlaying = true;
+                    Audio.playFrogSplashingSound();
                 } else {
                     logIndex++;
                     tile = tiles[tile.getROW()][tile.getCOLUMN()];
                 }
                 startMoving(Direction.RIGHT);
             } else {
+                // if not on log then check if tile to the right is transparent and set next tile accordingly
                 startMoving(Direction.RIGHT, !tiles[tile.getROW()][tile.getCOLUMN() + 1].isTransparent());
                 if (tiles[tile.getROW()][tile.getCOLUMN() + 1].isTransparent())
                     tile = tiles[tile.getROW()][tile.getCOLUMN() + 1];
@@ -274,6 +265,10 @@ public class Frog {
 
             }
         }
+        // if in last column that animate moving to the wall
+        else if (tile.getCOLUMN() == nColumns) {
+            startMoving(Direction.RIGHT, true);
+        }
     }
 
     /**
@@ -281,8 +276,9 @@ public class Frog {
      */
     private void moveLeft(Tile[][] tiles) {
 
+        // rotate the texture of a frog to face left
         textureRotation = 90;
-        // if not in the first column
+        // check if can move left (if not in the first column)
         if (tile.getCOLUMN() > 0) {
 
             // if on a log then check if won't land in water (if yes then die)
@@ -290,20 +286,24 @@ public class Frog {
                 if (logIndex == 0) {
                     onLog = false;
                     goingToDrown = true;
-                    sound2.play(1.0f);
-                    soundPlaying = true;
+                    Audio.playFrogSplashingSound();
                 } else {
                     logIndex--;
                     tile = tiles[tile.getROW()][tile.getCOLUMN()];
                 }
                 startMoving(Direction.LEFT);
             } else {
+                // if not on log then check if tile to the left is transparent and set next tile accordingly
                 startMoving(Direction.LEFT, !tiles[tile.getROW()][tile.getCOLUMN() - 1].isTransparent());
                 if (tiles[tile.getROW()][tile.getCOLUMN() - 1].isTransparent())
                     tile = tiles[tile.getROW()][tile.getCOLUMN() - 1];
                 else
                     tile = tiles[tile.getROW()][tile.getCOLUMN()];
             }
+        }
+        // if in the first column that animate moving to the wall
+        else if (tile.getCOLUMN() == 0) {
+            startMoving(Direction.LEFT, true);
         }
     }
 
@@ -312,8 +312,9 @@ public class Frog {
      */
     private void moveUp(Row[] rows, Tile[][] tiles, int nRows) {
 
+        // rotate the texture of a frog to face up
         textureRotation = 0;
-        // if not in the last row
+        // check if can move up (if not in the last row)
         if (tile.getROW() < nRows -1) {
 
             // if next row is the row with logs (from any to log)
@@ -334,8 +335,7 @@ public class Frog {
                 if (!onLog) { // if frog didn't land on the log then die
                     startMoving(Direction.UP);
                     goingToDrown = true;
-                    sound2.play(1.0f);
-                    soundPlaying = true;
+                    Audio.playFrogSplashingSound();
                 }
             }
             else // if next row is NOT the row with logs
@@ -361,9 +361,7 @@ public class Frog {
                     else
                         tile = tiles[tile.getROW()][tile.getCOLUMN()];
                 }
-
             }
-
         }
     }
 
@@ -372,8 +370,9 @@ public class Frog {
      */
     private void moveDown(Row[] rows, Tile[][] tiles) {
 
+        // rotate the texture of a frog to face down
         textureRotation = 180;
-        // if not in the first row
+        // check if can move down (if not in the first row)
         if (tile.getROW() > 0) {
 
             // from any to log
@@ -390,8 +389,7 @@ public class Frog {
                 if (!onLog) { // if frog didn't land on the log then die
                     startMoving(Direction.DOWN);
                     goingToDrown = true;
-                    sound2.play(1.0f);
-                    soundPlaying = true;
+                    Audio.playFrogSplashingSound();
                 }
             } else {
 
@@ -414,12 +412,14 @@ public class Frog {
                 }
 
             }
+        } else if (tile.getROW() == 0) {
+            startMoving(Direction.DOWN, true);
         }
     }
 
     /**
-     * Method to find the next tile when jumping from log
-     * @param rowIndex next row index
+     * Method to find the next tile when jumping from log to ground
+     * @param rowIndex index of next row
      */
     private boolean findTileByCoordinates(int rowIndex) {
         Tile[][] tiles = FroggerGameScreen.level.getMap().getTiles();
@@ -439,7 +439,7 @@ public class Frog {
 
 
     /**
-     * Method that iterates through every piece of log (length)
+     * Method that iterates through every part of log (length)
      * and defines whether the frog will land on that piece or not
      * @param log log
      * @return true if lands
@@ -460,7 +460,7 @@ public class Frog {
     }
 
     /**
-     * Method that defines whether the frog will land specific part of log
+     * Method that defines whether the frog will land on a specific part of log
      * If lands, it also defines the parameters needed for animation and movement of the frog
      * @param log log
      * @param i index of part of log
@@ -489,6 +489,7 @@ public class Frog {
     /**
      * Method that changes parameters when the movement starts
      * @param direction moving direction
+     * @param toTheWall is frog moving to the wall
      */
     private void startMoving (Direction direction, boolean toTheWall) {
         startedMovingTime = TimeUtils.nanoTime();
@@ -498,6 +499,10 @@ public class Frog {
         moveToTheWall = toTheWall;
     }
 
+    /**
+     * Method that changes parameters when the movement starts
+     * @param direction moving direction
+     */
     private void startMoving (Direction direction) {
         startedMovingTime = TimeUtils.nanoTime();
         isMoving = true;
@@ -507,7 +512,7 @@ public class Frog {
 
 
     /**
-     * Method to move up. Runs every frame
+     * Method to animate moving up. Runs every frame. Also changes camera
      */
     public void animateMovingUp(Row[] rows, int nColumns, int nRows) {
 
@@ -542,14 +547,13 @@ public class Frog {
             {
                 dy = size / SPEED;
                 dx = distanceX / SPEED;
-                if (onLog) log.setFlooded(true);
             }
 
             y += dy;
             x += dx;
 
             // move camera
-            if (tile.getROW() > (nColumns / 2) && tile.getROW() < (nRows - (nColumns / 2)))
+            if (tile.getROW() > (nColumns / 2) && tile.getROW() < (nRows - (nColumns / 2)) && !moveToTheWall)
                 FroggerGame.gameCamera.translate(0,dy,0);
 
             animate();
@@ -557,7 +561,7 @@ public class Frog {
     }
 
     /**
-     * Method to move down. Runs every frame
+     * Method to animate moving down. Runs every frame. Also changes camera
      */
     public void animateMovingDown(Row[] rows, int nColumns, int nRows) {
 
@@ -593,14 +597,13 @@ public class Frog {
             {
                 dy = -size / SPEED;
                 dx = distanceX / SPEED;
-                if (onLog) log.setFlooded(true);
             }
 
             x += dx;
             y += dy;
 
             // move camera
-            if (tile.getROW() >= nColumns / 2 && tile.getROW() < (nRows - (nColumns / 2) - 1))
+            if (tile.getROW() >= nColumns / 2 && tile.getROW() < (nRows - (nColumns / 2) - 1) && !moveToTheWall)
                 FroggerGame.gameCamera.translate(0,dy,0);
 
             animate();
@@ -608,7 +611,7 @@ public class Frog {
     }
 
     /**
-     * Method to move right. Runs every frame
+     * Method to animate moving right. Runs every frame.
      */
     private void animateMovingRight(Row[] rows) {
 
@@ -632,7 +635,6 @@ public class Frog {
             } else if (animationFrameCount < (int) SPEED) {
                 x += size / SPEED;
                 if (onLog) {
-                    log.setFlooded(true);
                     if (log.getDirection() == Direction.RIGHT) {
                         x -= log.getSize() / log.getSpeed();
                     } else {
@@ -645,7 +647,7 @@ public class Frog {
     }
 
     /**
-     * Method to move left. Runs every frame
+     * Method to animate moving left. Runs every frame.
      */
     public void animateMovingLeft(Row[] rows) {
 
@@ -668,7 +670,6 @@ public class Frog {
             } else if (animationFrameCount < (int) SPEED) {
                 x -= size / SPEED;
                 if (onLog) {
-                    log.setFlooded(true);
                     if (log.getDirection() == Direction.RIGHT) {
                         x -= log.getSize() / log.getSpeed();
                     } else {
@@ -680,14 +681,17 @@ public class Frog {
         }
     }
 
+    /**
+     * Method that runs default texture animation when moving
+     */
     private void animate() {
         // animate
         if (!goingToDrown) {
             if (animationFrameCount == (int) SPEED / 4) {
-                texture = FROG_JUMPING_UP;
+                texture = character.jumping;
             }
             if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
-                texture = FROG_LOOKING_UP;
+                texture = character.standing;
             }
         } else {
             animateDrowning();
@@ -695,8 +699,12 @@ public class Frog {
         if (tile.isLily() && animationFrameCount < 2) {
             tile.setSmallLily();
         }
+        if (onLog) log.setFlooded(true);
     }
 
+    /**
+     * Method that finishes animation after each move
+     */
     private void endAnimation() {
         if (onLog) log.setFlooded(false);
         if (goingToDrown) alive = false;
@@ -705,38 +713,51 @@ public class Frog {
         }
     }
 
+    /**
+     * Method that animates moving to the wall
+     */
     private void animateMovingToTheWall() {
-        texture = FROG_JUMPING_UP;
+        texture = character.jumping;
         if (animationFrameCount > 2) {
-            texture = FROG_LOOKING_UP;
+            texture = character.standing;
             moveToTheWall = false;
         }
     }
 
-
+    /**
+     * Method that animates dying
+     */
     private void animateDying(){
-        texture = FROG_DEAD;
+        texture = character.dead;
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             alive = false;
         }
     }
 
+    /**
+     * Method that animates drowning
+     */
     private void animateDrowning() {
+
         if (animationFrameCount <= (int) SPEED * 0.25f) {
-            texture = FROG_DROWNING_UP_1;
+            texture = character.drowning1;
         }
         else if (animationFrameCount <= (int) SPEED * 0.5f) {
-            texture = FROG_DROWNING_UP_2;
+            texture = character.drowning2;
         }
         else if (animationFrameCount <= (int) SPEED * 0.75f) {
-            texture = FROG_DROWNING_UP_3;
+            texture = character.drowning3;
         }
         else if (animationFrameCount <= (int) SPEED) {
-            texture = FROG_DROWNING_UP_4;
+            texture = character.drowning4;
         }
-        else texture = FROG_DROWNING_UP_5;
+        else texture = character.drowning5;
+
     }
 
+    /**
+     * Method that animates drowning
+     */
     private void drown() {
         animationFrameCount ++;
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
@@ -770,6 +791,7 @@ public class Frog {
      */
     public float getSize() {return size;}
 
+
     public boolean isAlive() {
         return alive;
     }
@@ -777,8 +799,6 @@ public class Frog {
     public void setX(float x) {
         this.x = x;
     }
-
-    public void setAlive(boolean alive) {this.alive = alive;}
 
     public void setTile(Tile tile) {
         this.tile = tile;
@@ -793,3 +813,51 @@ public class Frog {
     }
 }
 
+class CharacterTexture {
+
+    private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog/frog.png"));
+    private static final Texture TURTLE = new Texture(Gdx.files.internal("characters/frog/turtle.png"));
+    private static final Texture CAT = new Texture(Gdx.files.internal("characters/frog/cat.png"));
+    private static final Texture BIRD = new Texture(Gdx.files.internal("characters/frog/bird.png"));
+    private static final Texture EGG = new Texture(Gdx.files.internal("characters/frog/egg.png"));
+
+    private Texture texturePack;
+
+    public TextureRegion standing;
+    public TextureRegion jumping;
+    public TextureRegion drowning1;
+    public TextureRegion drowning2;
+    public TextureRegion drowning3;
+    public TextureRegion drowning4;
+    public TextureRegion drowning5;
+    public TextureRegion dead;
+
+    CharacterTexture() {
+        setCharacter(Util.Character.FROG);
+    }
+
+    public void setCharacter(Util.Character character) {
+        if (character == Util.Character.FROG) texturePack = FROG_PACK;
+        else if (character == Util.Character.TURTLE) texturePack = TURTLE;
+        else if (character == Util.Character.CAT) texturePack = CAT;
+        else if (character == Util.Character.BIRD) texturePack = BIRD;
+        else if (character == Util.Character.EGG) texturePack = EGG;
+
+        standing = new TextureRegion(texturePack, 300, 150, 150, 150);
+        jumping = new TextureRegion(texturePack, 150, 150, 150, 150);
+        drowning1 = new TextureRegion(texturePack, 0, 0, 150, 150);
+        drowning2 = new TextureRegion(texturePack, 150, 0, 150, 150);
+        drowning3 = new TextureRegion(texturePack, 300, 0, 150, 150);
+        drowning4 = new TextureRegion(texturePack, 0, 150, 150, 150);
+        drowning5 = new TextureRegion(texturePack, 0, 300, 150, 150);
+        dead = new TextureRegion(texturePack, 150, 300, 150, 150);
+    }
+
+    public static void dispose() {
+        FROG_PACK.dispose();
+        TURTLE.dispose();
+        CAT.dispose();
+        BIRD.dispose();
+        EGG.dispose();
+    }
+}
