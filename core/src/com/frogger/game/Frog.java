@@ -833,7 +833,7 @@ class CharacterTexture {
     public TextureRegion dead;
 
     CharacterTexture() {
-        setCharacter(Util.Character.FROG);
+        setCharacter(Util.Character.EGG);
     }
 
     public void setCharacter(Util.Character character) {
