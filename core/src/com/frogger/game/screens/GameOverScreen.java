@@ -1,7 +1,5 @@
 package com.frogger.game.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -11,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.*;
 
 import static com.frogger.game.Const.*;
+import static com.frogger.game.DataIO.updateStarNumber;
 import static com.frogger.game.Scorer.FILLED_STAR;
 import static com.frogger.game.Scorer.UNFILLED_STAR;
 import static com.frogger.game.screens.FroggerGameScreen.level;
@@ -32,10 +31,12 @@ public class GameOverScreen extends Screen{
         for (Score score : currentLevel.getMap().getScores()) if (score.isCollected()) starScore++;
         if(currentLevel.isBig()) {
             score = (int) (329 * starScore + 456 * (1 - (timer / 330)));
-            if(isWon) LevelsGenerator.updateBigLevel(score);
+            updateStarNumber(starScore);
+            DataIO.updateBigLevel(score);
         }else {
             score = (int) (((isWon) ? 2 : 1) * (329 * starScore + 456 * (timer / currentLevel.getTime())));
-            if(isWon) LevelsGenerator.updateLevel(currentLevel.getNumber() - 1, score, starScore);
+            if(isWon) DataIO.updateLevel(currentLevel.getNumber() - 1, score, starScore);
+            updateStarNumber(starScore);
         }
     }
 

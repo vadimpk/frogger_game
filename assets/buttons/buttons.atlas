@@ -122,6 +122,13 @@ size: 2048, 2048
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
+btn-disabled
+  rotate: false
+  xy: 483, 1171
+  size: 450, 165
+  orig: 450, 165
+  offset: 0, 0
+  index: -1
 green-btn-down
   rotate: false
   xy: 483, 1672

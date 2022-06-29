@@ -29,7 +29,7 @@ public class Frog {
     private boolean alive;
     private TextureRegion texture;
     private int textureRotation;
-    private CharacterTexture character = new CharacterTexture();
+    private CharacterSkin character;
 
     /** initialize fields for movement mechanic  */
     private long startedMovingTime;
@@ -64,6 +64,9 @@ public class Frog {
      */
     private Frog() {
         alive = true;
+        for (CharacterSkin skin : DataIO.getSkins()) if (skin.isChosen()) character = skin;
+        if(character == null) for (CharacterSkin skin : DataIO.getSkins())
+            if (skin.getCharacter() == Util.Character.FROG) character = skin;
         texture = character.standing;
         textureRotation = 0;
     }
@@ -107,7 +110,7 @@ public class Frog {
     }
 
     public static void dispose() {
-        CharacterTexture.dispose();
+        CharacterSkin.dispose();
     }
 
     /**
@@ -811,53 +814,8 @@ public class Frog {
     public boolean isMoving() {
         return isMoving;
     }
-}
 
-class CharacterTexture {
-
-    private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog/frog.png"));
-    private static final Texture TURTLE = new Texture(Gdx.files.internal("characters/frog/turtle.png"));
-    private static final Texture CAT = new Texture(Gdx.files.internal("characters/frog/cat.png"));
-    private static final Texture BIRD = new Texture(Gdx.files.internal("characters/frog/bird.png"));
-    private static final Texture EGG = new Texture(Gdx.files.internal("characters/frog/egg.png"));
-
-    private Texture texturePack;
-
-    public TextureRegion standing;
-    public TextureRegion jumping;
-    public TextureRegion drowning1;
-    public TextureRegion drowning2;
-    public TextureRegion drowning3;
-    public TextureRegion drowning4;
-    public TextureRegion drowning5;
-    public TextureRegion dead;
-
-    CharacterTexture() {
-        setCharacter(Util.Character.FROG);
-    }
-
-    public void setCharacter(Util.Character character) {
-        if (character == Util.Character.FROG) texturePack = FROG_PACK;
-        else if (character == Util.Character.TURTLE) texturePack = TURTLE;
-        else if (character == Util.Character.CAT) texturePack = CAT;
-        else if (character == Util.Character.BIRD) texturePack = BIRD;
-        else if (character == Util.Character.EGG) texturePack = EGG;
-
-        standing = new TextureRegion(texturePack, 300, 150, 150, 150);
-        jumping = new TextureRegion(texturePack, 150, 150, 150, 150);
-        drowning1 = new TextureRegion(texturePack, 0, 0, 150, 150);
-        drowning2 = new TextureRegion(texturePack, 150, 0, 150, 150);
-        drowning3 = new TextureRegion(texturePack, 300, 0, 150, 150);
-        drowning4 = new TextureRegion(texturePack, 0, 150, 150, 150);
-        drowning5 = new TextureRegion(texturePack, 0, 300, 150, 150);
-        dead = new TextureRegion(texturePack, 150, 300, 150, 150);
-    }
-
-    public static void dispose() {
-        FROG_PACK.dispose();
-        TURTLE.dispose();
-        CAT.dispose();
-        BIRD.dispose();
-        EGG.dispose();
+    public void setCharacter(CharacterSkin character) {
+        this.character = character;
     }
 }

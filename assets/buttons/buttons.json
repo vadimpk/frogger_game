@@ -3,7 +3,8 @@
 	"default": {
 		"up": "green-btn-up",
 		"down": "green-btn-down",
-		"over": "green-btn-over"
+		"over": "green-btn-over",
+		"disabled": "btn-disabled"
 	},
 	"green": {
 		"up": "green-btn-up",
