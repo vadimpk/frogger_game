@@ -28,6 +28,7 @@ public class Tile{
     private final float X, Y;
     private final float SIZE;
 
+    private CharacterSkin skin;
 
     private boolean transparent;
     private boolean safe;
@@ -53,10 +54,12 @@ public class Tile{
         // starting point (5% of height) + size of every tile in a column below this one
         Y = (float) (0.05 * screenHeight) + SIZE * this.ROW;
 
+        skin = new CharacterSkin("name", 1, true, true, Util.TileSkin.BEACH);
+
         // set texture
         Random random = new Random();
-        if (random.nextBoolean()) texture = GRASS_TILE_TEXTURE_1;
-        else texture = GRASS_TILE_TEXTURE_2;
+        if (random.nextBoolean()) texture = skin.transparentTile1;
+        else texture = skin.transparentTile2;
         transparent = true;
         finish = false;
         safe = true;
@@ -113,6 +116,19 @@ public class Tile{
         return transparent;
     }
 
+    public void setNewSkin(Util.TileSkin newSkin) {
+        skin.setTileSkin(newSkin);
+
+        if (isTransparent()) {
+            Random random = new Random();
+            if (random.nextBoolean()) texture = skin.transparentTile1;
+            else texture = skin.transparentTile2;
+        } else {
+            texture = skin.notTransparentTile;
+        }
+
+    }
+
     /**
      * Set texture of a tile
      * @param texture new texture
@@ -121,7 +137,7 @@ public class Tile{
 
     public void setTransparent(boolean transparent) {
         this.transparent = transparent;
-        if (!transparent) texture = TREE_TILE_TEXTURE;
+        if (!transparent) texture = skin.notTransparentTile;
     }
 
     public void setWaterTexture() {

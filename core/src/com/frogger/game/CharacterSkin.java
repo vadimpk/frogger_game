@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import java.util.ArrayList;
-
 public class CharacterSkin {
 
     private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog/frog.png"));
@@ -26,6 +24,15 @@ public class CharacterSkin {
     public TextureRegion drowning5;
     public TextureRegion dead;
 
+    private static final Texture OAK_FOREST_TILES_PACK = new Texture(Gdx.files.internal("objects/tiles/oak-forest-tiles.png"));
+    private static final Texture FIR_FOREST_TILES_PACK = new Texture(Gdx.files.internal("objects/tiles/fir-forest-tiles.png"));
+    private static final Texture BEACH_TILES_PACK = new Texture(Gdx.files.internal("objects/tiles/beach-tiles.png"));
+    private static final Texture DARK_FOREST_TILES_PACK = new Texture(Gdx.files.internal("objects/tiles/dark-forest-tiles.png"));
+
+    public TextureRegion transparentTile1;
+    public TextureRegion transparentTile2;
+    public TextureRegion notTransparentTile;
+
     private Texture texturePack;
     private int textureRotation;
 
@@ -33,16 +40,30 @@ public class CharacterSkin {
     private final int PRICE;
     private boolean unlocked;
     private boolean active;
-    private final Util.Character CHARACTER;
+    private Util.Character characterSkin;
+    private Util.TileSkin tileSkin;
+    private boolean forTiles;
 
-    public CharacterSkin(String name, int price, boolean isUnlocked, boolean isActive, Util.Character character) {
+    public CharacterSkin(String name, int price, boolean isUnlocked, boolean isActive, Util.Character characterSkin) {
         this.NAME = name;
         this.PRICE = price;
         this.unlocked = isUnlocked;
         this.active = isActive;
-        this.CHARACTER = character;
-        setCharacter(character);
+        this.characterSkin = characterSkin;
+        setCharacterSkin(characterSkin);
         textureRotation = 0;
+        forTiles = false;
+    }
+
+    public CharacterSkin(String name, int price, boolean isUnlocked, boolean isActive, Util.TileSkin tileSkin) {
+        this.NAME = name;
+        this.PRICE = price;
+        this.unlocked = isUnlocked;
+        this.active = isActive;
+        this.tileSkin = tileSkin;
+        setTileSkin(tileSkin);
+        textureRotation = 0;
+        forTiles = true;
     }
 
     /**
@@ -50,13 +71,17 @@ public class CharacterSkin {
      * @param active active
      */
     public void setActive(boolean active) {
-        if(active) {
-            Frog.get().setCharacterSkin(this);
-            for (CharacterSkin skin: DataIO.getSkins()) {
-                if (skin.isActive()) {
-                    skin.setActive(false);
+        if (!forTiles) {
+            if (active) {
+                Frog.get().setCharacterSkin(this);
+                for (CharacterSkin skin : DataIO.getSkins()) {
+                    if (skin.isActive()) {
+                        skin.setActive(false);
+                    }
                 }
             }
+        } else {
+
         }
         this.active = active;
     }
@@ -81,15 +106,15 @@ public class CharacterSkin {
         return PRICE;
     }
 
-    public void setCharacter(Util.Character character) {
-        if (character == Util.Character.FROG) texturePack = FROG_PACK;
-        else if (character == Util.Character.TURTLE) texturePack = TURTLE_PACK;
-        else if (character == Util.Character.BIRD) texturePack = BIRD_PACK;
-        else if (character == Util.Character.EGG) texturePack = EGG_PACK;
-        else if (character == Util.Character.FISH) texturePack = FISH_PACK;
-        else if (character == Util.Character.PIZZA) texturePack = PIZZA_PACK;
-        else if (character == Util.Character.BOTTLE_OF_WINE) texturePack = BOTTLE_OF_WINE_PACK;
-        else if (character == Util.Character.BOTTLE_OF_COKE) texturePack = BOTTLE_OF_COKE_PACK;
+    public void setCharacterSkin(Util.Character characterSkin) {
+        if (characterSkin == Util.Character.FROG) texturePack = FROG_PACK;
+        else if (characterSkin == Util.Character.TURTLE) texturePack = TURTLE_PACK;
+        else if (characterSkin == Util.Character.BIRD) texturePack = BIRD_PACK;
+        else if (characterSkin == Util.Character.EGG) texturePack = EGG_PACK;
+        else if (characterSkin == Util.Character.FISH) texturePack = FISH_PACK;
+        else if (characterSkin == Util.Character.PIZZA) texturePack = PIZZA_PACK;
+        else if (characterSkin == Util.Character.BOTTLE_OF_WINE) texturePack = BOTTLE_OF_WINE_PACK;
+        else if (characterSkin == Util.Character.BOTTLE_OF_COKE) texturePack = BOTTLE_OF_COKE_PACK;
 
         standing = new TextureRegion(texturePack, 300, 150, 150, 150);
         jumping = new TextureRegion(texturePack, 150, 150, 150, 150);
@@ -101,6 +126,18 @@ public class CharacterSkin {
         dead = new TextureRegion(texturePack, 150, 300, 150, 150);
     }
 
+    public void setTileSkin(Util.TileSkin tileSkin) {
+        if (tileSkin == Util.TileSkin.OAK_FOREST) texturePack = OAK_FOREST_TILES_PACK;
+        else if (tileSkin == Util.TileSkin.FIR_FOREST) texturePack = FIR_FOREST_TILES_PACK;
+        else if (tileSkin == Util.TileSkin.BEACH) texturePack = BEACH_TILES_PACK;
+        else if (tileSkin == Util.TileSkin.DARK_FOREST) texturePack = DARK_FOREST_TILES_PACK;
+
+
+        transparentTile1 = new TextureRegion(texturePack, 300, 0, 300, 300);
+        transparentTile2 = new TextureRegion(texturePack, 600, 0, 300, 300);
+        notTransparentTile = new TextureRegion(texturePack, 0, 0, 300, 300);
+    }
+
     public static void dispose() {
         FROG_PACK.dispose();
         TURTLE_PACK.dispose();
@@ -110,10 +147,15 @@ public class CharacterSkin {
         PIZZA_PACK.dispose();
         BOTTLE_OF_WINE_PACK.dispose();
         BOTTLE_OF_COKE_PACK.dispose();
+
+        OAK_FOREST_TILES_PACK.dispose();
+        FIR_FOREST_TILES_PACK.dispose();
+        BEACH_TILES_PACK.dispose();
+        DARK_FOREST_TILES_PACK.dispose();
     }
 
-    public Util.Character getCharacter() {
-        return CHARACTER;
+    public Util.Character getCharacterSkin() {
+        return characterSkin;
     }
 
     public void rotate(int degree) {
