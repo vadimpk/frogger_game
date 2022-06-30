@@ -1,0 +1,54 @@
+{
+"com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
+	"default": {
+		"up": "green-btn-up",
+		"down": "green-btn-down",
+		"over": "green-btn-over",
+		"disabled": "btn-disabled"
+	},
+	"green": {
+		"up": "green-btn-up",
+		"down": "green-btn-down",
+		"over": "green-btn-over"
+	},
+	"yellow": {
+		"up": "yellow-btn-up",
+		"down": "yellow-btn-down",
+		"over": "yellow-btn-over"
+	},
+	"red": {
+		"up": "red-btn-up",
+		"down": "red-btn-down",
+		"over": "red-btn-over"
+	},
+	"level-btn-3-stars": {
+		"up": "level-btn-up-3-stars",
+		"down": "level-btn-down-3-stars",
+		"over": "level-btn-over-3-stars"
+	},
+	"level-btn-2-stars": {
+		"up": "level-btn-up-2-stars",
+		"down": "level-btn-down-2-stars",
+		"over": "level-btn-over-2-stars"
+	},
+	"level-btn-1-stars": {
+		"up": "level-btn-up-1-stars",
+		"down": "level-btn-down-1-stars",
+		"over": "level-btn-over-1-stars"
+	},
+	"level-btn-0-stars": {
+		"up": "level-btn-up-0-stars",
+		"down": "level-btn-down-0-stars",
+		"over": "level-btn-over-0-stars",
+		"disabled": "level-btn-disabled"
+	},
+	"sounds": {
+		"up": "sound-on-btn-up",
+		"down": "sound-on-btn-down",
+		"over": "sound-on-btn-over",
+		"checked": "sound-off-btn-up",
+		"checkedOver": "sound-off-btn-over",
+		"checkedDown": "sound-off-btn-down"
+	}
+}
+}

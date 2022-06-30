@@ -3,13 +3,24 @@ package com.frogger.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import java.util.Random;
 
 
-public class Tile {
+public class Tile{
 
-    // TODO: add different textures
-    private static final Texture DEFAULT_TILE_TEXTURE = new Texture(Gdx.files.internal("tile.png"));
-    private static final Texture NOT_TRANSPARENT_TILE_TEXTURE = new Texture(Gdx.files.internal("log.png"));
+    private static final Texture TILES_PACK = new Texture(Gdx.files.internal("objects/tiles/tiles.png"));
+
+    private static final TextureRegion GRASS_TILE_TEXTURE_1 = new TextureRegion(TILES_PACK, 300, 0, 300, 300);
+    private static final TextureRegion GRASS_TILE_TEXTURE_2 = new TextureRegion(TILES_PACK, 600, 0, 300, 300);
+    private static final TextureRegion TREE_TILE_TEXTURE = new TextureRegion(TILES_PACK, 300, 600, 300, 300);
+    private static final TextureRegion WATER_TILE_TEXTURE = new TextureRegion(TILES_PACK, 600, 600, 300, 300);
+    private static final TextureRegion ROAD_TILE_TEXTURE = new TextureRegion(TILES_PACK, 0, 600, 300, 300);
+    private static final TextureRegion RAIL_ROAD_TILE_TEXTURE = new TextureRegion(TILES_PACK, 600, 300, 300, 300);
+    private static final TextureRegion FINISH_TILE_TEXTURE = new TextureRegion(TILES_PACK, 0, 0, 300, 300);
+    private static final TextureRegion LILY_PAD_TEXTURE = new TextureRegion(TILES_PACK, 300, 300, 300, 300);
+    private static final TextureRegion LILY_PAD_SMALL_TEXTURE = new TextureRegion(TILES_PACK, 0, 300, 300, 300);
 
     /** initialize tile attributes */
     private final int ROW;
@@ -17,8 +28,13 @@ public class Tile {
     private final float X, Y;
     private final float SIZE;
 
+
     private boolean transparent;
-    private Texture texture;
+    private boolean safe;
+    private boolean isScore;
+    private boolean finish;
+    private TextureRegion texture;
+    private int textureRotation;
 
     Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
 
@@ -38,25 +54,22 @@ public class Tile {
         Y = (float) (0.05 * screenHeight) + SIZE * this.ROW;
 
         // set texture
-        texture = DEFAULT_TILE_TEXTURE;
+        Random random = new Random();
+        if (random.nextBoolean()) texture = GRASS_TILE_TEXTURE_1;
+        else texture = GRASS_TILE_TEXTURE_2;
         transparent = true;
-    }
-
-    Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column, boolean transparent) {
-        this(numberOfColumns, screenWidth, screenHeight, row, column);
-        this.transparent = transparent;
-        if (!transparent) {
-            texture = NOT_TRANSPARENT_TILE_TEXTURE;
-        }
+        finish = false;
+        safe = true;
+        textureRotation = 0;
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(texture, X, Y,SIZE,SIZE);
+        batch.draw(texture, X, Y, SIZE/2, SIZE/2 , SIZE, SIZE, 1, 1, textureRotation);
     }
 
+
     public static void dispose() {
-        DEFAULT_TILE_TEXTURE.dispose();
-        NOT_TRANSPARENT_TILE_TEXTURE.dispose();
+        TILES_PACK.dispose();
     }
 
 
@@ -94,7 +107,7 @@ public class Tile {
      * Get texture of a tile
      * @return texture
      */
-    public Texture getTexture() {return texture;}
+    public TextureRegion getTexture() {return texture;}
 
     public boolean isTransparent() {
         return transparent;
@@ -104,10 +117,66 @@ public class Tile {
      * Set texture of a tile
      * @param texture new texture
      */
-    public void setTexture(Texture texture) {this.texture = texture;}
+    public void setTexture(TextureRegion texture) {this.texture = texture;}
 
     public void setTransparent(boolean transparent) {
         this.transparent = transparent;
-        if (!transparent) texture = NOT_TRANSPARENT_TILE_TEXTURE;
+        if (!transparent) texture = TREE_TILE_TEXTURE;
+    }
+
+    public void setWaterTexture() {
+        texture = WATER_TILE_TEXTURE;
+        safe = false;
+    }
+    public void setRoadTexture() {
+        texture = ROAD_TILE_TEXTURE;
+    }
+    public void setRailRoadTexture() {
+        texture = RAIL_ROAD_TILE_TEXTURE;
+    }
+    public void setFinishTexture() {
+        texture = FINISH_TILE_TEXTURE;
+        finish = true;
+    }
+    public void setLily() {
+        safe = true;
+        texture = LILY_PAD_TEXTURE;
+    }
+
+    public void setRandomRotation() {
+        Random rand = new Random();
+        if (rand.nextBoolean())
+            textureRotation = 90;
+            if (rand.nextBoolean())
+                textureRotation = 0;
+        else
+            textureRotation = 180;
+            if (rand.nextBoolean())
+                textureRotation = 270;
+    }
+
+    public void setSmallLily() {
+        safe = true;
+        texture = LILY_PAD_SMALL_TEXTURE;
+    }
+
+    public boolean isLily() {
+        return texture == LILY_PAD_TEXTURE || texture == LILY_PAD_SMALL_TEXTURE;
+    }
+
+    public void setScore(boolean score) {
+        isScore = score;
+    }
+
+    public boolean isScore() {
+        return isScore;
+    }
+
+    public boolean isFinish() {
+        return finish;
+    }
+
+    public boolean isSafe() {
+        return safe;
     }
 }
