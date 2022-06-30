@@ -49,6 +49,12 @@
 		"checked": "sound-off-btn-up",
 		"checkedOver": "sound-off-btn-over",
 		"checkedDown": "sound-off-btn-down"
+	},
+	"arrow": {
+		"up": "arrow-btn-up",
+		"down": "arrow-btn-down",
+		"over": "arrow-btn-over",
+		"disabled": "arrow-btn-disabled"
 	}
 }
 }
