@@ -1219,11 +1219,10 @@ public class DataIO {
     }
 
     private static void createSkins() {
-        CharacterSkinParameters[] skinParameters = new CharacterSkinParameters[4];
+        CharacterSkinParameters[] skinParameters = new CharacterSkinParameters[3];
         skinParameters[0] = new CharacterSkinParameters("Bird", 1, false, false, Util.Character.BIRD);
-        skinParameters[1] = new CharacterSkinParameters("Cat", 2, false, false, Util.Character.CAT);
-        skinParameters[2] = new CharacterSkinParameters("Egg", 5, false, false, Util.Character.EGG);
-        skinParameters[3] = new CharacterSkinParameters("Turtle", 3, false, false, Util.Character.TURTLE);
+        skinParameters[1] = new CharacterSkinParameters("Egg", 5, false, false, Util.Character.EGG);
+        skinParameters[2] = new CharacterSkinParameters("Turtle", 3, false, false, Util.Character.TURTLE);
 //        skinParameters[4] = new CharacterSkinParameters("Frog", 0, true, true, Util.Character.FROG);
         loadSkinsToFile(skinParameters);
     }

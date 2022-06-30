@@ -124,7 +124,7 @@ public class SkinsScreen extends Screen{
                     Audio.playClickedSound();
                     for (CharacterSkin skin : getSkins()) skin.setChosen(false);
                     skin.setChosen(true);
-                    for (SkinPanel skinPanel : skinPanels) if(skinPanel.skin.isUnlocked())skinPanel.setButton.setDisabled(false);
+                    for (SkinPanel skinPanel : skinPanels) if(skinPanel.skin.isUnlocked()) skinPanel.setButton.setDisabled(false);
                     setButton.setDisabled(true);
                     updateSkins();
                 }

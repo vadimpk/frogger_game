@@ -7,12 +7,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class CharacterSkin {
 
     private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog/frog.png"));
-    private static final Texture TURTLE = new Texture(Gdx.files.internal("characters/frog/turtle.png"));
-    private static final Texture CAT = new Texture(Gdx.files.internal("characters/frog/cat.png"));
-    private static final Texture BIRD = new Texture(Gdx.files.internal("characters/frog/bird.png"));
-    private static final Texture EGG = new Texture(Gdx.files.internal("characters/frog/egg.png"));
+    private static final Texture TURTLE_PACK = new Texture(Gdx.files.internal("characters/frog/turtle.png"));
+    private static final Texture BIRD_PACK = new Texture(Gdx.files.internal("characters/frog/bird.png"));
+    private static final Texture EGG_PACK = new Texture(Gdx.files.internal("characters/frog/egg.png"));
+    private static final Texture FISH_PACK = new Texture(Gdx.files.internal("characters/frog/fish.png"));
+    private static final Texture PIZZA_PACK = new Texture(Gdx.files.internal("characters/frog/pizza.png"));
+    private static final Texture BOTTLE_OF_WINE_PACK = new Texture(Gdx.files.internal("characters/frog/wine.png"));
+    private static final Texture BOTTLE_OF_COKE_PACK = new Texture(Gdx.files.internal("characters/frog/cola.png"));
 
     private Texture texturePack;
+    private int textureRotation;
 
     public TextureRegion standing;
     public TextureRegion jumping;
@@ -35,6 +39,7 @@ public class CharacterSkin {
         this.isUnlocked = isUnlocked;
         this.character = character;
         setCharacter(character);
+        textureRotation = 0;
     }
 
     public void setChosen(boolean chosen) {
@@ -64,10 +69,13 @@ public class CharacterSkin {
 
     public void setCharacter(Util.Character character) {
         if (character == Util.Character.FROG) texturePack = FROG_PACK;
-        else if (character == Util.Character.TURTLE) texturePack = TURTLE;
-        else if (character == Util.Character.CAT) texturePack = CAT;
-        else if (character == Util.Character.BIRD) texturePack = BIRD;
-        else if (character == Util.Character.EGG) texturePack = EGG;
+        else if (character == Util.Character.TURTLE) texturePack = TURTLE_PACK;
+        else if (character == Util.Character.BIRD) texturePack = BIRD_PACK;
+        else if (character == Util.Character.EGG) texturePack = EGG_PACK;
+        else if (character == Util.Character.FISH) texturePack = FISH_PACK;
+        else if (character == Util.Character.PIZZA) texturePack = PIZZA_PACK;
+        else if (character == Util.Character.BOTTLE_OF_WINE) texturePack = BOTTLE_OF_WINE_PACK;
+        else if (character == Util.Character.BOTTLE_OF_COKE) texturePack = BOTTLE_OF_COKE_PACK;
 
         standing = new TextureRegion(texturePack, 300, 150, 150, 150);
         jumping = new TextureRegion(texturePack, 150, 150, 150, 150);
@@ -81,10 +89,13 @@ public class CharacterSkin {
 
     public static void dispose() {
         FROG_PACK.dispose();
-        TURTLE.dispose();
-        CAT.dispose();
-        BIRD.dispose();
-        EGG.dispose();
+        TURTLE_PACK.dispose();
+        BIRD_PACK.dispose();
+        EGG_PACK.dispose();
+        FISH_PACK.dispose();
+        PIZZA_PACK.dispose();
+        BOTTLE_OF_WINE_PACK.dispose();
+        BOTTLE_OF_COKE_PACK.dispose();
     }
 
     public TextureRegion getStanding() {
@@ -93,5 +104,17 @@ public class CharacterSkin {
 
     public Util.Character getCharacter() {
         return character;
+    }
+
+    public void rotate(int degree) {
+        textureRotation = degree;
+
+        if (texturePack == BOTTLE_OF_COKE_PACK || texturePack == BOTTLE_OF_WINE_PACK) {
+            textureRotation = 0;
+        }
+    }
+
+    public int getTextureRotation() {
+        return textureRotation;
     }
 }
