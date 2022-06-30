@@ -28,6 +28,7 @@ public class Frog {
     private float x, y, size;
     private boolean alive;
     private TextureRegion texture;
+    private int textureRotation;
     private CharacterSkin character;
 
     /** initialize fields for movement mechanic  */
@@ -64,8 +65,10 @@ public class Frog {
     private Frog() {
         alive = true;
         character = DataIO.getSkins()[0];
+        for (CharacterSkin skin : DataIO.getSkins()) if (skin.isChosen()) character = skin;
+
         texture = character.standing;
-        character.rotate(0);
+        textureRotation = 0;
     }
 
     /**
@@ -102,11 +105,12 @@ public class Frog {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(texture, x, y, size/2, size/2 , size, size, 1, 1, character.getTextureRotation());
+        batch.draw(texture, x, y, size/2, size/2 , size, size, 1, 1, textureRotation);
         update(0f);
     }
 
     public static void dispose() {
+        CharacterSkin.dispose();
     }
 
     /**
@@ -240,7 +244,7 @@ public class Frog {
     private void moveRight(Tile[][] tiles, int nColumns) {
 
         // rotate the texture of a frog to face right
-        character.rotate(270);
+        textureRotation = 270;
         // check if can move right (if not in the last column)
         if (tile.getCOLUMN() < nColumns - 1) {
 
@@ -277,7 +281,7 @@ public class Frog {
     private void moveLeft(Tile[][] tiles) {
 
         // rotate the texture of a frog to face left
-        character.rotate(90);
+        textureRotation = 90;
         // check if can move left (if not in the first column)
         if (tile.getCOLUMN() > 0) {
 
@@ -313,7 +317,7 @@ public class Frog {
     private void moveUp(Row[] rows, Tile[][] tiles, int nRows) {
 
         // rotate the texture of a frog to face up
-        character.rotate(0);
+        textureRotation = 0;
         // check if can move up (if not in the last row)
         if (tile.getROW() < nRows -1) {
 
@@ -328,7 +332,7 @@ public class Frog {
                     if (getLogWhenMovingUpOrDown(log)) {
                         tile = tiles[tile.getROW() + 1][tile.getCOLUMN()];
                         startMoving(Direction.UP);
-                        character.rotate(0);
+                        textureRotation = 0;
                         break; // stop iterating as the log is already found
                     }
                 }
@@ -371,7 +375,7 @@ public class Frog {
     private void moveDown(Row[] rows, Tile[][] tiles) {
 
         // rotate the texture of a frog to face down
-        character.rotate(180);
+        textureRotation = 180;
         // check if can move down (if not in the first row)
         if (tile.getROW() > 0) {
 
@@ -382,7 +386,7 @@ public class Frog {
                     if (getLogWhenMovingUpOrDown(log)) {
                         tile = tiles[tile.getROW() - 1][tile.getCOLUMN()];
                         startMoving(Direction.DOWN);
-                        character.rotate(180);
+                        textureRotation = 180;
                         break;
                     }
                 }
@@ -524,7 +528,7 @@ public class Frog {
 
         // counter of frames (for animation)
         animationFrameCount++;
-        character.rotate(0);
+        textureRotation = 0;
 
         float dy = 0f;
         float dx = 0f;
@@ -572,7 +576,7 @@ public class Frog {
 
         // counter of frames (for animation)
         animationFrameCount++;
-        character.rotate(180);
+        textureRotation = 180;
 
         float dy = 0f;
         float dx = 0f;
@@ -619,7 +623,7 @@ public class Frog {
         }
 
         animationFrameCount++;
-        character.rotate(270);
+        textureRotation = 270;
 
         if (moveToTheWall) {
             animateMovingToTheWall();
@@ -653,7 +657,7 @@ public class Frog {
             endAnimation();
         }
         animationFrameCount++;
-        character.rotate(90);
+        textureRotation = 90;
 
         if (moveToTheWall) {
             animateMovingToTheWall();

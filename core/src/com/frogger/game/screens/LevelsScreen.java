@@ -24,13 +24,14 @@ public class LevelsScreen extends Screen {
 
         initButtons();
 
-        TextButton[] buttons = new TextButton[levels.length];
+        final TextButton[] buttons = new TextButton[levels.length];
         float distanceX = 0.08f*WINDOW_WIDTH;
         float buttonSize = 0.15f * WINDOW_HEIGHT;
         float startingX = WINDOW_WIDTH * 0.5f - 2.5f*buttonSize - 2f*distanceX;
         for (int i = 0; i < levels.length; i++) {
 
             buttons[i] = new TextButton(String.valueOf(i + 1), textButtonStyles.get(String.valueOf(levels[i].getStarScore())));
+            if (levels[i].isBlocked()) buttons[i].setDisabled(true);
 
             if (i <= 4)
                 buttons[i].setBounds(startingX + (distanceX + buttonSize) * i, 0.7f * WINDOW_HEIGHT - 0.5f * buttonSize, buttonSize, buttonSize);
@@ -40,8 +41,10 @@ public class LevelsScreen extends Screen {
             buttons[i].addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    Audio.playClickedSound();
-                    switchScreenWithFading(new FroggerGameScreen(game, levels[finalI]), 0.3f);
+                    if(!buttons[finalI].isDisabled()) {
+                        Audio.playClickedSound();
+                        switchScreenWithFading(new FroggerGameScreen(game, levels[finalI]), 0.3f);
+                    }
                 }
             });
             stage.addActor(buttons[i]);
@@ -61,5 +64,6 @@ public class LevelsScreen extends Screen {
             buttonStyle.down = skin.getDrawable("level-btn-down-" + key + "-stars");
             buttonStyle.over = skin.getDrawable("level-btn-over-" + key + "-stars");
         }
+        textButtonStyles.get("0").disabled = skin.getDrawable("level-btn-disabled");
     }
 }

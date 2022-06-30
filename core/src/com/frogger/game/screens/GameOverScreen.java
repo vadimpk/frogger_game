@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.*;
 
 import static com.frogger.game.Const.*;
-import static com.frogger.game.DataIO.updateStarNumber;
 import static com.frogger.game.Scorer.FILLED_STAR;
 import static com.frogger.game.Scorer.UNFILLED_STAR;
 import static com.frogger.game.screens.FroggerGameScreen.level;
@@ -29,15 +28,8 @@ public class GameOverScreen extends Screen{
 
         int starScore = 0;
         for (Score score : currentLevel.getMap().getScores()) if (score.isCollected()) starScore++;
-        if(currentLevel.isBig()) {
-            score = (int) (329 * starScore + 456 * (1 - (timer / 330)));
-            updateStarNumber(starScore);
-            DataIO.updateBigLevel(score);
-        }else {
-            score = (int) (((isWon) ? 2 : 1) * (329 * starScore + 456 * (timer / currentLevel.getTime())));
-            if(isWon) DataIO.updateLevel(currentLevel.getNumber() - 1, score, starScore);
-            updateStarNumber(starScore);
-        }
+        score = (int) (((isWon) ? 2 : 1) * (329 * starScore + 456 * (timer / currentLevel.getTime())));
+        if(isWon) DataIO.updateLevel(currentLevel.getNumber() - 1, score, starScore);
     }
 
     @Override
@@ -51,7 +43,7 @@ public class GameOverScreen extends Screen{
         label.setY(WINDOW_HEIGHT * 0.7f);
 
         float deltaY = 0f;
-        if(!currentLevel.isBig() && isWon) {
+        if(isWon) {
             int starScore = 0;
             for (Score s : level.getMap().getScores()) if (s.isCollected()) starScore++;
             Image[] stars = new Image[3];
@@ -91,15 +83,12 @@ public class GameOverScreen extends Screen{
         }
 
         Label.LabelStyle labelStyle = new Label.LabelStyle(fonts.get("36"), Color.BLACK);
-        Label levelLabel = null;
-        if (!currentLevel.isBig()) {
-            levelLabel = new Label("Level " + currentLevel.getNumber(), labelStyle);
-            levelLabel.setX(WINDOW_WIDTH / 2 - levelLabel.getWidth() / 2);
-            levelLabel.setY(label.getY() + label.getHeight() + 0.05f* WINDOW_HEIGHT);
-        }
+        Label levelLabel =  new Label("Level " + currentLevel.getNumber(), labelStyle);
         Label yourScore = new Label("Your Score: " + score, labelStyle);
         Label bestScore = new Label("The Best Score: " + currentLevel.getBestScore(), labelStyle);
-        Label timeLabel = new Label("Time: " + Timer.convert((currentLevel.isBig() ? timer: level.getTime() - timer)) , labelStyle);
+        Label timeLabel = new Label("Time: " + Timer.convert(level.getTime() - timer) , labelStyle);
+        levelLabel.setX(WINDOW_WIDTH / 2 - levelLabel.getWidth() / 2);
+        levelLabel.setY(label.getY() + label.getHeight() + 0.05f* WINDOW_HEIGHT);
         yourScore.setX(WINDOW_WIDTH / 2 - yourScore.getWidth() / 2);
         yourScore.setY(WINDOW_HEIGHT * (0.6f + deltaY) - yourScore.getHeight());
         bestScore.setX(WINDOW_WIDTH / 2 - bestScore.getWidth() / 2);
@@ -137,8 +126,7 @@ public class GameOverScreen extends Screen{
 
         stage.addActor(restartButton);
         stage.addActor(backButton);
-
-        if(!currentLevel.isBig()) stage.addActor(levelLabel);
+        stage.addActor(levelLabel);
         stage.addActor(label);
         stage.addActor(yourScore);
         stage.addActor(bestScore);
