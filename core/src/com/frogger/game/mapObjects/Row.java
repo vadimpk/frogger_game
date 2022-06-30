@@ -1,8 +1,8 @@
-package com.frogger.game;
+package com.frogger.game.mapObjects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.frogger.game.Util.TypeOfRow;
-import com.frogger.game.objects.*;
+import com.frogger.game.gameObjects.*;
 
 public class Row  {
 
@@ -11,7 +11,7 @@ public class Row  {
     private MovingObject[] movingObjects;
 
 
-    protected Row(Tile[] tiles, TypeOfRow typeOfRow, MovingObject[] movingObjects){
+    public Row(Tile[] tiles, TypeOfRow typeOfRow, MovingObject[] movingObjects){
         type = typeOfRow;
         this.movingObjects = movingObjects;
 
@@ -32,7 +32,7 @@ public class Row  {
         }
     }
 
-    protected Row(Tile[] tiles, TypeOfRow typeOfRow, int[] lilyIndexes, int nColumns){
+    public Row(Tile[] tiles, TypeOfRow typeOfRow, int[] lilyIndexes, int nColumns){
         type = typeOfRow;
 
         if (typeOfRow == TypeOfRow.LILY) {

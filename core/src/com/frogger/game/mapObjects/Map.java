@@ -1,9 +1,12 @@
-package com.frogger.game;
+package com.frogger.game.mapObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.frogger.game.Util;
+import com.frogger.game.attributeObjects.Score;
+import com.frogger.game.gameObjects.Frog;
 
 import java.util.ArrayList;
 import java.util.List;

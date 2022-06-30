@@ -1,13 +1,14 @@
-package com.frogger.game;
+package com.frogger.game.attributeObjects;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.frogger.game.utils.Audio;
+import com.frogger.game.mapObjects.Tile;
 
-import static com.frogger.game.Map.getFrog;
+import static com.frogger.game.mapObjects.Map.getFrog;
 
 public class Score {
 

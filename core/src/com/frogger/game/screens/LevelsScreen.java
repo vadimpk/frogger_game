@@ -3,12 +3,12 @@ package com.frogger.game.screens;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.frogger.game.Audio;
+import com.frogger.game.utils.Audio;
 import com.frogger.game.DataIO;
 import com.frogger.game.FroggerGame;
-import com.frogger.game.Level;
+import com.frogger.game.levels.Level;
 
-import static com.frogger.game.Const.*;
+import static com.frogger.game.utils.Const.*;
 
 public class LevelsScreen extends Screen {
 

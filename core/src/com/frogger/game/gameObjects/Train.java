@@ -1,12 +1,11 @@
-package com.frogger.game.objects;
+package com.frogger.game.gameObjects;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.frogger.game.Audio;
-import com.frogger.game.Map;
+import com.frogger.game.utils.Audio;
+import com.frogger.game.mapObjects.Map;
 import com.frogger.game.Util.Direction;
 
 import static com.frogger.game.screens.FroggerGameScreen.level;

@@ -1,9 +1,6 @@
-package com.frogger.game.objects;
+package com.frogger.game.gameObjects;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.frogger.game.Frog;
 import com.frogger.game.Util.Direction;
 import com.frogger.game.screens.FroggerGameScreen;
 

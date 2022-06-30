@@ -1,9 +1,11 @@
-package com.frogger.game;
+package com.frogger.game.mapObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.frogger.game.skins.CharacterSkin;
+import com.frogger.game.Util;
 
 import java.util.Random;
 
@@ -37,7 +39,7 @@ public class Tile{
     private TextureRegion texture;
     private int textureRotation;
 
-    Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
+    public Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
 
         this.ROW = row;
         this.COLUMN = column;

@@ -7,10 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.*;
+import com.frogger.game.attributeObjects.Score;
+import com.frogger.game.attributeObjects.Timer;
+import com.frogger.game.levels.Level;
+import com.frogger.game.utils.Audio;
 
-import static com.frogger.game.Const.*;
-import static com.frogger.game.Scorer.FILLED_STAR;
-import static com.frogger.game.Scorer.UNFILLED_STAR;
+import static com.frogger.game.utils.Const.*;
+import static com.frogger.game.attributeObjects.Scorer.FILLED_STAR;
+import static com.frogger.game.attributeObjects.Scorer.UNFILLED_STAR;
 import static com.frogger.game.screens.FroggerGameScreen.level;
 
 public class GameOverScreen extends Screen{

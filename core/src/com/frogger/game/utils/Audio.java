@@ -1,9 +1,9 @@
-package com.frogger.game;
+package com.frogger.game.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.frogger.game.objects.Train;
+import com.frogger.game.gameObjects.Train;
 import com.frogger.game.screens.MainMenuScreen;
 
 /**

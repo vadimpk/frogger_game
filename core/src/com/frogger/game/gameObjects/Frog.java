@@ -1,14 +1,18 @@
-package com.frogger.game;
+package com.frogger.game.gameObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.frogger.game.*;
 import com.frogger.game.Util.Direction;
 import com.frogger.game.Util.TypeOfRow;
-import com.frogger.game.objects.MovingObject;
+import com.frogger.game.mapObjects.Row;
+import com.frogger.game.mapObjects.Tile;
 import com.frogger.game.screens.FroggerGameScreen;
+import com.frogger.game.skins.CharacterSkin;
+import com.frogger.game.utils.Audio;
 
 /**
  * Frog.java

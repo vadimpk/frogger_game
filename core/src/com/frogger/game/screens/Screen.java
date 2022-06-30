@@ -17,14 +17,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.frogger.game.Audio;
+import com.frogger.game.utils.Audio;
 import com.frogger.game.FroggerGame;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-import static com.frogger.game.Const.*;
+import static com.frogger.game.utils.Const.*;
 
 public abstract class Screen implements com.badlogic.gdx.Screen {
     protected FroggerGame game;

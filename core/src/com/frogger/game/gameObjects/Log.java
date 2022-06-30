@@ -1,4 +1,4 @@
-package com.frogger.game.objects;
+package com.frogger.game.gameObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

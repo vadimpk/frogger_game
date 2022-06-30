@@ -1,19 +1,22 @@
-package com.frogger.game;
+package com.frogger.game.skins;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.frogger.game.DataIO;
+import com.frogger.game.Util;
+import com.frogger.game.gameObjects.Frog;
 
 public class CharacterSkin {
 
-    private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog/frog.png"));
-    private static final Texture TURTLE_PACK = new Texture(Gdx.files.internal("characters/frog/turtle.png"));
-    private static final Texture BIRD_PACK = new Texture(Gdx.files.internal("characters/frog/bird.png"));
-    private static final Texture EGG_PACK = new Texture(Gdx.files.internal("characters/frog/egg.png"));
-    private static final Texture FISH_PACK = new Texture(Gdx.files.internal("characters/frog/fish.png"));
-    private static final Texture PIZZA_PACK = new Texture(Gdx.files.internal("characters/frog/pizza.png"));
-    private static final Texture BOTTLE_OF_WINE_PACK = new Texture(Gdx.files.internal("characters/frog/wine.png"));
-    private static final Texture BOTTLE_OF_COKE_PACK = new Texture(Gdx.files.internal("characters/frog/cola.png"));
+    private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog.png"));
+    private static final Texture TURTLE_PACK = new Texture(Gdx.files.internal("characters/turtle.png"));
+    private static final Texture BIRD_PACK = new Texture(Gdx.files.internal("characters/bird.png"));
+    private static final Texture EGG_PACK = new Texture(Gdx.files.internal("characters/egg.png"));
+    private static final Texture FISH_PACK = new Texture(Gdx.files.internal("characters/fish.png"));
+    private static final Texture PIZZA_PACK = new Texture(Gdx.files.internal("characters/pizza.png"));
+    private static final Texture BOTTLE_OF_WINE_PACK = new Texture(Gdx.files.internal("characters/wine.png"));
+    private static final Texture BOTTLE_OF_COKE_PACK = new Texture(Gdx.files.internal("characters/cola.png"));
 
     public TextureRegion standing;
     public TextureRegion jumping;

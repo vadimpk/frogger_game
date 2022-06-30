@@ -5,8 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.frogger.game.*;
+import com.frogger.game.attributeObjects.Scorer;
+import com.frogger.game.attributeObjects.Timer;
+import com.frogger.game.gameObjects.Frog;
+import com.frogger.game.levels.Level;
+import com.frogger.game.utils.Const;
 
-import static com.frogger.game.Const.WINDOW_HEIGHT;
+import static com.frogger.game.utils.Const.WINDOW_HEIGHT;
 
 
 public class FroggerGameScreen extends Screen {

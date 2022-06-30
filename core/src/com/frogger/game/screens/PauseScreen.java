@@ -2,19 +2,18 @@ package com.frogger.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.frogger.game.Audio;
+import com.frogger.game.utils.Audio;
 import com.frogger.game.FroggerGame;
 
 import java.util.HashMap;
 
-import static com.frogger.game.Const.*;
+import static com.frogger.game.utils.Const.*;
 
 public class PauseScreen extends Screen {
 

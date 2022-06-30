@@ -1,4 +1,4 @@
-package com.frogger.game;
+package com.frogger.game.utils;
 
 import com.badlogic.gdx.Gdx;
 

@@ -1,4 +1,6 @@
-package com.frogger.game;
+package com.frogger.game.levels;
+
+import com.frogger.game.mapObjects.Map;
 
 public class Level{
     private int number;

@@ -30,7 +30,7 @@ public class SplashScreen extends Screen {
             }
         };
 
-        Texture splashTex = new Texture(Gdx.files.internal("characters/frog/frog-looking-down.png"));
+        Texture splashTex = new Texture(Gdx.files.internal("characters/frog-looking-down.png"));
         splashImg = new Image(splashTex);
         splashImg.setOrigin(splashImg.getWidth() / 2, splashImg.getHeight() / 2);
         splashImg.setPosition(stage.getWidth() / 2 - 32, stage.getHeight() + 32);

@@ -1,10 +1,15 @@
 package com.frogger.game;
 
 import com.badlogic.gdx.Gdx;
-import com.frogger.game.objects.Car;
-import com.frogger.game.objects.Log;
-import com.frogger.game.objects.MovingObject;
-import com.frogger.game.objects.Train;
+import com.frogger.game.gameObjects.Car;
+import com.frogger.game.gameObjects.Log;
+import com.frogger.game.gameObjects.MovingObject;
+import com.frogger.game.gameObjects.Train;
+import com.frogger.game.levels.Level;
+import com.frogger.game.mapObjects.Map;
+import com.frogger.game.mapObjects.Row;
+import com.frogger.game.mapObjects.Tile;
+import com.frogger.game.skins.CharacterSkin;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
