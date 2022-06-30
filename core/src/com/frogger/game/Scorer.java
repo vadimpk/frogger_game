@@ -12,72 +12,58 @@ public class Scorer {
 
     private static final Texture STARS_PACK = new Texture(Gdx.files.internal("objects/stars/stars.png"));
 
-    public static final TextureRegion FILLED_STAR = new TextureRegion(STARS_PACK, 289, 560,289,280);
-    public static final TextureRegion UNFILLED_STAR = new TextureRegion(STARS_PACK, 0, 560,289,280);
+    public static final TextureRegion FILLED_STAR = new TextureRegion(STARS_PACK, 289, 560, 289, 280);
+    public static final TextureRegion UNFILLED_STAR = new TextureRegion(STARS_PACK, 0, 560, 289, 280);
 
     private static final BitmapFont FONT = new BitmapFont(Gdx.files.internal("fonts/Pixellari_36.fnt"));
 
     private float x, y, size;
-    private boolean isForBigLevel;
 
     public Scorer(float x, float y, float size) {
         this.x = x;
         this.y = y;
         this.size = size;
 
-        for (Score s: level.getMap().getScores()) {
+        for (Score s : level.getMap().getScores()) {
             s.setUncollected();
         }
     }
 
     public void render(SpriteBatch batch) {
         int score = 0;
-        for (Score s: level.getMap().getScores()) {
-            if(s.isCollected()) score++;
+        for (Score s : level.getMap().getScores()) {
+            if (s.isCollected()) score++;
         }
 
-        if(!isForBigLevel) {
-            switch (score) {
-                case 0:
-                    batch.draw(UNFILLED_STAR, x, y, size, size);
-                    batch.draw(UNFILLED_STAR, x + size, y, size, size);
-                    batch.draw(UNFILLED_STAR, x + 2 * size, y, size, size);
-                    break;
-                case 1:
-                    batch.draw(FILLED_STAR, x, y, size, size);
-                    batch.draw(UNFILLED_STAR, x + size, y, size, size);
-                    batch.draw(UNFILLED_STAR, x + 2 * size, y, size, size);
-                    break;
-                case 2:
-                    batch.draw(FILLED_STAR, x, y, size, size);
-                    batch.draw(FILLED_STAR, x + size, y, size, size);
-                    batch.draw(UNFILLED_STAR, x + 2 * size, y, size, size);
-                    break;
-                case 3:
-                    batch.draw(FILLED_STAR, x, y, size, size);
-                    batch.draw(FILLED_STAR, x + size, y, size, size);
-                    batch.draw(FILLED_STAR, x + 2 * size, y, size, size);
-                    break;
-                default:
-                    throw new RuntimeException("the illegal value for score: " + score);
-            }
-        }else {
-            batch.draw(FILLED_STAR, x, y, size, size);
-            FONT.draw(batch, "x " + score, x + size, level.getMap().getTiles()[level.getMap().getnColumns() - 1][0].getY() + 1.65f*level.getMap().getTiles()[0][0].getSize());
+        switch (score) {
+            case 0:
+                batch.draw(UNFILLED_STAR, x, y, size, size);
+                batch.draw(UNFILLED_STAR, x + size, y, size, size);
+                batch.draw(UNFILLED_STAR, x + 2 * size, y, size, size);
+                break;
+            case 1:
+                batch.draw(FILLED_STAR, x, y, size, size);
+                batch.draw(UNFILLED_STAR, x + size, y, size, size);
+                batch.draw(UNFILLED_STAR, x + 2 * size, y, size, size);
+                break;
+            case 2:
+                batch.draw(FILLED_STAR, x, y, size, size);
+                batch.draw(FILLED_STAR, x + size, y, size, size);
+                batch.draw(UNFILLED_STAR, x + 2 * size, y, size, size);
+                break;
+            case 3:
+                batch.draw(FILLED_STAR, x, y, size, size);
+                batch.draw(FILLED_STAR, x + size, y, size, size);
+                batch.draw(FILLED_STAR, x + 2 * size, y, size, size);
+                break;
+            default:
+                throw new RuntimeException("the illegal value for score: " + score);
         }
-
     }
 
-    public static void dispose(){
-       STARS_PACK.dispose();
-       FONT.dispose();
-    }
 
-    public boolean isForBigLevel() {
-        return isForBigLevel;
-    }
-
-    public void setForBigLevel(boolean forBigLevel) {
-        isForBigLevel = forBigLevel;
+    public static void dispose() {
+        STARS_PACK.dispose();
+        FONT.dispose();
     }
 }

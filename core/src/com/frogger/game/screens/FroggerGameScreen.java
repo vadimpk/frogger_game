@@ -27,10 +27,7 @@ public class FroggerGameScreen extends Screen {
                 level.getMap().getTiles()[level.getMap().getnColumns() - 1][0].getY() + level.getMap().getTiles()[0][0].getSize(),
                 level.getTime(), stage);
 
-        if(level.isBig()) timer.setReversed(true);
         scorer = new Scorer(level.getMap().getTiles()[0][level.getMap().getnColumns() - 1].getX() - 2f * WINDOW_HEIGHT*0.08f, WINDOW_HEIGHT*0.932f, WINDOW_HEIGHT*0.08f);
-        if(level.isBig()) scorer.setForBigLevel(true);
-
         isPaused = false;
     }
 
@@ -38,17 +35,13 @@ public class FroggerGameScreen extends Screen {
     public void show() {
         super.show();
 
-        if(!level.isBig()) {
-            float startingY = level.getMap().getTiles()[level.getMap().getnColumns() - 1][0].getY() + level.getMap().getTiles()[0][0].getSize();
+        float startingY = level.getMap().getTiles()[level.getMap().getnColumns() - 1][0].getY() + level.getMap().getTiles()[0][0].getSize();
 
-            Label levelLabel = new Label("Level " + level.getNumber(), new Label.LabelStyle(fonts.get("36"), Color.BLACK));
-            levelLabel.setX(Const.WINDOW_WIDTH / 2 - levelLabel.getWidth() / 2);
-            levelLabel.setY(startingY);
-            System.out.println("startint y" + stage.getWidth() + ":" + stage.getHeight());
+        Label levelLabel = new Label("Level " + level.getNumber(), new Label.LabelStyle(fonts.get("36"), Color.BLACK));
+        levelLabel.setX(Const.WINDOW_WIDTH / 2 - levelLabel.getWidth() / 2);
+        levelLabel.setY(startingY);
 
-            stage.addActor(levelLabel);
-        }
-
+        stage.addActor(levelLabel);
         timer.show();
     }
 

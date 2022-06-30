@@ -6,7 +6,8 @@ public class Level{
     private int starScore;
     private int time;
     private Map map;
-    private boolean isBig;
+    private boolean isBlocked;
+    private boolean isPassed;
 
     public Level(int number, int bestScore, int starScore, Map map, int time) {
         this.number = number;
@@ -14,7 +15,8 @@ public class Level{
         this.starScore = starScore;
         this.map = map;
         this.time = time;
-        isBig = false;
+        isBlocked = true;
+        isPassed = false;
     }
 
     public Map getMap() {
@@ -62,11 +64,19 @@ public class Level{
         return time;
     }
 
-    public boolean isBig() {
-        return isBig;
+    public boolean isBlocked() {
+        return isBlocked;
     }
 
-    public void setBig(boolean big) {
-        isBig = big;
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+
+    public boolean isPassed() {
+        return isPassed;
+    }
+
+    public void setPassed(boolean passed) {
+        isPassed = passed;
     }
 }

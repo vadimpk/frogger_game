@@ -139,7 +139,6 @@ public class SkinsScreen extends Screen{
                         buyButton.setDisabled(true);
                         skin.setUnlocked(true);
                         starNumber.setText(String.valueOf(DataIO.getStarNumber()));
-                        updateStarNumber(-1*skin.getPrice());
                         updateSkins();
                     }
                 }

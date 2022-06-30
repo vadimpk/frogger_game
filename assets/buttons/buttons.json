@@ -39,7 +39,8 @@
 	"level-btn-0-stars": {
 		"up": "level-btn-up-0-stars",
 		"down": "level-btn-down-0-stars",
-		"over": "level-btn-over-0-stars"
+		"over": "level-btn-over-0-stars",
+		"disabled": "level-btn-disabled"
 	},
 	"sounds": {
 		"up": "sound-on-btn-up",

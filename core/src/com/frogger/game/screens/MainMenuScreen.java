@@ -31,7 +31,6 @@ public class MainMenuScreen extends Screen {
 
         //Add buttons to table
         stage.addActor(buttons.get("play"));
-        stage.addActor(buttons.get("levels"));
         stage.addActor(buttons.get("skins"));
         stage.addActor(buttons.get("exit"));
         stage.addActor(soundsButton);
@@ -50,23 +49,14 @@ public class MainMenuScreen extends Screen {
         float distance = BUTTON_HEIGHT *1.5f;
         float startingY = 0.55f*WINDOW_HEIGHT;
         buttons.put("play", new TextButton("Play", textButtonStyles.get("green")));
-        buttons.get("play").setBounds(startingX, startingY, BUTTON_WIDTH, BUTTON_HEIGHT);
-        buttons.put("levels", new TextButton("Levels", textButtonStyles.get("yellow")));
-        buttons.get("levels").setBounds(startingX,startingY - distance, BUTTON_WIDTH, BUTTON_HEIGHT);
+        buttons.get("play").setBounds(startingX,startingY, BUTTON_WIDTH, BUTTON_HEIGHT);
         buttons.put("skins", new TextButton("Skins", textButtonStyles.get("yellow")));
-        buttons.get("skins").setBounds(startingX,startingY - 2f*distance, BUTTON_WIDTH, BUTTON_HEIGHT);
+        buttons.get("skins").setBounds(startingX,startingY - distance, BUTTON_WIDTH, BUTTON_HEIGHT);
         buttons.put("exit",  new TextButton("Exit", textButtonStyles.get("red")));
-        buttons.get("exit").setBounds(startingX, startingY - 3f*distance, BUTTON_WIDTH, BUTTON_HEIGHT);
+        buttons.get("exit").setBounds(startingX, startingY - 2f*distance, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         //Add listeners to buttons
         buttons.get("play").addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Audio.playClickedSound();
-                switchScreenWithFading(new FroggerGameScreen(game, DataIO.getBigLevel()), 0.3f);
-            }
-        });
-        buttons.get("levels").addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Audio.playClickedSound();

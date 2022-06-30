@@ -64,9 +64,9 @@ public class Frog {
      */
     private Frog() {
         alive = true;
+        character = DataIO.getSkins()[0];
         for (CharacterSkin skin : DataIO.getSkins()) if (skin.isChosen()) character = skin;
-        if(character == null) for (CharacterSkin skin : DataIO.getSkins())
-            if (skin.getCharacter() == Util.Character.FROG) character = skin;
+
         texture = character.standing;
         textureRotation = 0;
     }

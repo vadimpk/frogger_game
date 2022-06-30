@@ -15,7 +15,6 @@ public class Timer {
     private BitmapFont font;
 
     private boolean isStopped;
-    private boolean isReversed;
     private Label timeLabel;
     private Stage stage;
     private float animatingTime;
@@ -31,9 +30,9 @@ public class Timer {
     }
 
     public void render(float delta, SpriteBatch batch) {
-        if (!isStopped) timer += (isReversed) ? delta : -delta;
+        if (!isStopped) timer -= delta;
         if (timer < 0) timer = 0;
-        if(!isReversed && timer < 5) {
+        if(timer < 5) {
             if(animatingTime <= 0) {
                 timeLabel.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.5f), Actions.alpha(1), Actions.fadeOut(0.5f)));
                 animatingTime = 1f;
@@ -73,14 +72,6 @@ public class Timer {
 
     public boolean isStopped() {
         return isStopped;
-    }
-
-    public boolean isReversed() {
-        return isReversed;
-    }
-
-    public void setReversed(boolean reversed) {
-        isReversed = reversed;
     }
 
     public void show() {
