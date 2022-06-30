@@ -17,12 +17,61 @@ import java.util.List;
 
 import static java.util.Collections.addAll;
 
-public class LevelsGenerator{
+public class DataIO {
 
     private static Level[] levels;
     private static LevelParameters[] levelParameters;
     private static LevelParameters bigLevelParameters;
     private static Level bigLevel;
+    private static CharacterSkin[] skins;
+    private static CharacterSkinParameters[] skinsParamaters;
+
+
+    public static Level[] getLevels() {
+        if(levels == null) {
+            createLevels();
+            levelParameters = loadLevelsFromFile("data/levels.txt");
+            levels = new Level[10];
+            for (int i = 0; i < levels.length; i++) {
+                levels[i] = convertToLevel(levelParameters[i]);
+            }
+        }
+        return levels;
+    }
+
+    public static Level getBigLevel() {
+        if(bigLevel == null) {
+            createBigLevel();
+            bigLevelParameters = loadLevelsFromFile("data/big-level.txt")[0];
+            bigLevel = convertToLevel(bigLevelParameters);
+            bigLevel.setBig(true);
+        }
+        return bigLevel;
+    }
+
+    public static CharacterSkin[] getSkins() {
+        if(skins == null) {
+            createSkins();
+            skinsParamaters = loadSkinsFromFile();
+            skins = new CharacterSkin[skinsParamaters.length];
+            for (int i = 0; i < skinsParamaters.length; i++) {
+                skins[i] = convertToSkin(skinsParamaters[i]);
+                if(skinsParamaters[i].isChosen) skins[i].setChosen(true);
+            }
+        }
+        return skins;
+    }
+
+    public static int getStarNumber() {
+        getBigLevel();
+        return bigLevelParameters.starScore;
+    }
+
+    public static void updateStarNumber(int newStarNumber) {
+        bigLevel.setStarScore(bigLevel.getStarScore() + newStarNumber);
+        bigLevelParameters.starScore += newStarNumber;
+        loadLevelsToFile(new LevelParameters[]{bigLevelParameters}, "data/big-level.txt");
+    }
 
 
     public static void updateLevel(int levelIndex, int bestScore, int starScore) {
@@ -39,43 +88,20 @@ public class LevelsGenerator{
         if(isChanging) {
             levelParameters[levelIndex].starScore = starScore;
             levelParameters[levelIndex].bestScore = bestScore;
-            loadToFile(levelParameters, "levels.txt");
+            loadLevelsToFile(levelParameters, "data/levels.txt");
         }
     }
 
-    public static void updateBigLevel(int score) {
-        if(bigLevel.getBestScore() < score) {
-            bigLevel.setBestScore(score);
-            bigLevelParameters.bestScore = score;
-            loadToFile(new LevelParameters[]{bigLevelParameters}, "big-level.txt");
+    public static void updateBigLevel(int bestScore) {
+        if(bigLevel.getBestScore() < bestScore) {
+            bigLevel.setBestScore(bestScore);
+            bigLevelParameters.bestScore = bestScore;
+            loadLevelsToFile(new LevelParameters[]{bigLevelParameters}, "data/big-level.txt");
         }
     }
 
+    public static void updateSkins() {
 
-    public static Level[] getLevels() {
-        createLevels();
-        if(levels == null) {
-            levelParameters = loadFromFile("levels.txt");
-            levels = new Level[10];
-            for (int i = 0; i < levels.length; i++) {
-                levels[i] = convertToLevel(levelParameters[i]);
-            }
-        }
-        return levels;
-    }
-
-    public static Level getBigLevel() {
-        try {
-            createBigLevel();
-            if(bigLevel == null) {
-                bigLevelParameters = loadFromFile("big-level.txt")[0];
-                bigLevel = convertToLevel(bigLevelParameters);
-                bigLevel.setBig(true);
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bigLevel;
     }
 
     private static void createBigLevel() {
@@ -978,7 +1004,7 @@ public class LevelsGenerator{
 
 
         bigLevelParameters = new LevelParameters(0, 15, rows, 0, 0, 0);
-        loadToFile(new LevelParameters[] {bigLevelParameters}, "big-level.txt");
+        loadLevelsToFile(new LevelParameters[] {bigLevelParameters}, "data/big-level.txt");
     }
 
     private static Level convertToLevel(LevelParameters levelParameter) {
@@ -1048,7 +1074,11 @@ public class LevelsGenerator{
         return new Level(levelParameter.number, levelParameter.bestScore, levelParameter.starScore, map, levelParameter.time);
     }
 
-    public static void createLevels(){
+    private static CharacterSkin convertToSkin(CharacterSkinParameters skin) {
+        return new CharacterSkin(skin.name, skin.price, skin.isUnlocked, skin.character);
+    }
+
+    private static void createLevels(){
         LevelParameters[] levelParameters = new LevelParameters[10];
 
         RowsParameters[] rows;
@@ -2097,10 +2127,23 @@ public class LevelsGenerator{
 
         levelParameters[9] = new LevelParameters(10, nColumns, rows, 0, 0, 45);
 
-        loadToFile(levelParameters, "levels.txt");
+        loadLevelsToFile(levelParameters, "data/levels.txt");
     }
 
-    public static void loadToFile(LevelParameters[] levels, String src) {
+    private static void createSkins() {
+        CharacterSkinParameters[] skinParameters = new CharacterSkinParameters[8];
+        skinParameters[0] = new CharacterSkinParameters("Frog", 1, false, false, Util.Character.FROG);
+        skinParameters[1] = new CharacterSkinParameters("Egg", 5, false, false, Util.Character.EGG);
+        skinParameters[2] = new CharacterSkinParameters("Turtle", 3, false, false, Util.Character.TURTLE);
+        skinParameters[3] = new CharacterSkinParameters("Bird", 0, true, true, Util.Character.BIRD);
+        skinParameters[4] = new CharacterSkinParameters("Fish", 6, false, false, Util.Character.FISH);
+        skinParameters[5] = new CharacterSkinParameters("Pizza", 6, false, false, Util.Character.PIZZA);
+        skinParameters[6] = new CharacterSkinParameters("Coke", 6, false, false, Util.Character.BOTTLE_OF_COKE);
+        skinParameters[7] = new CharacterSkinParameters("Wine", 6, false, false, Util.Character.BOTTLE_OF_WINE);
+        loadSkinsToFile(skinParameters);
+    }
+
+    private static void loadLevelsToFile(LevelParameters[] levels, String src) {
         try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get(src)))) {
             out.writeObject(levels);
         } catch (IOException e) {
@@ -2108,7 +2151,15 @@ public class LevelsGenerator{
         }
     }
 
-    public static LevelParameters[] loadFromFile(String src) {
+    private static void loadSkinsToFile(CharacterSkinParameters[] skins) {
+        try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get("data/skins.txt")))) {
+            out.writeObject(skins);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static LevelParameters[] loadLevelsFromFile(String src) {
         LevelParameters[] levels;
         try(ObjectInputStream out = new ObjectInputStream(Files.newInputStream(Paths.get(src)))) {
             levels = (LevelParameters[]) out.readObject();
@@ -2116,6 +2167,16 @@ public class LevelsGenerator{
             throw new RuntimeException(e);
         }
         return levels;
+    }
+
+    private static CharacterSkinParameters[] loadSkinsFromFile() {
+        CharacterSkinParameters[] skins;
+        try(ObjectInputStream out = new ObjectInputStream(Files.newInputStream(Paths.get("data/skins.txt")))) {
+            skins = (CharacterSkinParameters[]) out.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return skins;
     }
 
     static class LevelParameters implements Serializable {
@@ -2209,6 +2270,22 @@ public class LevelsGenerator{
             this.direction = direction;
             this.isFading =isFading;
             this.deltaTime = deltaTime;
+        }
+    }
+
+    static class CharacterSkinParameters implements Serializable{
+        String name;
+        int price;
+        boolean isUnlocked;
+        boolean isChosen;
+        Util.Character character;
+
+        public CharacterSkinParameters(String name, int price, boolean isUnlocked, boolean isChosen, Util.Character character) {
+            this.name = name;
+            this.price = price;
+            this.isUnlocked = isUnlocked;
+            this.isChosen = isChosen;
+            this.character = character;
         }
     }
 }

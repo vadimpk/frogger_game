@@ -7,20 +7,24 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.frogger.game.Audio;
 import com.frogger.game.FroggerGame;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+import static com.frogger.game.Const.*;
 
 public abstract class Screen implements com.badlogic.gdx.Screen {
     protected FroggerGame game;
@@ -53,6 +57,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         fonts = new HashMap<>();
         buttons = new HashMap<>();
 
+        fonts.put("24", new BitmapFont(Gdx.files.internal("fonts/Pixellari_24.fnt")));
         fonts.put("36", new BitmapFont(Gdx.files.internal("fonts/Pixellari_36.fnt")));
         fonts.put("100", new BitmapFont(Gdx.files.internal("fonts/Pixellari_100.fnt")));
         skin = new Skin();
@@ -144,5 +149,19 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         soundsStyle.checkedOver = skin.getDrawable("sound-off-btn-over");
         soundsStyle.checkedDown = skin.getDrawable("sound-off-btn-down");
         buttonStyles.put("sounds", soundsStyle);
+    }
+
+    public TextButton getBackButton(float x, float y) {
+        if(!textButtonStyles.containsKey("red")) createMenuButtons();
+        TextButton backButton = new TextButton("Back", textButtonStyles.get("red"));
+        backButton.setBounds(x, y, BUTTON_WIDTH, BUTTON_HEIGHT);
+        backButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Audio.playClickedSound();
+                switchScreenWithFading(new MainMenuScreen(game), 0.3f);
+            }
+        });
+        return backButton;
     }
 }

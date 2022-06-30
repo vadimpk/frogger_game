@@ -28,7 +28,7 @@ public class Frog {
     private float x, y, size;
     private boolean alive;
     private TextureRegion texture;
-    private CharacterTexture character = new CharacterTexture();
+    private CharacterSkin character;
 
     /** initialize fields for movement mechanic  */
     private long startedMovingTime;
@@ -63,6 +63,7 @@ public class Frog {
      */
     private Frog() {
         alive = true;
+        character = DataIO.getSkins()[0];
         texture = character.standing;
         character.rotate(0);
     }
@@ -101,12 +102,11 @@ public class Frog {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(texture, x, y, size/2, size/2 , size, size, 1, 1, character.textureRotation);
+        batch.draw(texture, x, y, size/2, size/2 , size, size, 1, 1, character.getTextureRotation());
         update(0f);
     }
 
     public static void dispose() {
-        CharacterTexture.dispose();
     }
 
     /**
@@ -517,6 +517,11 @@ public class Frog {
      */
     public void animateMovingUp(Row[] rows, int nColumns, int nRows) {
 
+        // don't let next move until time passes
+        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
+            endAnimation();
+        }
+
         // counter of frames (for animation)
         animationFrameCount++;
         character.rotate(0);
@@ -551,11 +556,7 @@ public class Frog {
             if (tile.getROW() > (nColumns / 2) && tile.getROW() < (nRows - (nColumns / 2)) && moveCamera)
                 FroggerGame.gameCamera.translate(0,dy,0);
 
-        }
-        animate();
-        // don't let next move until time passes
-        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
-            endAnimation();
+            animate();
         }
     }
 
@@ -563,6 +564,11 @@ public class Frog {
      * Method to animate moving down. Runs every frame. Also changes camera
      */
     public void animateMovingDown(Row[] rows, int nColumns, int nRows) {
+
+        // don't let next move until time passes
+        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
+            endAnimation();
+        }
 
         // counter of frames (for animation)
         animationFrameCount++;
@@ -598,11 +604,8 @@ public class Frog {
             // move camera
             if (tile.getROW() >= nColumns / 2 && tile.getROW() < (nRows - (nColumns / 2) - 1) && moveCamera)
                 FroggerGame.gameCamera.translate(0,dy,0);
-        }
-        animate();
-        // don't let next move until time passes
-        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
-            endAnimation();
+
+            animate();
         }
     }
 
@@ -611,6 +614,9 @@ public class Frog {
      */
     private void animateMovingRight(Row[] rows) {
 
+        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
+            endAnimation();
+        }
 
         animationFrameCount++;
         character.rotate(270);
@@ -636,9 +642,6 @@ public class Frog {
             }
         }
         animate();
-        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
-            endAnimation();
-        }
     }
 
     /**
@@ -646,6 +649,9 @@ public class Frog {
      */
     public void animateMovingLeft(Row[] rows) {
 
+        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
+            endAnimation();
+        }
         animationFrameCount++;
         character.rotate(90);
 
@@ -668,10 +674,7 @@ public class Frog {
                     }
                 }
             }
-        }
-        animate();
-        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
-            endAnimation();
+            animate();
         }
     }
 
@@ -807,71 +810,8 @@ public class Frog {
     public boolean isMoving() {
         return isMoving;
     }
-}
 
-class CharacterTexture {
-
-    private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog/frog.png"));
-    private static final Texture TURTLE_PACK = new Texture(Gdx.files.internal("characters/frog/turtle.png"));
-    private static final Texture CAT_PACK = new Texture(Gdx.files.internal("characters/frog/cat.png"));
-    private static final Texture BIRD_PACK = new Texture(Gdx.files.internal("characters/frog/bird.png"));
-    private static final Texture EGG_PACK = new Texture(Gdx.files.internal("characters/frog/egg.png"));
-    private static final Texture FISH_PACK = new Texture(Gdx.files.internal("characters/frog/fish.png"));
-    private static final Texture PIZZA_PACK = new Texture(Gdx.files.internal("characters/frog/pizza.png"));
-    private static final Texture WINE_PACK = new Texture(Gdx.files.internal("characters/frog/wine.png"));
-    private static final Texture COKE_PACK = new Texture(Gdx.files.internal("characters/frog/cola.png"));
-
-    private Texture texturePack;
-
-    public TextureRegion standing;
-    public TextureRegion jumping;
-    public TextureRegion drowning1;
-    public TextureRegion drowning2;
-    public TextureRegion drowning3;
-    public TextureRegion drowning4;
-    public TextureRegion drowning5;
-    public TextureRegion dead;
-    
-    public int textureRotation;
-
-    CharacterTexture() {
-        setCharacter(Util.Character.BOTTLE_OF_WINE);
-        textureRotation = 0;
-    }
-
-    public void setCharacter(Util.Character character) {
-        if (character == Util.Character.FROG) texturePack = FROG_PACK;
-        else if (character == Util.Character.TURTLE) texturePack = TURTLE_PACK;
-        else if (character == Util.Character.CAT) texturePack = CAT_PACK;
-        else if (character == Util.Character.BIRD) texturePack = BIRD_PACK;
-        else if (character == Util.Character.EGG) texturePack = EGG_PACK;
-        else if (character == Util.Character.FISH) texturePack = FISH_PACK;
-        else if (character == Util.Character.PIZZA) texturePack = PIZZA_PACK;
-        else if (character == Util.Character.BOTTLE_OF_COKE) texturePack = COKE_PACK;
-        else if (character == Util.Character.BOTTLE_OF_WINE) texturePack = WINE_PACK;
-
-        standing = new TextureRegion(texturePack, 300, 150, 150, 150);
-        jumping = new TextureRegion(texturePack, 150, 150, 150, 150);
-        drowning1 = new TextureRegion(texturePack, 0, 0, 150, 150);
-        drowning2 = new TextureRegion(texturePack, 150, 0, 150, 150);
-        drowning3 = new TextureRegion(texturePack, 300, 0, 150, 150);
-        drowning4 = new TextureRegion(texturePack, 0, 150, 150, 150);
-        drowning5 = new TextureRegion(texturePack, 0, 300, 150, 150);
-        dead = new TextureRegion(texturePack, 150, 300, 150, 150);
-    }
-
-    public static void dispose() {
-        FROG_PACK.dispose();
-        TURTLE_PACK.dispose();
-        CAT_PACK.dispose();
-        BIRD_PACK.dispose();
-        EGG_PACK.dispose();
-    }
-    
-    public void rotate(int degree) {
-        textureRotation = degree;
-        if (texturePack == COKE_PACK || texturePack == WINE_PACK) {
-            textureRotation = 0;
-        }
+    public void setCharacter(CharacterSkin character) {
+        this.character = character;
     }
 }

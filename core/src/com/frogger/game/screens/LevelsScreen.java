@@ -1,16 +1,12 @@
 package com.frogger.game.screens;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.Audio;
+import com.frogger.game.DataIO;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.Level;
-import com.frogger.game.LevelsGenerator;
 
 import static com.frogger.game.Const.*;
 
@@ -24,7 +20,7 @@ public class LevelsScreen extends Screen {
     public void show() {
         super.show();
 
-        final Level[] levels = LevelsGenerator.getLevels();
+        final Level[] levels = DataIO.getLevels();
 
         initButtons();
 
@@ -50,19 +46,7 @@ public class LevelsScreen extends Screen {
             });
             stage.addActor(buttons[i]);
         }
-
-        createMenuButtons();
-        TextButton backButton = new TextButton("Back", textButtonStyles.get("red"));
-        backButton.setBounds(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 0.15f*WINDOW_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
-        backButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Audio.playClickedSound();
-                switchScreenWithFading(new MainMenuScreen(game), 0.3f);
-            }
-        });
-
-        stage.addActor(backButton);
+        stage.addActor(getBackButton(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 0.15f*WINDOW_HEIGHT));
     }
 
     private void initButtons() {
