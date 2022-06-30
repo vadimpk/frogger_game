@@ -2,7 +2,6 @@ package com.frogger.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -28,8 +27,7 @@ public class Frog {
     private float x, y, size;
     private boolean alive;
     private TextureRegion texture;
-    private int textureRotation;
-    private CharacterSkin character;
+    private CharacterSkin characterSkin;
 
     /** initialize fields for movement mechanic  */
     private long startedMovingTime;
@@ -64,11 +62,10 @@ public class Frog {
      */
     private Frog() {
         alive = true;
-        character = DataIO.getSkins()[0];
-        for (CharacterSkin skin : DataIO.getSkins()) if (skin.isChosen()) character = skin;
+        for (CharacterSkin skin : DataIO.getSkins()) if (skin.isActive()) characterSkin = skin;
 
-        texture = character.standing;
-        textureRotation = 0;
+        texture = characterSkin.standing;
+        characterSkin.rotate(0);
     }
 
     /**
@@ -89,7 +86,7 @@ public class Frog {
     public void respawn(Tile tile) {
         setStartingTile(tile);
         alive = true;
-        texture = character.standing;
+        texture = characterSkin.standing;
         onLog = false;
         log = null;
         logIndex = -1;
@@ -105,7 +102,7 @@ public class Frog {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(texture, x, y, size/2, size/2 , size, size, 1, 1, textureRotation);
+        batch.draw(texture, x, y, size/2, size/2 , size, size, 1, 1, characterSkin.getTextureRotation());
         update(0f);
     }
 
@@ -244,7 +241,7 @@ public class Frog {
     private void moveRight(Tile[][] tiles, int nColumns) {
 
         // rotate the texture of a frog to face right
-        textureRotation = 270;
+        characterSkin.rotate(270);
         // check if can move right (if not in the last column)
         if (tile.getCOLUMN() < nColumns - 1) {
 
@@ -281,7 +278,7 @@ public class Frog {
     private void moveLeft(Tile[][] tiles) {
 
         // rotate the texture of a frog to face left
-        textureRotation = 90;
+        characterSkin.rotate(90);
         // check if can move left (if not in the first column)
         if (tile.getCOLUMN() > 0) {
 
@@ -317,7 +314,7 @@ public class Frog {
     private void moveUp(Row[] rows, Tile[][] tiles, int nRows) {
 
         // rotate the texture of a frog to face up
-        textureRotation = 0;
+        characterSkin.rotate(0);
         // check if can move up (if not in the last row)
         if (tile.getROW() < nRows -1) {
 
@@ -332,7 +329,6 @@ public class Frog {
                     if (getLogWhenMovingUpOrDown(log)) {
                         tile = tiles[tile.getROW() + 1][tile.getCOLUMN()];
                         startMoving(Direction.UP);
-                        textureRotation = 0;
                         break; // stop iterating as the log is already found
                     }
                 }
@@ -375,7 +371,7 @@ public class Frog {
     private void moveDown(Row[] rows, Tile[][] tiles) {
 
         // rotate the texture of a frog to face down
-        textureRotation = 180;
+        characterSkin.rotate(180);
         // check if can move down (if not in the first row)
         if (tile.getROW() > 0) {
 
@@ -386,7 +382,6 @@ public class Frog {
                     if (getLogWhenMovingUpOrDown(log)) {
                         tile = tiles[tile.getROW() - 1][tile.getCOLUMN()];
                         startMoving(Direction.DOWN);
-                        textureRotation = 180;
                         break;
                     }
                 }
@@ -528,7 +523,6 @@ public class Frog {
 
         // counter of frames (for animation)
         animationFrameCount++;
-        textureRotation = 0;
 
         float dy = 0f;
         float dx = 0f;
@@ -576,7 +570,6 @@ public class Frog {
 
         // counter of frames (for animation)
         animationFrameCount++;
-        textureRotation = 180;
 
         float dy = 0f;
         float dx = 0f;
@@ -623,7 +616,6 @@ public class Frog {
         }
 
         animationFrameCount++;
-        textureRotation = 270;
 
         if (moveToTheWall) {
             animateMovingToTheWall();
@@ -657,7 +649,6 @@ public class Frog {
             endAnimation();
         }
         animationFrameCount++;
-        textureRotation = 90;
 
         if (moveToTheWall) {
             animateMovingToTheWall();
@@ -689,10 +680,10 @@ public class Frog {
         // animate
         if (!goingToDrown) {
             if (animationFrameCount == (int) SPEED / 4) {
-                texture = character.jumping;
+                texture = characterSkin.jumping;
             }
             if (TimeUtils.nanoTime() - startedMovingTime > MOVE_ANIMATION_TIME) {
-                texture = character.standing;
+                texture = characterSkin.standing;
             }
         } else {
             animateDrowning();
@@ -720,9 +711,9 @@ public class Frog {
      * Method that animates moving to the wall
      */
     private void animateMovingToTheWall() {
-        texture = character.jumping;
+        texture = characterSkin.jumping;
         if (animationFrameCount > 2) {
-            texture = character.standing;
+            texture = characterSkin.standing;
             moveToTheWall = false;
         }
     }
@@ -731,7 +722,7 @@ public class Frog {
      * Method that animates dying
      */
     private void animateDying(){
-        texture = character.dead;
+        texture = characterSkin.dead;
         if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
             alive = false;
         }
@@ -743,18 +734,18 @@ public class Frog {
     private void animateDrowning() {
 
         if (animationFrameCount <= (int) SPEED * 0.25f) {
-            texture = character.drowning1;
+            texture = characterSkin.drowning1;
         }
         else if (animationFrameCount <= (int) SPEED * 0.5f) {
-            texture = character.drowning2;
+            texture = characterSkin.drowning2;
         }
         else if (animationFrameCount <= (int) SPEED * 0.75f) {
-            texture = character.drowning3;
+            texture = characterSkin.drowning3;
         }
         else if (animationFrameCount <= (int) SPEED) {
-            texture = character.drowning4;
+            texture = characterSkin.drowning4;
         }
-        else texture = character.drowning5;
+        else texture = characterSkin.drowning5;
 
     }
 
@@ -815,7 +806,7 @@ public class Frog {
         return isMoving;
     }
 
-    public void setCharacter(CharacterSkin character) {
-        this.character = character;
+    public void setCharacterSkin(CharacterSkin characterSkin) {
+        this.characterSkin = characterSkin;
     }
 }

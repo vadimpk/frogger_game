@@ -40,16 +40,22 @@ public class DataIO {
             skins = new CharacterSkin[skinsParamaters.length];
             for (int i = 0; i < skinsParamaters.length; i++) {
                 skins[i] = convertToSkin(skinsParamaters[i]);
-                if(skinsParamaters[i].isChosen) skins[i].setChosen(true);
             }
         }
         return skins;
     }
 
     public static int getStarNumber() {
-        int starNumber = 0;
-        for (Level level : levels) {
-            if(!level.isBlocked() && level.isPassed())  starNumber += level.getStarScore();
+        int starNumber = 10;
+        for (Level level : getLevels()) {
+            if(!level.isBlocked() && level.isPassed()) {
+                starNumber += level.getStarScore();
+            }
+        }
+        for (CharacterSkin skin: getSkins()) {
+            if (skin.isUnlocked()) {
+                starNumber -= skin.getPrice();
+            }
         }
         return starNumber;
     }
@@ -157,7 +163,7 @@ public class DataIO {
     }
 
     private static CharacterSkin convertToSkin(CharacterSkinParameters skin) {
-        return new CharacterSkin(skin.name, skin.price, skin.isUnlocked, skin.character);
+        return new CharacterSkin(skin.name, skin.price, skin.unlocked, skin.active, skin.character);
     }
 
     private static void createLevels(){
@@ -1219,11 +1225,15 @@ public class DataIO {
     }
 
     private static void createSkins() {
-        CharacterSkinParameters[] skinParameters = new CharacterSkinParameters[3];
-        skinParameters[0] = new CharacterSkinParameters("Bird", 1, false, false, Util.Character.BIRD);
-        skinParameters[1] = new CharacterSkinParameters("Egg", 5, false, false, Util.Character.EGG);
-        skinParameters[2] = new CharacterSkinParameters("Turtle", 3, false, false, Util.Character.TURTLE);
-//        skinParameters[4] = new CharacterSkinParameters("Frog", 0, true, true, Util.Character.FROG);
+        CharacterSkinParameters[] skinParameters = new CharacterSkinParameters[8];
+        skinParameters[0] = new CharacterSkinParameters("Frog", 0, true, true, Util.Character.FROG);
+        skinParameters[1] = new CharacterSkinParameters("Bird", 2, false, false, Util.Character.BIRD);
+        skinParameters[2] = new CharacterSkinParameters("Turtle", 2, false, false, Util.Character.TURTLE);
+        skinParameters[3] = new CharacterSkinParameters("Fish", 2, false, false, Util.Character.FISH);
+        skinParameters[4] = new CharacterSkinParameters("Pizza", 4, false, false, Util.Character.PIZZA);
+        skinParameters[5] = new CharacterSkinParameters("Coke", 5, false, false, Util.Character.BOTTLE_OF_COKE);
+        skinParameters[6] = new CharacterSkinParameters("Wine", 5, false, false, Util.Character.BOTTLE_OF_WINE);
+        skinParameters[7] = new CharacterSkinParameters("Egg", 10, false, false, Util.Character.EGG);
         loadSkinsToFile(skinParameters);
     }
 
@@ -1362,15 +1372,15 @@ public class DataIO {
     static class CharacterSkinParameters implements Serializable{
         String name;
         int price;
-        boolean isUnlocked;
-        boolean isChosen;
+        boolean unlocked;
+        boolean active;
         Util.Character character;
 
-        public CharacterSkinParameters(String name, int price, boolean isUnlocked, boolean isChosen, Util.Character character) {
+        public CharacterSkinParameters(String name, int price, boolean isUnlocked, boolean active, Util.Character character) {
             this.name = name;
             this.price = price;
-            this.isUnlocked = isUnlocked;
-            this.isChosen = isChosen;
+            this.unlocked = isUnlocked;
+            this.active = active;
             this.character = character;
         }
     }

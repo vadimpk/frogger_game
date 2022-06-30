@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import java.util.ArrayList;
+
 public class CharacterSkin {
 
     private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog/frog.png"));
@@ -15,9 +17,6 @@ public class CharacterSkin {
     private static final Texture BOTTLE_OF_WINE_PACK = new Texture(Gdx.files.internal("characters/frog/wine.png"));
     private static final Texture BOTTLE_OF_COKE_PACK = new Texture(Gdx.files.internal("characters/frog/cola.png"));
 
-    private Texture texturePack;
-    private int textureRotation;
-
     public TextureRegion standing;
     public TextureRegion jumping;
     public TextureRegion drowning1;
@@ -27,44 +26,59 @@ public class CharacterSkin {
     public TextureRegion drowning5;
     public TextureRegion dead;
 
-    private String name;
-    private int price;
-    private boolean isUnlocked;
-    private boolean isChosen;
-    private Util.Character character;
+    private Texture texturePack;
+    private int textureRotation;
 
-    public CharacterSkin(String name, int price, boolean isUnlocked, Util.Character character) {
-        this.name = name;
-        this.price = price;
-        this.isUnlocked = isUnlocked;
-        this.character = character;
+    private final String NAME;
+    private final int PRICE;
+    private boolean unlocked;
+    private boolean active;
+    private final Util.Character CHARACTER;
+
+    public CharacterSkin(String name, int price, boolean isUnlocked, boolean isActive, Util.Character character) {
+        this.NAME = name;
+        this.PRICE = price;
+        this.unlocked = isUnlocked;
+        this.active = isActive;
+        this.CHARACTER = character;
         setCharacter(character);
         textureRotation = 0;
     }
 
-    public void setChosen(boolean chosen) {
-        if(chosen) Frog.get().setCharacter(this);
-        isChosen = chosen;
+    /**
+     * Method to set current skin active and also set all the other skins inactive
+     * @param active active
+     */
+    public void setActive(boolean active) {
+        if(active) {
+            Frog.get().setCharacterSkin(this);
+            for (CharacterSkin skin: DataIO.getSkins()) {
+                if (skin.isActive()) {
+                    skin.setActive(false);
+                }
+            }
+        }
+        this.active = active;
     }
 
-    public boolean isChosen() {
-        return isChosen;
+    public boolean isActive() {
+        return active;
     }
 
     public boolean isUnlocked() {
-        return isUnlocked;
+        return unlocked;
     }
 
     public void setUnlocked(boolean unlocked) {
-        isUnlocked = unlocked;
+        this.unlocked = unlocked;
     }
 
     public String getName() {
-        return name;
+        return NAME;
     }
 
     public int getPrice() {
-        return price;
+        return PRICE;
     }
 
     public void setCharacter(Util.Character character) {
@@ -98,12 +112,8 @@ public class CharacterSkin {
         BOTTLE_OF_COKE_PACK.dispose();
     }
 
-    public TextureRegion getStanding() {
-        return standing;
-    }
-
     public Util.Character getCharacter() {
-        return character;
+        return CHARACTER;
     }
 
     public void rotate(int degree) {
