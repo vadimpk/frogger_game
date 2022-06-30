@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.Audio;
@@ -29,10 +30,16 @@ public class MainMenuScreen extends Screen {
 
         initButtons();
 
+        bgTexture = new Texture(Gdx.files.internal("main-bg.png"));
+        Image bg = new Image(bgTexture);
+        bg.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
         //Add buttons to table
+        stage.addActor(bg);
         stage.addActor(buttons.get("play"));
         stage.addActor(buttons.get("skins"));
         stage.addActor(buttons.get("exit"));
+        stage.addActor(buttons.get("donate"));
         stage.addActor(soundsButton);
 
     }
@@ -54,6 +61,12 @@ public class MainMenuScreen extends Screen {
         buttons.get("skins").setBounds(startingX,startingY - distance, BUTTON_WIDTH, BUTTON_HEIGHT);
         buttons.put("exit",  new TextButton("Exit", textButtonStyles.get("red")));
         buttons.get("exit").setBounds(startingX, startingY - 2f*distance, BUTTON_WIDTH, BUTTON_HEIGHT);
+
+        textButtonStyles.put("yellow-small", textButtonStyles.get("yellow"));
+        textButtonStyles.get("yellow-small").font = fonts.get("24");
+        buttons.put("donate",  new TextButton("Donate", textButtonStyles.get("yellow-small")));
+        buttons.get("donate").setBounds((WINDOW_WIDTH / 2) - (0.7f*BUTTON_WIDTH / 2), 0.05f*WINDOW_HEIGHT, 0.7f*BUTTON_WIDTH, 0.7f*BUTTON_HEIGHT);
+
 
         //Add listeners to buttons
         buttons.get("play").addListener(new ClickListener(){
@@ -80,6 +93,13 @@ public class MainMenuScreen extends Screen {
             }
         });
 
+        buttons.get("donate").addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Audio.playClickedSound();
+            }
+        });
+
         soundsButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -87,5 +107,11 @@ public class MainMenuScreen extends Screen {
                 IS_SOUNDS_ON = !IS_SOUNDS_ON;
             }
         });
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        bgTexture.dispose();
     }
 }
