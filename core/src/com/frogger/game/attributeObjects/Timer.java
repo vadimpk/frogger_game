@@ -29,7 +29,7 @@ public class Timer {
         this.stage = stage;
     }
 
-    public void render(float delta, SpriteBatch batch) {
+    public void render(float delta) {
         if (!isStopped) timer -= delta;
         if (timer < 0) timer = 0;
         if(timer < 5) {

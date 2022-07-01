@@ -1,6 +1,5 @@
 package com.frogger.game.screens;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -26,7 +25,7 @@ public class SkinsScreen extends Screen {
 
         for (int i = 0; i < skins.length; i++) {
             if (skins[i].isActive()) {
-                skinPanel = new SkinPanel(i, skins);
+                skinPanel = new SkinPanel(i, skins,stage);
             }
         }
     }
@@ -35,6 +34,9 @@ public class SkinsScreen extends Screen {
     public void show() {
         super.show();
 
+        setBackground();
+
+        skinPanel.show();
 
         Button rightArrow = new Button(buttonStyles.get("arrow"));
         Button leftArrow = new Button(buttonStyles.get("arrow"));
@@ -83,11 +85,8 @@ public class SkinsScreen extends Screen {
 
     @Override
     public void render(float delta) {
-
+        super.render(delta);
         skinPanel.render();
-
-        stage.act();
-        stage.draw();
     }
 
     private boolean defineBuyButtonAvailability() {
@@ -95,7 +94,6 @@ public class SkinsScreen extends Screen {
     }
 
     private void createButtonStyles() {
-
         TextButton.TextButtonStyle buyButtonStyle = new TextButton.TextButtonStyle();
         buyButtonStyle.font = fonts.get("36");
         buyButtonStyle.up = skin.getDrawable("yellow-btn-up");
@@ -112,6 +110,12 @@ public class SkinsScreen extends Screen {
 
         buttonStyles.put("arrow", rightButtonStyle);
         textButtonStyles.put("buy", buyButtonStyle);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        skinPanel.dispose();
     }
 }
 

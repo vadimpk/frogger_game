@@ -10,6 +10,7 @@ import com.frogger.game.mapObjects.Map;
 import com.frogger.game.mapObjects.Row;
 import com.frogger.game.mapObjects.Tile;
 import com.frogger.game.skins.CharacterSkin;
+import com.sun.tools.javac.util.ArrayUtils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,6 +18,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class DataIO {
 
@@ -31,7 +33,7 @@ public class DataIO {
 
     public static Level[] getLevels() {
         if(levels == null) {
-            //createLevels();
+            createLevels();
             levelParameters = loadLevelsFromFile();
             levels = new Level[10];
             for (int i = 0; i < levels.length; i++) {
@@ -43,7 +45,7 @@ public class DataIO {
 
     public static CharacterSkin[] getCharacterSkins() {
         if(characterSkins == null) {
-            //createSkins();
+            createSkins();
             skinsParameters = loadSkinsFromFile();
             int counter = 0;
             for (CharacterSkinParameters skinsParameter : skinsParameters) if (!skinsParameter.forTiles) counter++;
@@ -67,10 +69,12 @@ public class DataIO {
             int counter = 0;
             for (CharacterSkinParameters skinsParameter : skinsParameters) if (skinsParameter.forTiles) counter++;
             tileSkins = new CharacterSkin[counter];
+            tileSkinsParameters = new CharacterSkinParameters[counter];
             counter = 0;
             for (CharacterSkinParameters skinsParameter : skinsParameters) {
                 if (skinsParameter.forTiles) {
-                    tileSkins[counter++] = new CharacterSkin(skinsParameter.name, skinsParameter.price, skinsParameter.unlocked, skinsParameter.active, skinsParameter.tileSkin);
+                    tileSkins[counter] = new CharacterSkin(skinsParameter.name, skinsParameter.price, skinsParameter.unlocked, skinsParameter.active, skinsParameter.tileSkin);
+                    tileSkinsParameters[counter++] = skinsParameter;
                 }
             }
         }
@@ -78,7 +82,7 @@ public class DataIO {
     }
 
     public static int getStarNumber() {
-        int starNumber = 10;
+        int starNumber = 0;
         for (Level level : getLevels()) {
             if(!level.isBlocked() && level.isPassed()) {
                 starNumber += level.getStarScore();
@@ -125,19 +129,19 @@ public class DataIO {
         }
     }
 
-    public static void updateSkins(boolean forTile, int skinIndex, boolean isUnlocked, boolean isActive) {
-        if((skinsParameters[skinIndex].unlocked ^ isUnlocked) || (skinsParameters[skinIndex].active ^ isActive)) {
-            CharacterSkin[] skins = (forTile) ? getTileSkins() : getCharacterSkins();
-            CharacterSkinParameters[] skinsParameters = (forTile) ? tileSkinsParameters : characterSkinsParameters;
-            skinsParameters[skinIndex].unlocked = isUnlocked;
-            skinsParameters[skinIndex].active = isActive;
-            skins[skinIndex].setUnlocked(isUnlocked);
-            skins[skinIndex].setActive(isActive);
-            if(isActive) for (int i = 0; i < skins.length; i++) {
-                if(i != skinIndex) skins[i].setActive(false);
+    public static void updateSkins(boolean forTile, int skinIndex) {
+        CharacterSkin[] skins = (forTile) ? getTileSkins() : getCharacterSkins();
+        CharacterSkinParameters[] localSkinsParameters = (forTile) ? tileSkinsParameters : characterSkinsParameters;
+        localSkinsParameters[skinIndex].unlocked = skins[skinIndex].isUnlocked();
+        localSkinsParameters[skinIndex].active = skins[skinIndex].isActive();
+        System.out.println(forTile + ": " + skins[skinIndex].isActive());
+        if(localSkinsParameters[skinIndex].active) for (int i = 0; i < skins.length; i++) {
+            if(i != skinIndex) {
+                localSkinsParameters[i].active = false;
             }
-            loadSkinsToFile(characterSkinsParameters);
         }
+        skinsParameters = concat(tileSkinsParameters, characterSkinsParameters);
+        loadSkinsToFile(skinsParameters);
     }
 
     private static Level convertToLevel(LevelParameters levelParameter) {
@@ -1322,12 +1326,18 @@ public class DataIO {
 
     private static CharacterSkinParameters[] loadSkinsFromFile() {
         CharacterSkinParameters[] skins;
-        try(ObjectInputStream out = new ObjectInputStream(Files.newInputStream(Paths.get("data/skins.txt")))) {
+        try (ObjectInputStream out = new ObjectInputStream(Files.newInputStream(Paths.get("data/skins.txt")))) {
             skins = (CharacterSkinParameters[]) out.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         return skins;
+    }
+
+    private static <T> T[] concat(T[] first, T[] second) {
+        T[] result = Arrays.copyOf(first, first.length + second.length);
+        System.arraycopy(second, 0, result, first.length, second.length);
+        return result;
     }
 
     static class LevelParameters implements Serializable {
@@ -1427,6 +1437,9 @@ public class DataIO {
     }
 
     static class CharacterSkinParameters implements Serializable{
+
+        private static final long serialVersionUID = 1L;
+
         String name;
         int price;
         boolean unlocked;
