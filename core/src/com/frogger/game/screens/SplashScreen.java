@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.frogger.game.FroggerGame;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+import static com.frogger.game.utils.Const.WINDOW_HEIGHT;
+import static com.frogger.game.utils.Const.WINDOW_WIDTH;
 
 public class SplashScreen extends Screen {
     private Image splashImg;
@@ -30,14 +32,15 @@ public class SplashScreen extends Screen {
             }
         };
 
-        Texture splashTex = new Texture(Gdx.files.internal("characters/frog-looking-down.png"));
+        Texture splashTex = new Texture(Gdx.files.internal("logo.png"));
         splashImg = new Image(splashTex);
-        splashImg.setOrigin(splashImg.getWidth() / 2, splashImg.getHeight() / 2);
+        splashImg.setSize(0.3f*splashTex.getWidth(), 0.3f*splashTex.getHeight());
+        splashImg.setOrigin(splashImg.getWidth() / 2, splashImg.getHeight());
         splashImg.setPosition(stage.getWidth() / 2 - 32, stage.getHeight() + 32);
         splashImg.addAction(sequence(alpha(0), scaleTo(.1f, .1f),
                 parallel(fadeIn(2f, Interpolation.pow2),
                         scaleTo(2f, 2f, 2.5f, Interpolation.pow5),
-                        moveTo(stage.getWidth() / 2 - (float) splashTex.getWidth() / 2, stage.getHeight() / 2 - (float) splashTex.getHeight() / 2, 2f, Interpolation.swing)),
+                        moveTo(stage.getWidth() / 2 - splashImg.getWidth() / 2, 0.7f*stage.getHeight() - splashImg.getHeight() / 2, 2f, Interpolation.swing)),
                 delay(1.5f), fadeOut(1.25f), run(transitionRunnable)));
 
         stage.addActor(splashImg);

@@ -24,6 +24,8 @@ public class LevelsScreen extends Screen {
 
         initButtons();
 
+        setBackground();
+
         final TextButton[] buttons = new TextButton[levels.length];
         float distanceX = 0.08f*WINDOW_WIDTH;
         float buttonSize = 0.15f * WINDOW_HEIGHT;

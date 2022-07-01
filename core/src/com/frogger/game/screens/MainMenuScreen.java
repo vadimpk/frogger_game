@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.utils.Audio;
@@ -27,6 +28,8 @@ public class MainMenuScreen extends Screen {
         super.show();
 
         initButtons();
+
+        setBackground();
 
         //Add buttons to table
         stage.addActor(buttons.get("play"));
@@ -86,5 +89,11 @@ public class MainMenuScreen extends Screen {
                 IS_SOUNDS_ON = !IS_SOUNDS_ON;
             }
         });
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        bgTexture.dispose();
     }
 }
