@@ -132,7 +132,7 @@ public class SkinPanel {
         smallStar = new Image(STAR_TEXTURE);
         priceLabel = new Label(String.valueOf(currentSkin.getPrice()), new Label.LabelStyle(FONT_FOR_NUMBERS, Color.BLACK));
 
-        smallStar.setBounds(WINDOW_WIDTH / 2 - priceLabel.getWidth() / 2 + 0.11f*WINDOW_HEIGHT , WINDOW_HEIGHT * 0.325f, 0.1f*WINDOW_HEIGHT, 0.1f*WINDOW_HEIGHT);
+        smallStar.setBounds(WINDOW_WIDTH / 2 - priceLabel.getWidth() / 2, WINDOW_HEIGHT * 0.325f, 0.1f*WINDOW_HEIGHT, 0.1f*WINDOW_HEIGHT);
         priceLabel.setPosition(WINDOW_WIDTH / 2 - priceLabel.getWidth() / 2, WINDOW_HEIGHT * 0.325f);
         if (currentSkin.isUnlocked()) {
             priceLabel.setVisible(false);
