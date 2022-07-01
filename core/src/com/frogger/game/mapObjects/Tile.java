@@ -9,14 +9,18 @@ import com.frogger.game.Util;
 
 import java.util.Random;
 
+/**
+ * Tile.java
+ * @author vadympolishchuk
+ * Method of a single tile.
+ * Tile is the marking point of the game (every other game object is of a size of a single tile)
+ * Tiles can be transparent, not transparent (trees) water, road or lily pads
+ */
 
 public class Tile{
 
     private static final Texture TILES_PACK = new Texture(Gdx.files.internal("objects/tiles/tiles.png"));
 
-    private static final TextureRegion GRASS_TILE_TEXTURE_1 = new TextureRegion(TILES_PACK, 300, 0, 300, 300);
-    private static final TextureRegion GRASS_TILE_TEXTURE_2 = new TextureRegion(TILES_PACK, 600, 0, 300, 300);
-    private static final TextureRegion TREE_TILE_TEXTURE = new TextureRegion(TILES_PACK, 300, 600, 300, 300);
     private static final TextureRegion WATER_TILE_TEXTURE = new TextureRegion(TILES_PACK, 600, 600, 300, 300);
     private static final TextureRegion ROAD_TILE_TEXTURE = new TextureRegion(TILES_PACK, 0, 600, 300, 300);
     private static final TextureRegion RAIL_ROAD_TILE_TEXTURE = new TextureRegion(TILES_PACK, 600, 300, 300, 300);
@@ -39,6 +43,15 @@ public class Tile{
     private TextureRegion texture;
     private int textureRotation;
 
+    /**
+     * Default constructor of a tile. Sets a tile in a certain position
+     * depending on its row and column and world size
+     * @param numberOfColumns columns in total
+     * @param screenWidth screen width
+     * @param screenHeight screen height
+     * @param row row
+     * @param column column
+     */
     public Tile(int numberOfColumns, float screenWidth, float screenHeight, int row, int column) {
 
         this.ROW = row;

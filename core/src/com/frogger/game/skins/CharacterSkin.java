@@ -7,8 +7,15 @@ import com.frogger.game.DataIO;
 import com.frogger.game.Util;
 import com.frogger.game.gameObjects.Frog;
 
+/**
+ * CharacterSkin.java
+ * @author vadympolishchuk
+ * Method that stores skins for every character or type of tile
+ */
+
 public class CharacterSkin {
 
+    /** initialize character textures */
     private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog.png"));
     private static final Texture TURTLE_PACK = new Texture(Gdx.files.internal("characters/turtle.png"));
     private static final Texture BIRD_PACK = new Texture(Gdx.files.internal("characters/bird.png"));
@@ -27,6 +34,7 @@ public class CharacterSkin {
     public TextureRegion drowning5;
     public TextureRegion dead;
 
+    /** initialize tiles textures */
     private static final Texture OAK_FOREST_TILES_PACK = new Texture(Gdx.files.internal("objects/tiles/oak-forest-tiles.png"));
     private static final Texture FIR_FOREST_TILES_PACK = new Texture(Gdx.files.internal("objects/tiles/fir-forest-tiles.png"));
     private static final Texture BEACH_TILES_PACK = new Texture(Gdx.files.internal("objects/tiles/beach-tiles.png"));
@@ -47,17 +55,33 @@ public class CharacterSkin {
     private Util.TileSkin tileSkin;
     private boolean forTiles;
 
-    public CharacterSkin(String name, int price, boolean isUnlocked, boolean isActive, Util.Character characterSkin) {
+    /**
+     * Constructor for character skin
+     * @param name name
+     * @param price price (in stars)
+     * @param isUnlocked is unlocked
+     * @param isActive is active
+     * @param character character
+     */
+    public CharacterSkin(String name, int price, boolean isUnlocked, boolean isActive, Util.Character character) {
         this.NAME = name;
         this.PRICE = price;
         this.unlocked = isUnlocked;
         this.active = isActive;
-        this.characterSkin = characterSkin;
+        this.characterSkin = character;
         setCharacterSkin(characterSkin);
         textureRotation = 0;
         forTiles = false;
     }
 
+    /**
+     * Constructor for tile skin
+     * @param name name
+     * @param price price (in stars)
+     * @param isUnlocked is unlocked
+     * @param isActive is active
+     * @param tileSkin tile skin
+     */
     public CharacterSkin(String name, int price, boolean isUnlocked, boolean isActive, Util.TileSkin tileSkin) {
         this.NAME = name;
         this.PRICE = price;
@@ -109,6 +133,10 @@ public class CharacterSkin {
         return PRICE;
     }
 
+    /**
+     * Set new character skin (update all textures)
+     * @param characterSkin character skin
+     */
     public void setCharacterSkin(Util.Character characterSkin) {
         if (characterSkin == Util.Character.FROG) texturePack = FROG_PACK;
         else if (characterSkin == Util.Character.TURTLE) texturePack = TURTLE_PACK;
@@ -129,6 +157,10 @@ public class CharacterSkin {
         dead = new TextureRegion(texturePack, 150, 300, 150, 150);
     }
 
+    /**
+     * Set new tile skin (update all textures)
+     * @param tileSkin tile skin
+     */
     public void setTileSkin(Util.TileSkin tileSkin) {
         if (tileSkin == Util.TileSkin.OAK_FOREST) texturePack = OAK_FOREST_TILES_PACK;
         else if (tileSkin == Util.TileSkin.FIR_FOREST) texturePack = FIR_FOREST_TILES_PACK;
@@ -161,10 +193,14 @@ public class CharacterSkin {
         return characterSkin;
     }
 
+    /**
+     * Rotate character texture (not all textures are rotatable)
+     * @param degree degree to rotate
+     */
     public void rotate(int degree) {
         textureRotation = degree;
 
-        if (texturePack == BOTTLE_OF_COKE_PACK || texturePack == BOTTLE_OF_WINE_PACK) {
+        if (texturePack == BOTTLE_OF_COKE_PACK || texturePack == BOTTLE_OF_WINE_PACK || texturePack == FISH_PACK) {
             textureRotation = 0;
         }
     }

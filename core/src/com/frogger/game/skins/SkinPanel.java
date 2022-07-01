@@ -8,17 +8,23 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.frogger.game.DataIO;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.attributeObjects.Scorer;
-import com.frogger.game.skins.CharacterSkin;
 
 import static com.frogger.game.utils.Const.WINDOW_HEIGHT;
 import static com.frogger.game.utils.Const.WINDOW_WIDTH;
 import static com.frogger.game.DataIO.getSkins;
 
+/**
+ * SkinPanel.java
+ * Method that implements skin panel when player is choosing a skin.
+ * It draws skin image, name, price and amount of stars on a screen.
+ * It has methods to change skin (next or previous) and to buy a skin
+ */
+
 public class SkinPanel {
 
     private CharacterSkin skin;
     private int skinId;
-    private TextureRegion promo;
+    private TextureRegion thumbnail;
     private float nameTextWidth;
     private float priceTextWidth;
     private float priceTextHeight;
@@ -36,24 +42,35 @@ public class SkinPanel {
         setSkin(skinId);
     }
 
+    /**
+     * Method to choose a new skin (from a list)
+     */
     public void nextSkin() {
         skinId = (skinId + 1 >= getSkins().length) ? 0 : skinId + 1;
         setSkin(skinId);
     }
 
+    /**
+     * Method to choose previous skin (from a list)
+     */
     public void previousSkin() {
         skinId = (skinId == 0) ? getSkins().length - 1 : skinId - 1;
         setSkin(skinId);
     }
 
+    /**
+     * Method to set new skin to show
+     * @param skinId which skin
+     */
     public void setSkin(int skinId) {
         this.skin = DataIO.getSkins()[skinId];
 
+        // if skin is unlocked set it to active
         if (skin.isUnlocked()) {
             skin.setActive(true);
         }
 
-        promo = skin.standing;
+        thumbnail = skin.standing;
 
         GlyphLayout layout = new GlyphLayout();
 
@@ -69,6 +86,9 @@ public class SkinPanel {
         starsAmountTextHeight = layout.height;
     }
 
+    /**
+     * Method to buy new skin
+     */
     public void buySkin() {
         if (DataIO.getStarNumber() >= skin.getPrice()) {
             skin.setUnlocked(true);
@@ -81,6 +101,9 @@ public class SkinPanel {
         }
     }
 
+    /**
+     * Method to draw skin panel
+     */
     public void render() {
         FroggerGame.skinPanelBatch.begin();
 
@@ -91,7 +114,7 @@ public class SkinPanel {
 
         FroggerGame.skinPanelBatch.draw(WHITE_BACKGROUND, WINDOW_WIDTH * 0.4f, WINDOW_HEIGHT * 0.2f,
                 WINDOW_WIDTH * 0.2f, WINDOW_WIDTH * 0.7f);
-        FroggerGame.skinPanelBatch.draw(promo, WINDOW_WIDTH * 0.4f, WINDOW_HEIGHT * 0.4f,
+        FroggerGame.skinPanelBatch.draw(thumbnail, WINDOW_WIDTH * 0.4f, WINDOW_HEIGHT * 0.4f,
                 WINDOW_WIDTH * 0.2f, WINDOW_WIDTH * 0.2f);
 
         FONT_FOR_TEXT.draw(FroggerGame.skinPanelBatch, skin.getName(), (WINDOW_WIDTH - nameTextWidth) / 2, WINDOW_HEIGHT * 0.8f);

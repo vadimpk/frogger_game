@@ -57,7 +57,7 @@ public class Map {
         return frog;
     }
 
-    public void render(float delta){
+    public void render(){
 
         // set up batch and camera for the game
         gameCamera.update();
@@ -69,10 +69,6 @@ public class Map {
 
         // start game batch
         gameBatch.begin();
-
-        // calculate delta time for each frame
-        now = TimeUtils.nanoTime();
-        dt = now - last;
 
         // render tiles
         for (int row = 0; row < nRows; row++) {
@@ -96,9 +92,6 @@ public class Map {
                row.render(gameBatch);
             else if (row.getType() != Util.TypeOfRow.LOG) row.render(gameBatch);
         }
-
-        // calculate delta time for each frame
-        last = TimeUtils.nanoTime();
 
         for (Score s : scores) if(!s.isCollected()) s.render(gameBatch);
 

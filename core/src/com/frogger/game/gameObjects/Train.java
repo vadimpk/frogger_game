@@ -10,6 +10,13 @@ import com.frogger.game.Util.Direction;
 
 import static com.frogger.game.screens.FroggerGameScreen.level;
 
+/**
+ * Train.java
+ * @author vadympolishchuk
+ * Child class of a MovingObject. Implements a train that is very long and fast and moves with certain delays each time
+ * while frog is nearby
+ */
+
 public class Train extends MovingObject {
 
     private boolean moving;
@@ -31,7 +38,12 @@ public class Train extends MovingObject {
     private static final int MIN_TILES_BEFORE_MOVING = 3;
     private static final int MIN_TILES_AFTER_MOVING  = 10;
 
-
+    /**
+     * Default constructor. Accepts only coordinates and size, every other parameter is constant
+     * @param size size of a single piece (tile) of a train
+     * @param x x coordinate of a train
+     * @param y y coordinate of a train
+     */
     public Train(float size, float x, float y) {
         super(size, x + size,
                 y, SPEED, LENGTH, MOVING_DIRECTION);
@@ -39,6 +51,10 @@ public class Train extends MovingObject {
         playingSound = false;
     }
 
+    /**
+     * Method that runs every frame, updates information and draws a train
+     * @param batch batch to draw a train
+     */
     public void render(SpriteBatch batch) {
 
         float frogY = Map.getFrog().getY();
@@ -70,7 +86,10 @@ public class Train extends MovingObject {
         }
     }
 
-
+    /**
+     * Method that renders train if game is paused.
+     * @param batch batch to draw train
+     */
     public void pausedRender(SpriteBatch batch) {
         batch.draw(HEAD_TEXTURE, getX(), getY(), getSize(), getSize());
         for (int i = 1; i < getLength(); i++) {

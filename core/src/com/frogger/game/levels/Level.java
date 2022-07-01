@@ -54,8 +54,8 @@ public class Level{
         this.map = map;
     }
 
-    public void render(float delta) {
-        map.render(delta);
+    public void render() {
+        map.render();
     }
 
     public void pausedRender() {

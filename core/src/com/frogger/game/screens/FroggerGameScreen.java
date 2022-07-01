@@ -67,7 +67,7 @@ public class FroggerGameScreen extends Screen {
             scorer.render(FroggerGame.attributesBatch);
             FroggerGame.attributesBatch.end();
         }else {
-            level.render(delta);
+            level.render();
 
             FroggerGame.attributesBatch.begin();
             timer.render(delta, FroggerGame.attributesBatch);

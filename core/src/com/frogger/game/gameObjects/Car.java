@@ -8,8 +8,15 @@ import com.frogger.game.Util;
 
 import java.util.Random;
 
+/**
+ * Car.java
+ * @author vadympolishchuk
+ * Class that implements car. Car is always of length two.
+ */
+
 public class Car extends MovingObject {
 
+    /** initialize textures */
     private static final Texture CAR_PACK = new Texture(Gdx.files.internal("objects/car/cars.png"));
 
     private static final TextureRegion CAR_HEAD_TEXTURE_1 = new TextureRegion(CAR_PACK, 0, 0, 60, 75);
@@ -52,17 +59,15 @@ public class Car extends MovingObject {
     @Override
     public void render(SpriteBatch batch) {
         move();
-        if (getDirection() == Util.Direction.LEFT) {
-            batch.draw(textureHead, getX(), getY(), getSize()/2, getSize()/2, getSize(), getSize(),1,1, textureRotation);
-            batch.draw(textureTail, getX()+ getSize(), getY(), getSize()/2, getSize()/2, getSize(), getSize(),1,1, textureRotation);
-        } else {
-            batch.draw(textureTail, getX(), getY(), getSize()/2, getSize()/2, getSize(), getSize(),1,1, textureRotation);
-            batch.draw(textureHead, getX()+ getSize(), getY(), getSize()/2, getSize()/2, getSize(), getSize(),1,1, textureRotation);
-        }
+        defaultRender(batch);
     }
 
     @Override
     public void pausedRender(SpriteBatch batch) {
+        defaultRender(batch);
+    }
+
+    private void defaultRender(SpriteBatch batch) {
         if (getDirection() == Util.Direction.LEFT) {
             batch.draw(textureHead, getX(), getY(), getSize()/2, getSize()/2, getSize(), getSize(),1,1, textureRotation);
             batch.draw(textureTail, getX()+ getSize(), getY(), getSize()/2, getSize()/2, getSize(), getSize(),1,1, textureRotation);
