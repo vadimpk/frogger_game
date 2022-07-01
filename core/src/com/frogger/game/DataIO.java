@@ -44,7 +44,7 @@ public class DataIO {
      */
     public static Level[] getLevels() {
         if(levels == null) {
-            createLevels();
+//            createLevels();
             levelParameters = loadLevelsFromFile();
             levels = new Level[10];
             for (int i = 0; i < levels.length; i++) {
@@ -60,7 +60,7 @@ public class DataIO {
      */
     public static CharacterSkin[] getCharacterSkins() {
         if(characterSkins == null) {
-            createSkins();
+//            createSkins();
             skinsParameters = loadSkinsFromFile();
             int counter = 0;
             for (CharacterSkinParameters skinsParameter : skinsParameters) if (!skinsParameter.forTiles) counter++;
@@ -83,7 +83,7 @@ public class DataIO {
      */
     public static CharacterSkin[] getTileSkins() {
         if(tileSkins == null) {
-            createSkins();
+//            createSkins();
             skinsParameters = loadSkinsFromFile();
             int counter = 0;
             for (CharacterSkinParameters skinsParameter : skinsParameters) if (skinsParameter.forTiles) counter++;
