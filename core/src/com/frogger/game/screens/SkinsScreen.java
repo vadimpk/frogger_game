@@ -23,8 +23,8 @@ public class SkinsScreen extends Screen {
     public void show() {
         super.show();
 
-        for (int i = 0; i < getSkins().length; i++) {
-            if (getSkins()[i].isActive()) {
+        for (int i = 0; i < getCharacterSkins().length; i++) {
+            if (getCharacterSkins()[i].isActive()) {
                 skinPanel = new SkinPanel(i);
             }
         }

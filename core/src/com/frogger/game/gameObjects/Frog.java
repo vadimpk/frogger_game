@@ -66,7 +66,7 @@ public class Frog {
      */
     private Frog() {
         alive = true;
-        for (CharacterSkin skin : DataIO.getSkins()) if (skin.isActive()) characterSkin = skin;
+        for (CharacterSkin skin : DataIO.getCharacterSkins()) if (skin.isActive()) characterSkin = skin;
 
         texture = characterSkin.standing;
         characterSkin.rotate(0);

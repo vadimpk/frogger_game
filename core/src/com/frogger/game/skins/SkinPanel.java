@@ -8,11 +8,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.frogger.game.DataIO;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.attributeObjects.Scorer;
-import com.frogger.game.skins.CharacterSkin;
 
 import static com.frogger.game.utils.Const.WINDOW_HEIGHT;
 import static com.frogger.game.utils.Const.WINDOW_WIDTH;
-import static com.frogger.game.DataIO.getSkins;
+import static com.frogger.game.DataIO.getCharacterSkins;
 
 public class SkinPanel {
 
@@ -37,17 +36,17 @@ public class SkinPanel {
     }
 
     public void nextSkin() {
-        skinId = (skinId + 1 >= getSkins().length) ? 0 : skinId + 1;
+        skinId = (skinId + 1 >= getCharacterSkins().length) ? 0 : skinId + 1;
         setSkin(skinId);
     }
 
     public void previousSkin() {
-        skinId = (skinId == 0) ? getSkins().length - 1 : skinId - 1;
+        skinId = (skinId == 0) ? getCharacterSkins().length - 1 : skinId - 1;
         setSkin(skinId);
     }
 
     public void setSkin(int skinId) {
-        this.skin = DataIO.getSkins()[skinId];
+        this.skin = DataIO.getCharacterSkins()[skinId];
 
         if (skin.isUnlocked()) {
             skin.setActive(true);

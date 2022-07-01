@@ -77,7 +77,7 @@ public class CharacterSkin {
         if (!forTiles) {
             if (active) {
                 Frog.get().setCharacterSkin(this);
-                for (CharacterSkin skin : DataIO.getSkins()) {
+                for (CharacterSkin skin : DataIO.getCharacterSkins()) {
                     if (skin.isActive()) {
                         skin.setActive(false);
                     }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.frogger.game.DataIO;
 import com.frogger.game.skins.CharacterSkin;
 import com.frogger.game.Util;
 
@@ -56,7 +57,10 @@ public class Tile{
         // starting point (5% of height) + size of every tile in a column below this one
         Y = (float) (0.05 * screenHeight) + SIZE * this.ROW;
 
-        skin = new CharacterSkin("name", 1, true, true, Util.TileSkin.BEACH);
+        skin = DataIO.getTileSkins()[0];
+        for (CharacterSkin tileSkin : DataIO.getTileSkins()) {
+            if(tileSkin.isActive()) skin = tileSkin;
+        }
 
         // set texture
         Random random = new Random();
