@@ -22,13 +22,16 @@ public class DataIO {
 
     private static Level[] levels;
     private static LevelParameters[] levelParameters;
-    private static CharacterSkin[] skins;
-    private static CharacterSkinParameters[] skinsParamaters;
+    private static CharacterSkin[] characterSkins;
+    private static CharacterSkin[] tileSkins;
+    private static CharacterSkinParameters[] skinsParameters;
+    private static CharacterSkinParameters[] characterSkinsParameters;
+    private static CharacterSkinParameters[] tileSkinsParameters;
 
 
     public static Level[] getLevels() {
         if(levels == null) {
-            createLevels();
+            //createLevels();
             levelParameters = loadLevelsFromFile();
             levels = new Level[10];
             for (int i = 0; i < levels.length; i++) {
@@ -38,16 +41,40 @@ public class DataIO {
         return levels;
     }
 
-    public static CharacterSkin[] getSkins() {
-        if(skins == null) {
-            createSkins();
-            skinsParamaters = loadSkinsFromFile();
-            skins = new CharacterSkin[skinsParamaters.length];
-            for (int i = 0; i < skinsParamaters.length; i++) {
-                skins[i] = convertToSkin(skinsParamaters[i]);
+    public static CharacterSkin[] getCharacterSkins() {
+        if(characterSkins == null) {
+            //createSkins();
+            skinsParameters = loadSkinsFromFile();
+            int counter = 0;
+            for (CharacterSkinParameters skinsParameter : skinsParameters) if (!skinsParameter.forTiles) counter++;
+            characterSkins = new CharacterSkin[counter];
+            characterSkinsParameters = new CharacterSkinParameters[counter];
+            counter = 0;
+            for (CharacterSkinParameters skinsParameter : skinsParameters) {
+                if (!skinsParameter.forTiles) {
+                    characterSkins[counter] = convertToSkin(skinsParameter);
+                    characterSkinsParameters[counter++] = skinsParameter;
+                }
             }
         }
-        return skins;
+        return characterSkins;
+    }
+
+    public static CharacterSkin[] getTileSkins() {
+        if(tileSkins == null) {
+            createSkins();
+            skinsParameters = loadSkinsFromFile();
+            int counter = 0;
+            for (CharacterSkinParameters skinsParameter : skinsParameters) if (skinsParameter.forTiles) counter++;
+            tileSkins = new CharacterSkin[counter];
+            counter = 0;
+            for (CharacterSkinParameters skinsParameter : skinsParameters) {
+                if (skinsParameter.forTiles) {
+                    tileSkins[counter++] = new CharacterSkin(skinsParameter.name, skinsParameter.price, skinsParameter.unlocked, skinsParameter.active, skinsParameter.tileSkin);
+                }
+            }
+        }
+        return tileSkins;
     }
 
     public static int getStarNumber() {
@@ -57,7 +84,12 @@ public class DataIO {
                 starNumber += level.getStarScore();
             }
         }
-        for (CharacterSkin skin: getSkins()) {
+        for (CharacterSkin skin: getCharacterSkins()) {
+            if (skin.isUnlocked()) {
+                starNumber -= skin.getPrice();
+            }
+        }
+        for (CharacterSkin skin: getTileSkins()) {
             if (skin.isUnlocked()) {
                 starNumber -= skin.getPrice();
             }
@@ -93,8 +125,19 @@ public class DataIO {
         }
     }
 
-    public static void updateSkins() {
-
+    public static void updateSkins(boolean forTile, int skinIndex, boolean isUnlocked, boolean isActive) {
+        if((skinsParameters[skinIndex].unlocked ^ isUnlocked) || (skinsParameters[skinIndex].active ^ isActive)) {
+            CharacterSkin[] skins = (forTile) ? getTileSkins() : getCharacterSkins();
+            CharacterSkinParameters[] skinsParameters = (forTile) ? tileSkinsParameters : characterSkinsParameters;
+            skinsParameters[skinIndex].unlocked = isUnlocked;
+            skinsParameters[skinIndex].active = isActive;
+            skins[skinIndex].setUnlocked(isUnlocked);
+            skins[skinIndex].setActive(isActive);
+            if(isActive) for (int i = 0; i < skins.length; i++) {
+                if(i != skinIndex) skins[i].setActive(false);
+            }
+            loadSkinsToFile(characterSkinsParameters);
+        }
     }
 
     private static Level convertToLevel(LevelParameters levelParameter) {
@@ -1230,7 +1273,8 @@ public class DataIO {
     }
 
     private static void createSkins() {
-        CharacterSkinParameters[] skinParameters = new CharacterSkinParameters[8];
+        CharacterSkinParameters[] skinParameters = new CharacterSkinParameters[12];
+        //Character skins
         skinParameters[0] = new CharacterSkinParameters("Frog", 0, true, true, Util.Character.FROG);
         skinParameters[1] = new CharacterSkinParameters("Bird", 2, false, false, Util.Character.BIRD);
         skinParameters[2] = new CharacterSkinParameters("Turtle", 2, false, false, Util.Character.TURTLE);
@@ -1239,6 +1283,14 @@ public class DataIO {
         skinParameters[5] = new CharacterSkinParameters("Coke", 5, false, false, Util.Character.BOTTLE_OF_COKE);
         skinParameters[6] = new CharacterSkinParameters("Wine", 5, false, false, Util.Character.BOTTLE_OF_WINE);
         skinParameters[7] = new CharacterSkinParameters("Egg", 10, false, false, Util.Character.EGG);
+
+        //Tiles skins
+        skinParameters[8] = new CharacterSkinParameters("oak forest", 0, true, true, Util.TileSkin.OAK_FOREST);
+        skinParameters[9] = new CharacterSkinParameters("fir forest", 2, false, false, Util.TileSkin.FIR_FOREST);
+        skinParameters[10] = new CharacterSkinParameters("beach", 3, false, false, Util.TileSkin.BEACH);
+        skinParameters[11] = new CharacterSkinParameters("dark forest", 5, false, false, Util.TileSkin.DARK_FOREST);
+
+
         loadSkinsToFile(skinParameters);
     }
 
@@ -1380,6 +1432,8 @@ public class DataIO {
         boolean unlocked;
         boolean active;
         Util.Character character;
+        Util.TileSkin tileSkin;
+        boolean forTiles;
 
         public CharacterSkinParameters(String name, int price, boolean isUnlocked, boolean active, Util.Character character) {
             this.name = name;
@@ -1387,6 +1441,16 @@ public class DataIO {
             this.unlocked = isUnlocked;
             this.active = active;
             this.character = character;
+            forTiles = false;
+        }
+
+        public CharacterSkinParameters(String name, int price, boolean isUnlocked, boolean active, Util.TileSkin tileSkin) {
+            this.name = name;
+            this.price = price;
+            this.unlocked = isUnlocked;
+            this.active = active;
+            this.tileSkin = tileSkin;
+            forTiles = true;
         }
     }
 }

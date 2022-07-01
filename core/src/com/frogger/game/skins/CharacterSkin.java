@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.frogger.game.DataIO;
 import com.frogger.game.Util;
 import com.frogger.game.gameObjects.Frog;
+import com.frogger.game.levels.Level;
+import com.frogger.game.mapObjects.Tile;
 
 /**
  * CharacterSkin.java
@@ -44,6 +46,7 @@ public class CharacterSkin {
     public TextureRegion transparentTile2;
     public TextureRegion notTransparentTile;
 
+    public TextureRegion thumbnail;
     private Texture texturePack;
     private int textureRotation;
 
@@ -101,14 +104,27 @@ public class CharacterSkin {
         if (!forTiles) {
             if (active) {
                 Frog.get().setCharacterSkin(this);
-                for (CharacterSkin skin : DataIO.getSkins()) {
+                for (CharacterSkin skin : DataIO.getCharacterSkins()) {
                     if (skin.isActive()) {
                         skin.setActive(false);
                     }
                 }
             }
         } else {
-
+            if (active) {
+                for (Level level: DataIO.getLevels()) {
+                    for (Tile[] row: level.getMap().getTiles()) {
+                        for (Tile tile: row) {
+                            tile.setNewSkin(this.tileSkin);
+                        }
+                    }
+                }
+                for (CharacterSkin skin : DataIO.getTileSkins()) {
+                    if (skin.isActive()) {
+                        skin.setActive(false);
+                    }
+                }
+            }
         }
         this.active = active;
     }
@@ -147,6 +163,7 @@ public class CharacterSkin {
         else if (characterSkin == Util.Character.BOTTLE_OF_WINE) texturePack = BOTTLE_OF_WINE_PACK;
         else if (characterSkin == Util.Character.BOTTLE_OF_COKE) texturePack = BOTTLE_OF_COKE_PACK;
 
+        thumbnail = new TextureRegion(texturePack, 300, 150, 150, 150);
         standing = new TextureRegion(texturePack, 300, 150, 150, 150);
         jumping = new TextureRegion(texturePack, 150, 150, 150, 150);
         drowning1 = new TextureRegion(texturePack, 0, 0, 150, 150);
@@ -167,7 +184,7 @@ public class CharacterSkin {
         else if (tileSkin == Util.TileSkin.BEACH) texturePack = BEACH_TILES_PACK;
         else if (tileSkin == Util.TileSkin.DARK_FOREST) texturePack = DARK_FOREST_TILES_PACK;
 
-
+        thumbnail = new TextureRegion(texturePack, 900, 0, 300, 300);
         transparentTile1 = new TextureRegion(texturePack, 300, 0, 300, 300);
         transparentTile2 = new TextureRegion(texturePack, 600, 0, 300, 300);
         notTransparentTile = new TextureRegion(texturePack, 0, 0, 300, 300);
@@ -207,5 +224,9 @@ public class CharacterSkin {
 
     public int getTextureRotation() {
         return textureRotation;
+    }
+
+    public boolean isForTiles() {
+        return forTiles;
     }
 }

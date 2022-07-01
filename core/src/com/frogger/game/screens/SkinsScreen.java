@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.*;
+import com.frogger.game.skins.CharacterSkin;
 import com.frogger.game.skins.SkinPanel;
 import com.frogger.game.utils.Audio;
 
@@ -13,21 +14,24 @@ import static com.frogger.game.DataIO.*;
 public class SkinsScreen extends Screen {
 
     private SkinPanel skinPanel;
+    private CharacterSkin[] skins;
 
-    public SkinsScreen(FroggerGame game) {
+    public SkinsScreen(FroggerGame game, boolean characterSkins) {
         super(game);
         createButtonStyles();
+
+        skins = (characterSkins) ? getCharacterSkins() : getTileSkins();
+
+        for (int i = 0; i < skins.length; i++) {
+            if (skins[i].isActive()) {
+                skinPanel = new SkinPanel(i, skins);
+            }
+        }
     }
 
     @Override
     public void show() {
         super.show();
-
-        for (int i = 0; i < getSkins().length; i++) {
-            if (getSkins()[i].isActive()) {
-                skinPanel = new SkinPanel(i);
-            }
-        }
 
 
         TextButton rightArrow = new TextButton("", textButtonStyles.get("right-arrow"));
@@ -84,7 +88,7 @@ public class SkinsScreen extends Screen {
     }
 
     private boolean defineBuyButtonAvailability() {
-        return skinPanel.getSkin().isUnlocked() || DataIO.getStarNumber() < skinPanel.getSkin().getPrice();
+        return skinPanel.getCurrentSkin().isUnlocked() || DataIO.getStarNumber() < skinPanel.getCurrentSkin().getPrice();
     }
 
     private void createButtonStyles() {

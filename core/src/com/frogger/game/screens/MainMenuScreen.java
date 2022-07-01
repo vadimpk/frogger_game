@@ -67,7 +67,7 @@ public class MainMenuScreen extends Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Audio.playClickedSound();
-                switchScreenWithFading(new SkinsScreen(game), 0.3f);
+                switchScreenWithFading(new TypeOfSkinChooser(game), 0.3f);
             }
         });
 
