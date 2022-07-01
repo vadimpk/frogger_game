@@ -62,6 +62,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
 
         fonts.put("24", new BitmapFont(Gdx.files.internal("fonts/Pixellari_24.fnt")));
         fonts.put("36", new BitmapFont(Gdx.files.internal("fonts/Pixellari_36.fnt")));
+        fonts.put("72", new BitmapFont(Gdx.files.internal("fonts/Pixellari_72.fnt")));
         fonts.put("100", new BitmapFont(Gdx.files.internal("fonts/Pixellari_100.fnt")));
         skin = new Skin();
         buttonAtlas = new TextureAtlas(Gdx.files.internal("buttons/buttons.atlas"));

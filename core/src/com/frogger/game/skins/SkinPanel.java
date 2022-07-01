@@ -35,7 +35,7 @@ public class SkinPanel {
     private final TextureRegion STAR_TEXTURE = Scorer.FILLED_STAR;
     private final Texture WHITE_BACKGROUND = new Texture(Gdx.files.internal("characters/white.png"));
     private final BitmapFont FONT_FOR_TEXT = new BitmapFont(Gdx.files.internal("fonts/Pixellari_36.fnt"));
-    private final BitmapFont FONT_FOR_NUMBERS = new BitmapFont(Gdx.files.internal("fonts/Pixellari_100.fnt"));
+    private final BitmapFont FONT_FOR_NUMBERS = new BitmapFont(Gdx.files.internal("fonts/Pixellari_72.fnt"));
 
     public SkinPanel(int skinId, CharacterSkin[] skins) {
         this.skins = skins;
