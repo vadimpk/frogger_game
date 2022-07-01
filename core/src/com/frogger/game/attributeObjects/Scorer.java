@@ -8,6 +8,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import static com.frogger.game.screens.FroggerGameScreen.level;
 
+/**
+ * Scorer.java
+ * @author stas-bukovskiy
+ * Class for displaying how much star is collected in FroggerGameScreen
+ */
 public class Scorer {
 
     private static final Texture STARS_PACK = new Texture(Gdx.files.internal("objects/stars/stars.png"));
@@ -17,8 +22,14 @@ public class Scorer {
 
     private static final BitmapFont FONT = new BitmapFont(Gdx.files.internal("fonts/Pixellari_36.fnt"));
 
-    private float x, y, size;
+    private final float x, y, size;
 
+    /**
+     * Constructor of class
+     * @param x - starting x-coordinate of star drawing
+     * @param y - starting y-coordinate of star drawing
+     * @param size - size of star that is drawing
+     */
     public Scorer(float x, float y, float size) {
         this.x = x;
         this.y = y;
@@ -29,6 +40,10 @@ public class Scorer {
         }
     }
 
+    /**
+     * Method draws filled and unfilled star
+     * @param batch - SpriteBatch for drawing
+     */
     public void render(SpriteBatch batch) {
         int score = 0;
         for (Score s : level.getMap().getScores()) {
@@ -61,7 +76,9 @@ public class Scorer {
         }
     }
 
-
+    /**
+     * Method for texture disposing
+     */
     public static void dispose() {
         STARS_PACK.dispose();
         FONT.dispose();

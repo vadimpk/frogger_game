@@ -10,6 +10,11 @@ import com.frogger.game.mapObjects.Tile;
 
 import static com.frogger.game.mapObjects.Map.getFrog;
 
+/**
+ * Score.java
+ * @author stas-bukovskiy
+ * Class of star score, that is on each level and should be collected by player
+ */
 public class Score {
 
     private static final Texture STARS_PACK = new Texture(Gdx.files.internal("objects/stars/stars.png"));
@@ -20,7 +25,7 @@ public class Score {
     private static final TextureRegion STAR_4 = new TextureRegion(STARS_PACK, 289, 0,289,280);
     private static final TextureRegion STAR_5 = new TextureRegion(STARS_PACK, 578, 0,289,280);
 
-    private Tile tile;
+    private final Tile tile;
     private TextureRegion texture;
     private boolean isCollected;
 
@@ -28,6 +33,10 @@ public class Score {
     private static final long ANIMATION_TIME = 10000000;
     private long startTime;
 
+    /**
+     * Constructor creates star score on specific tile
+     * @param tile - tile where score will be created
+     */
     public Score(Tile tile) {
         this.tile = tile;
         texture = STAR_1;
@@ -36,11 +45,18 @@ public class Score {
         isCollected = false;
     }
 
+    /**
+     * Method draw star if it is not collected
+     * @param batch - SpriteBatch instance for drawing
+     */
     public void render(SpriteBatch batch) {
         update();
         batch.draw(texture, tile.getX() + 0.1f * tile.getSize(), tile.getY() + 0.1f * tile.getSize(), 0.8f * tile.getSize(), 0.8f * tile.getSize());
     }
 
+    /**
+     * Method checks if frog collects this score and sets texture for animating
+     */
     private void update() {
 
         if (getFrog().getX() + getFrog().getSize() >= tile.getX() + 0.3*tile.getSize() &&
@@ -85,14 +101,24 @@ public class Score {
 
     }
 
+    /**
+     * Method dispose star texture
+     */
     public void dispose() {
         STARS_PACK.dispose();
     }
 
+    /**
+     * Method returns true if this score is collected otherwise false
+     * @return true if this score is collected otherwise false
+     */
     public boolean isCollected() {
         return isCollected;
     }
 
+    /**
+     * Method sets score uncollected
+     */
     public void setUncollected(){
         isCollected = false;
     }

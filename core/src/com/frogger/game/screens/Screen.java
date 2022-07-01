@@ -28,6 +28,13 @@ import java.util.Map;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.frogger.game.utils.Const.*;
 
+/**
+ * Screen.java
+ * @author stas-bukovskiy
+ *
+ * Class implements com.badlogic.gdx.Screen and sets all required options for further screen creating
+ * It uses in all screen classe
+ */
 public abstract class Screen implements com.badlogic.gdx.Screen {
     protected FroggerGame game;
 
@@ -44,6 +51,10 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
     protected Texture bgTexture;
     protected boolean isSwitching;
 
+    /**
+     * Constructor create Stage, OrthographicCamera instances and all Map collections
+     * @param game - instance of FroggerGame class
+     */
     public Screen(FroggerGame game) {
         this.game = game;
 
@@ -72,6 +83,11 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
 
         isSwitching = false;
     }
+
+    /**
+     * Method renders stage
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
@@ -81,6 +97,9 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         stage.draw();
     }
 
+    /**
+     * Method dispose all disposable instances
+     */
     @Override
     public void dispose() {
         stage.dispose();
@@ -91,12 +110,21 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         if(bgTexture != null) bgTexture.dispose();
     }
 
+    /**
+     * Method Sets the InputProcessor that will receive all touch and key input events.
+     * It will be called before the ApplicationListener.render() method each frame.
+     */
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
         stage.getRoot().addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.3f)));
     }
 
+    /**
+     * Method resizes stage
+     * @param width - window width
+     * @param height - window width
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
@@ -104,6 +132,11 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         camera.update();
     }
 
+    /**
+     * Method switches screens with fading effect
+     * @param newScreen - screen that will be set
+     * @param duration - duration of fading effect in seconds
+     */
     public void switchScreenWithFading(final Screen newScreen, float duration) {
         stage.getRoot().getColor().a = 1;
         SequenceAction sequenceAction = new SequenceAction();
@@ -116,8 +149,6 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         }));
         stage.getRoot().addAction(sequenceAction);
     }
-
-
 
     @Override
     public void pause() {
@@ -133,7 +164,9 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
 
     }
 
-
+    /**
+     * Method fills textButtonStyles map with basic styles such as "green", "yellow", "red"
+     */
     public void createMenuButtons(){
         textButtonStyles.put("green", new TextButton.TextButtonStyle());
         textButtonStyles.put("yellow", new TextButton.TextButtonStyle());
@@ -156,6 +189,13 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         buttonStyles.put("sounds", soundsStyle);
     }
 
+    /**
+     * Method creates back button
+     * @param x - x-coordinate of back button
+     * @param y - y-coordinate of back button
+     * @param previousScreen - screen that will be changed
+     * @return  back button
+     */
     public TextButton getBackButton(float x, float y, final Screen previousScreen) {
         if(!textButtonStyles.containsKey("red")) createMenuButtons();
         TextButton backButton = new TextButton("Back", textButtonStyles.get("red"));
@@ -170,6 +210,9 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         return backButton;
     }
 
+    /**
+     * Method sets standard background image
+     */
     public void setBackground() {
         bgTexture = new Texture(Gdx.files.internal("backgrounds/bg.png"));
         Image bg = new Image(bgTexture);

@@ -14,6 +14,12 @@ import com.frogger.game.utils.Const;
 import static com.frogger.game.utils.Const.WINDOW_HEIGHT;
 
 
+/**
+ * FroggerGameScreen.java
+ * @author stas-bukovskiy
+ *
+ * Class for game screen that consist Timer and Scorer instances
+ */
 public class FroggerGameScreen extends Screen {
 
     public static Level level;
@@ -21,7 +27,12 @@ public class FroggerGameScreen extends Screen {
     private final Scorer scorer;
     public static boolean isPaused;
 
-
+    /**
+     * Class constructor creates Timer and Scorer instances.
+     * Also, it respawns Frog instance
+     * @param game - FroggerGame instance
+     * @param level - level that will be displayed
+     */
     public FroggerGameScreen(FroggerGame game, Level level) {
         super(game);
         FroggerGameScreen.level = level;
@@ -36,6 +47,9 @@ public class FroggerGameScreen extends Screen {
         isPaused = false;
     }
 
+    /**
+     * Method shows attributes
+     */
     @Override
     public void show() {
         super.show();
@@ -50,6 +64,10 @@ public class FroggerGameScreen extends Screen {
         timer.show();
     }
 
+    /**
+     * Method draws level map and checks if game is over
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -98,11 +116,17 @@ public class FroggerGameScreen extends Screen {
         stage.draw();
     }
 
+    /**
+     * Method hides stage
+     */
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
     }
 
+    /**
+     * Method dispose all disposable instances
+     */
     @Override
     public void dispose() {
         super.dispose();

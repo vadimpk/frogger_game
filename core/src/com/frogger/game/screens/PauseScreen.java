@@ -15,17 +15,30 @@ import java.util.HashMap;
 
 import static com.frogger.game.utils.Const.*;
 
+/**
+ * PauseScreen.java
+ * @author stas-bukovskiy
+ *
+ * Class for pause screen.
+ * It gives player opportuooty to restart level or back to level screen.
+ */
 public class PauseScreen extends Screen {
 
     private final FroggerGameScreen gameScreen;
     Texture bgTexture;
 
+    /**
+     * @param game - FroggerGame instance
+     * @param gameScreen - game screen that is paused
+     */
     public PauseScreen(FroggerGame game, FroggerGameScreen gameScreen) {
         super(game);
         this.gameScreen = gameScreen;
-        textButtonStyles = new HashMap<>();
     }
 
+    /**
+     * Method sets background image and adds buttons
+     */
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
@@ -68,6 +81,10 @@ public class PauseScreen extends Screen {
 
     }
 
+    /**
+     * Method invokes pause render method for game screen
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -82,6 +99,9 @@ public class PauseScreen extends Screen {
         stage.draw();
     }
 
+    /**
+     * Method dispose all disposable instances
+     */
     @Override
     public void dispose() {
         super.dispose();

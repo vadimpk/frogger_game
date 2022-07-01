@@ -12,16 +12,26 @@ import com.frogger.game.utils.Audio;
 import static com.frogger.game.utils.Const.*;
 import static com.frogger.game.DataIO.*;
 
+/**
+ * SkinsScreen.java
+ * @author stas-bukovskiy
+ *
+ * Class for screen for choosing map and character skins.
+ * It gives player oppotunity to buy and select new skins for map or character
+ */
 public class SkinsScreen extends Screen {
 
     private SkinPanel skinPanel;
-    private CharacterSkin[] skins;
 
+    /**
+     * @param game - FroggerGame instance
+     * @param characterSkins - true if player is choosing skin for character
+     */
     public SkinsScreen(FroggerGame game, boolean characterSkins) {
         super(game);
         createButtonStyles();
 
-        skins = (characterSkins) ? getCharacterSkins() : getTileSkins();
+        CharacterSkin[] skins = (characterSkins) ? getCharacterSkins() : getTileSkins();
 
         for (int i = 0; i < skins.length; i++) {
             if (skins[i].isActive()) {
@@ -30,6 +40,9 @@ public class SkinsScreen extends Screen {
         }
     }
 
+    /**
+     * Method invokes show() method for skin panel and adds buttons and labels
+     */
     @Override
     public void show() {
         super.show();
@@ -83,6 +96,10 @@ public class SkinsScreen extends Screen {
         stage.addActor(getBackButton(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 0.08f * WINDOW_HEIGHT, new TypeOfSkinChooser(game)));
     }
 
+    /**
+     * Method invokes render method for skin panel
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         super.render(delta);
@@ -93,6 +110,9 @@ public class SkinsScreen extends Screen {
         return skinPanel.getCurrentSkin().isUnlocked() || DataIO.getStarNumber() < skinPanel.getCurrentSkin().getPrice();
     }
 
+    /**
+     * Method creates button styles
+     */
     private void createButtonStyles() {
         TextButton.TextButtonStyle buyButtonStyle = new TextButton.TextButtonStyle();
         buyButtonStyle.font = fonts.get("36");
@@ -112,6 +132,9 @@ public class SkinsScreen extends Screen {
         textButtonStyles.put("buy", buyButtonStyle);
     }
 
+    /**
+     * Method dispose all disposable instances
+     */
     @Override
     public void dispose() {
         super.dispose();

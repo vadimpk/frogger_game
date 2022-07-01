@@ -17,6 +17,13 @@ import static com.frogger.game.attributeObjects.Scorer.FILLED_STAR;
 import static com.frogger.game.attributeObjects.Scorer.UNFILLED_STAR;
 import static com.frogger.game.screens.FroggerGameScreen.level;
 
+/**
+ * GameOverScreen.java
+ * @author stas-bukovskiy
+ * Class for screen that displys result of game
+ * It creates after game over and give player opportunit to back to level screen or
+ * restart passed level
+ */
 public class GameOverScreen extends Screen{
 
     private final Level currentLevel;
@@ -24,6 +31,13 @@ public class GameOverScreen extends Screen{
     private final int score;
     private final boolean isWon;
 
+    /**
+     * Constructor counts star and best score and if player is won invoke updateLevel method
+     * @param game - FroggerGame instance
+     * @param currentLevel - level that was played
+     * @param timer - time that has been passed
+     * @param isWon - true if player is won
+     */
     public GameOverScreen(FroggerGame game, Level currentLevel, float timer, boolean isWon) {
         super(game);
         this.currentLevel = currentLevel;
@@ -36,6 +50,9 @@ public class GameOverScreen extends Screen{
         if(isWon) DataIO.updateLevel(currentLevel.getNumber() - 1, score, starScore);
     }
 
+    /**
+     * Method adds to stage all labels and buttons
+     */
     @Override
     public void show() {
         super.show();

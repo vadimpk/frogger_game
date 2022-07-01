@@ -12,15 +12,30 @@ import com.frogger.game.utils.Audio;
 
 import static com.frogger.game.utils.Const.*;
 
+/**
+ * MainMenuScreen.java
+ * @author stas-bukovskiy
+ *
+ * Class for main menu screen.
+ * It gives player opportunity to go on level and skin screen or exit from game
+ * Also consist button for turning off/on game and menu sounds
+ */
 public class MainMenuScreen extends Screen {
 
     public static boolean IS_SOUNDS_ON = true;
     private Button soundsButton;
 
+    /**
+     * Basic constructor
+     * @param game - FroggerGame instance
+     */
     public MainMenuScreen(FroggerGame game) {
         super(game);
     }
 
+    /**
+     * Method adds level buttons to stage
+     */
     @Override
     public void show() {
         super.show();
@@ -42,6 +57,9 @@ public class MainMenuScreen extends Screen {
 
     }
 
+    /**
+     * Method creates buttons
+     */
     private void initButtons() {
 
         createMenuButtons();
@@ -107,6 +125,9 @@ public class MainMenuScreen extends Screen {
         });
     }
 
+    /**
+     * Method dispose all disposable instances
+     */
     @Override
     public void dispose() {
         super.dispose();

@@ -10,7 +10,6 @@ import com.frogger.game.mapObjects.Map;
 import com.frogger.game.mapObjects.Row;
 import com.frogger.game.mapObjects.Tile;
 import com.frogger.game.skins.CharacterSkin;
-import com.sun.tools.javac.util.ArrayUtils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,6 +19,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+/**
+ * DataIO.java
+ * @author stas-bukovskiy
+ *
+ * Class for writting and reading files that consist all inforamtion for game
+ * Class also saves duplicates all inforamtion in fields
+ * Files with data are saving in data/ folder
+ */
 public class DataIO {
 
     private static Level[] levels;
@@ -31,6 +38,10 @@ public class DataIO {
     private static CharacterSkinParameters[] tileSkinsParameters;
 
 
+    /**
+     * Method returns list with levels
+     * @return list with levels
+     */
     public static Level[] getLevels() {
         if(levels == null) {
             createLevels();
@@ -43,6 +54,10 @@ public class DataIO {
         return levels;
     }
 
+    /**
+     * Method returns list with skins for character
+     * @return list with skins for character
+     */
     public static CharacterSkin[] getCharacterSkins() {
         if(characterSkins == null) {
             createSkins();
@@ -62,6 +77,10 @@ public class DataIO {
         return characterSkins;
     }
 
+    /**
+     * Method returns list with skins for map
+     * @return list with skins for map
+     */
     public static CharacterSkin[] getTileSkins() {
         if(tileSkins == null) {
             createSkins();
@@ -81,6 +100,10 @@ public class DataIO {
         return tileSkins;
     }
 
+    /**
+     * Method counts number of star that was collected and returns it
+     * @return number of star that was collected
+     */
     public static int getStarNumber() {
         int starNumber = 0;
         for (Level level : getLevels()) {
@@ -101,7 +124,12 @@ public class DataIO {
         return starNumber;
     }
 
-
+    /**
+     * Method load list of levels into file with updating information
+     * @param levelIndex - index for level that has new information
+     * @param bestScore - new best score
+     * @param starScore - new star score
+     */
     public static void updateLevel(int levelIndex, int bestScore, int starScore) {
         Level level = levels[levelIndex];
         boolean isChanging = false;
@@ -129,6 +157,11 @@ public class DataIO {
         }
     }
 
+    /**
+     * Method load list of skins into file with updating information
+     * @param forTile - true if it is skin for tile
+     * @param skinIndex - index of skin that has new information
+     */
     public static void updateSkins(boolean forTile, int skinIndex) {
         CharacterSkin[] skins = (forTile) ? getTileSkins() : getCharacterSkins();
         CharacterSkinParameters[] localSkinsParameters = (forTile) ? tileSkinsParameters : characterSkinsParameters;
@@ -144,6 +177,11 @@ public class DataIO {
         loadSkinsToFile(skinsParameters);
     }
 
+    /**
+     * Method that receives LevelParameters instance and converts it to Level instance
+     * @param levelParameter - LevelParameters instance that will be converted
+     * @return Level instance
+     */
     private static Level convertToLevel(LevelParameters levelParameter) {
         int screenWidth = Gdx.graphics.getWidth();
         int screenHeight = Gdx.graphics.getHeight();
@@ -214,10 +252,19 @@ public class DataIO {
         return level;
     }
 
+    /**
+     * Method that receives CharacterSkinParameters instance and converts it to CharacterSkin instance
+     * @param skin - LevelParameters instance that will be concerted
+     * @return CharacterSkin instance
+     */
     private static CharacterSkin convertToSkin(CharacterSkinParameters skin) {
         return new CharacterSkin(skin.name, skin.price, skin.unlocked, skin.active, skin.character);
     }
 
+    /**
+     * Method creates level list and loads it into file
+     * Method must be invoked only once
+     */
     private static void createLevels(){
         LevelParameters[] levelParameters = new LevelParameters[10];
 
@@ -1276,6 +1323,10 @@ public class DataIO {
         loadLevelsToFile(levelParameters);
     }
 
+    /**
+     * Method creates skin list and loads it into file
+     * Method must be invoked only once
+     */
     private static void createSkins() {
         CharacterSkinParameters[] skinParameters = new CharacterSkinParameters[12];
         //Character skins
@@ -1298,6 +1349,10 @@ public class DataIO {
         loadSkinsToFile(skinParameters);
     }
 
+    /**
+     * Method writes received list into file data/levels.txt
+     * @param levels - list that will be written
+     */
     private static void loadLevelsToFile(LevelParameters[] levels) {
         try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get("data/levels.txt")))) {
             out.writeObject(levels);
@@ -1306,6 +1361,10 @@ public class DataIO {
         }
     }
 
+    /**
+     * Method writes received list into file data/skins.txt
+     * @param skins - list that will be written
+     */
     private static void loadSkinsToFile(CharacterSkinParameters[] skins) {
         try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get("data/skins.txt")))) {
             out.writeObject(skins);
@@ -1314,6 +1373,10 @@ public class DataIO {
         }
     }
 
+    /**
+     * Method reads list of LevelParameters instances from data/levels.txt file
+     * @return list of LevelParameters instances
+     */
     private static LevelParameters[] loadLevelsFromFile() {
         LevelParameters[] levels;
         try(ObjectInputStream out = new ObjectInputStream(Files.newInputStream(Paths.get("data/levels.txt")))) {
@@ -1324,6 +1387,10 @@ public class DataIO {
         return levels;
     }
 
+    /**
+     * Method reads list of CharacterSkinParameters instances from data/skins.txt file
+     * @return list of CharacterSkinParameters instances
+     */
     private static CharacterSkinParameters[] loadSkinsFromFile() {
         CharacterSkinParameters[] skins;
         try (ObjectInputStream out = new ObjectInputStream(Files.newInputStream(Paths.get("data/skins.txt")))) {
@@ -1334,12 +1401,24 @@ public class DataIO {
         return skins;
     }
 
+    /**
+     * Method returns array that is merging of received arrays
+     * @param first - first array that will be merger
+     * @param second - second array that will be merger
+     * @return merged array
+     */
     private static <T> T[] concat(T[] first, T[] second) {
         T[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
         return result;
     }
 
+    /**
+     * @author stas-bukovskiy
+     *
+     * Class for representing parameters for creating Level instances
+     * It gives opportunity to read and write much less unimportant information
+     */
     static class LevelParameters implements Serializable {
         public int nRows;
 
@@ -1367,6 +1446,12 @@ public class DataIO {
         
     }
 
+    /**
+     * @author stas-bukovskiy
+     *
+     * Class for representing parameters for creating Row instances
+     * It gives opportunity to read and write much less unimportant information
+     */
     static class RowsParameters  implements Serializable {
 
         private static final long serialVersionUID = 1L;
@@ -1389,6 +1474,12 @@ public class DataIO {
         }
     }
 
+    /**
+     * @author stas-bukovskiy
+     *
+     * Class for representing parameters for creating Tile instances
+     * It gives opportunity to read and write much less unimportant information
+     */
     static class TileParameters implements Serializable {
 
         private static final long serialVersionUID = 1L;
@@ -1406,6 +1497,12 @@ public class DataIO {
         }
     }
 
+    /**
+     * @author stas-bukovskiy
+     *
+     * Class for representing parameters for creating MovingObject instances
+     * It gives opportunity to read and write much less unimportant information
+     */
     static class MovingObjectParameters  implements Serializable {
 
         private static final long serialVersionUID = 1L;
@@ -1436,6 +1533,12 @@ public class DataIO {
         }
     }
 
+    /**
+     * @author stas-bukovskiy
+     *
+     * Class for representing parameters for creating CharacterSkin instances
+     * It gives opportunity to read and write much less unimportant information
+     */
     static class CharacterSkinParameters implements Serializable{
 
         private static final long serialVersionUID = 1L;

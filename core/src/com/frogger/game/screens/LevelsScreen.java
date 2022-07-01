@@ -10,12 +10,26 @@ import com.frogger.game.levels.Level;
 
 import static com.frogger.game.utils.Const.*;
 
+/**
+ * LevelScreen.java
+ * @author stas-bukovskiy
+ * Class for screen that displys list of levels.
+ * It gives playyer oportunity to choose level.
+ * Also, it displayse star score for each passed level
+ */
 public class LevelsScreen extends Screen {
 
+    /**
+     * Basic constructor
+     * @param game - FroggerGame instance
+     */
     public LevelsScreen(FroggerGame game) {
         super(game);
     }
 
+    /**
+     * Method adds level buttons to stage
+     */
     @Override
     public void show() {
         super.show();
@@ -54,6 +68,9 @@ public class LevelsScreen extends Screen {
         stage.addActor(getBackButton(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 0.1f*WINDOW_HEIGHT, new MainMenuScreen(game)));
     }
 
+    /**
+     * Method creates buttons
+     */
     private void initButtons() {
         textButtonStyles.put("0", new TextButton.TextButtonStyle());
         textButtonStyles.put("1", new TextButton.TextButtonStyle());

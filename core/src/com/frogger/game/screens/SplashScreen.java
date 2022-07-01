@@ -13,14 +13,27 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.frogger.game.utils.Const.WINDOW_HEIGHT;
 import static com.frogger.game.utils.Const.WINDOW_WIDTH;
 
+/**
+ * SplashScreen.java
+ * @author stas-bukovskiy
+ * Class of dsplaying game logo with scaling effect.
+ * It used only once, on starting of game.
+ */
 public class SplashScreen extends Screen {
     private Image splashImg;
 
+    /**
+     * Basic constructor
+     * @param game - FroggerGame instance
+     */
     public SplashScreen(FroggerGame game) {
         super(game);
     }
 
 
+    /**
+     * Method adds logo image and add for it animation
+     */
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
