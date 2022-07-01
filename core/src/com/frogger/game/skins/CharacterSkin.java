@@ -19,7 +19,7 @@ public class CharacterSkin {
 
     /** initialize character textures */
     private static final Texture FROG_PACK = new Texture(Gdx.files.internal("characters/frog.png"));
-    private static final Texture TURTLE_PACK = new Texture(Gdx.files.internal("characters/turtle.png"));
+    private static final Texture CRAB_PACK = new Texture(Gdx.files.internal("characters/crab.png"));
     private static final Texture BIRD_PACK = new Texture(Gdx.files.internal("characters/bird.png"));
     private static final Texture EGG_PACK = new Texture(Gdx.files.internal("characters/egg.png"));
     private static final Texture FISH_PACK = new Texture(Gdx.files.internal("characters/fish.png"));
@@ -155,7 +155,7 @@ public class CharacterSkin {
      */
     public void setCharacterSkin(Util.Character characterSkin) {
         if (characterSkin == Util.Character.FROG) texturePack = FROG_PACK;
-        else if (characterSkin == Util.Character.TURTLE) texturePack = TURTLE_PACK;
+        else if (characterSkin == Util.Character.CRAB) texturePack = CRAB_PACK;
         else if (characterSkin == Util.Character.BIRD) texturePack = BIRD_PACK;
         else if (characterSkin == Util.Character.EGG) texturePack = EGG_PACK;
         else if (characterSkin == Util.Character.FISH) texturePack = FISH_PACK;
@@ -192,7 +192,7 @@ public class CharacterSkin {
 
     public static void dispose() {
         FROG_PACK.dispose();
-        TURTLE_PACK.dispose();
+        CRAB_PACK.dispose();
         BIRD_PACK.dispose();
         EGG_PACK.dispose();
         FISH_PACK.dispose();
@@ -217,7 +217,7 @@ public class CharacterSkin {
     public void rotate(int degree) {
         textureRotation = degree;
 
-        if (texturePack == BOTTLE_OF_COKE_PACK || texturePack == BOTTLE_OF_WINE_PACK || texturePack == FISH_PACK) {
+        if (texturePack == BOTTLE_OF_COKE_PACK || texturePack == BOTTLE_OF_WINE_PACK || texturePack == FISH_PACK || texturePack == CRAB_PACK) {
             textureRotation = 0;
         }
     }

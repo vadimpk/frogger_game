@@ -44,7 +44,7 @@ public class DataIO {
      */
     public static Level[] getLevels() {
         if(levels == null) {
-//            createLevels();
+            //createLevels();
             levelParameters = loadLevelsFromFile();
             levels = new Level[10];
             for (int i = 0; i < levels.length; i++) {
@@ -60,7 +60,7 @@ public class DataIO {
      */
     public static CharacterSkin[] getCharacterSkins() {
         if(characterSkins == null) {
-//            createSkins();
+            createSkins();
             skinsParameters = loadSkinsFromFile();
             int counter = 0;
             for (CharacterSkinParameters skinsParameter : skinsParameters) if (!skinsParameter.forTiles) counter++;
@@ -83,7 +83,7 @@ public class DataIO {
      */
     public static CharacterSkin[] getTileSkins() {
         if(tileSkins == null) {
-//            createSkins();
+            createSkins();
             skinsParameters = loadSkinsFromFile();
             int counter = 0;
             for (CharacterSkinParameters skinsParameter : skinsParameters) if (skinsParameter.forTiles) counter++;
@@ -105,7 +105,7 @@ public class DataIO {
      * @return number of star that was collected
      */
     public static int getStarNumber() {
-        int starNumber = 0;
+        int starNumber = 10;
         for (Level level : getLevels()) {
             if(!level.isBlocked() && level.isPassed()) {
                 starNumber += level.getStarScore();
@@ -163,6 +163,8 @@ public class DataIO {
      * @param skinIndex - index of skin that has new information
      */
     public static void updateSkins(boolean forTile, int skinIndex) {
+        getTileSkins();
+        getCharacterSkins();
         CharacterSkin[] skins = (forTile) ? getTileSkins() : getCharacterSkins();
         CharacterSkinParameters[] localSkinsParameters = (forTile) ? tileSkinsParameters : characterSkinsParameters;
         localSkinsParameters[skinIndex].unlocked = skins[skinIndex].isUnlocked();
@@ -1330,20 +1332,20 @@ public class DataIO {
     private static void createSkins() {
         CharacterSkinParameters[] skinParameters = new CharacterSkinParameters[12];
         //Character skins
-        skinParameters[0] = new CharacterSkinParameters("Frog", 0, true, true, Util.Character.FROG);
-        skinParameters[1] = new CharacterSkinParameters("Bird", 2, false, false, Util.Character.BIRD);
-        skinParameters[2] = new CharacterSkinParameters("Turtle", 2, false, false, Util.Character.TURTLE);
-        skinParameters[3] = new CharacterSkinParameters("Fish", 2, false, false, Util.Character.FISH);
-        skinParameters[4] = new CharacterSkinParameters("Pizza", 4, false, false, Util.Character.PIZZA);
-        skinParameters[5] = new CharacterSkinParameters("Coke", 5, false, false, Util.Character.BOTTLE_OF_COKE);
-        skinParameters[6] = new CharacterSkinParameters("Wine", 5, false, false, Util.Character.BOTTLE_OF_WINE);
-        skinParameters[7] = new CharacterSkinParameters("Egg", 10, false, false, Util.Character.EGG);
+        skinParameters[0] = new CharacterSkinParameters("Frog (just frog)", 0, true, true, Util.Character.FROG);
+        skinParameters[1] = new CharacterSkinParameters("Bird Man", 2, false, false, Util.Character.BIRD);
+        skinParameters[2] = new CharacterSkinParameters("Friendly Crab (no)", 2, false, false, Util.Character.CRAB);
+        skinParameters[3] = new CharacterSkinParameters("Fish from Minecraft", 2, false, false, Util.Character.FISH);
+        skinParameters[4] = new CharacterSkinParameters("Dominos", 3, false, false, Util.Character.PIZZA);
+        skinParameters[5] = new CharacterSkinParameters("Juvchick na minimalkax", 3, false, false, Util.Character.BOTTLE_OF_COKE);
+        skinParameters[6] = new CharacterSkinParameters("Good evening", 3, false, false, Util.Character.BOTTLE_OF_WINE);
+        skinParameters[7] = new CharacterSkinParameters("It could be a chicken!", 5, false, false, Util.Character.EGG);
 
         //Tiles skins
-        skinParameters[8] = new CharacterSkinParameters("oak forest", 0, true, true, Util.TileSkin.OAK_FOREST);
-        skinParameters[9] = new CharacterSkinParameters("fir forest", 2, false, false, Util.TileSkin.FIR_FOREST);
-        skinParameters[10] = new CharacterSkinParameters("beach", 3, false, false, Util.TileSkin.BEACH);
-        skinParameters[11] = new CharacterSkinParameters("dark forest", 5, false, false, Util.TileSkin.DARK_FOREST);
+        skinParameters[8] = new CharacterSkinParameters("Oak Forest ", 0, true, true, Util.TileSkin.OAK_FOREST);
+        skinParameters[9] = new CharacterSkinParameters("Fir Forest", 2, false, false, Util.TileSkin.FIR_FOREST);
+        skinParameters[10] = new CharacterSkinParameters("Beatchy", 3, false, false, Util.TileSkin.BEACH);
+        skinParameters[11] = new CharacterSkinParameters("Dark Forest", 5, false, false, Util.TileSkin.DARK_FOREST);
 
 
         loadSkinsToFile(skinParameters);
@@ -1408,6 +1410,8 @@ public class DataIO {
      * @return merged array
      */
     private static <T> T[] concat(T[] first, T[] second) {
+        System.out.println(Arrays.toString(first));
+        System.out.println(Arrays.toString(second));
         T[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
         return result;
