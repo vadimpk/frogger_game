@@ -1,6 +1,8 @@
 package com.frogger.game.screens;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.*;
@@ -34,11 +36,12 @@ public class SkinsScreen extends Screen {
         super.show();
 
 
-        TextButton rightArrow = new TextButton("", textButtonStyles.get("right-arrow"));
-        TextButton leftArrow = new TextButton("", textButtonStyles.get("left-arrow"));
+        Button rightArrow = new Button(buttonStyles.get("arrow"));
+        Button leftArrow = new Button(buttonStyles.get("arrow"));
 
-        leftArrow.setBounds(0.2f * WINDOW_WIDTH, WINDOW_HEIGHT * 0.45f, 0.1f * WINDOW_HEIGHT, 0.1f * WINDOW_HEIGHT);
-
+        leftArrow.setBounds(0.2f * WINDOW_WIDTH + 0.1f * WINDOW_HEIGHT, WINDOW_HEIGHT * 0.55f, 0.1f * WINDOW_HEIGHT, 0.1f * WINDOW_HEIGHT);
+        leftArrow.setTransform(true);
+        leftArrow.setRotation(180);
         rightArrow.setBounds(0.8f * WINDOW_WIDTH - 0.1f * WINDOW_HEIGHT, WINDOW_HEIGHT * 0.45f, 0.1f * WINDOW_HEIGHT, 0.1f * WINDOW_HEIGHT);
 
         final TextButton buyButton = new TextButton("Buy", textButtonStyles.get("buy"));
@@ -101,16 +104,13 @@ public class SkinsScreen extends Screen {
         buyButtonStyle.disabled = skin.getDrawable("btn-disabled");
 
 
-        TextButton.TextButtonStyle rightButtonStyle = new TextButton.TextButtonStyle();
-        rightButtonStyle.font = fonts.get("24");
+        Button.ButtonStyle rightButtonStyle = new Button.ButtonStyle();
         rightButtonStyle.up = skin.getDrawable("arrow-btn-up");
         rightButtonStyle.down = skin.getDrawable("arrow-btn-down");
         rightButtonStyle.over = skin.getDrawable("arrow-btn-over");
         rightButtonStyle.disabled = skin.getDrawable("arrow-btn-disabled");
 
-
-        textButtonStyles.put("left-arrow", rightButtonStyle);
-        textButtonStyles.put("right-arrow", rightButtonStyle);
+        buttonStyles.put("arrow", rightButtonStyle);
         textButtonStyles.put("buy", buyButtonStyle);
     }
 }
