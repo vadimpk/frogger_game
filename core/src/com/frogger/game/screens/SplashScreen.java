@@ -32,7 +32,7 @@ public class SplashScreen extends Screen {
             }
         };
 
-        Texture splashTex = new Texture(Gdx.files.internal("logo.png"));
+        Texture splashTex = new Texture(Gdx.files.internal("backgrounds/logo.png"));
         splashImg = new Image(splashTex);
         splashImg.setSize(0.3f*splashTex.getWidth(), 0.3f*splashTex.getHeight());
         splashImg.setOrigin(splashImg.getWidth() / 2, splashImg.getHeight());

@@ -170,7 +170,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
     }
 
     public void setBackground() {
-        bgTexture = new Texture(Gdx.files.internal("bg.png"));
+        bgTexture = new Texture(Gdx.files.internal("backgrounds/bg.png"));
         Image bg = new Image(bgTexture);
         bg.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 

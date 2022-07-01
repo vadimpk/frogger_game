@@ -51,7 +51,7 @@ public class LevelsScreen extends Screen {
             });
             stage.addActor(buttons[i]);
         }
-        stage.addActor(getBackButton(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 0.15f*WINDOW_HEIGHT));
+        stage.addActor(getBackButton(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 0.1f*WINDOW_HEIGHT));
     }
 
     private void initButtons() {

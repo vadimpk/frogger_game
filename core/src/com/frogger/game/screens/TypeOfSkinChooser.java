@@ -21,7 +21,7 @@ public class TypeOfSkinChooser extends Screen {
 
     public TypeOfSkinChooser(FroggerGame game) {
         super(game);
-        createButtonStyles();
+        createMenuButtons();
     }
 
     /**
@@ -31,13 +31,17 @@ public class TypeOfSkinChooser extends Screen {
     public void show() {
         super.show();
 
-        TextButton chooseCharacterSkin = new TextButton("characters", textButtonStyles.get("buy"));
-        TextButton chooseTileSkin = new TextButton("tiles", textButtonStyles.get("buy"));
+        setBackground();
 
-        chooseCharacterSkin.setBounds(300,300, BUTTON_WIDTH, BUTTON_HEIGHT);
-        chooseTileSkin.setBounds(900,300, BUTTON_WIDTH, BUTTON_HEIGHT);
+        buttons.put("character", new TextButton("Character", textButtonStyles.get("yellow")));
+        buttons.put("map", new TextButton("Map", textButtonStyles.get("yellow")));
 
-        chooseCharacterSkin.addListener(new ClickListener() {
+        float distanceX = 0.1f*WINDOW_WIDTH;
+        float startingX = WINDOW_WIDTH/2 - BUTTON_WIDTH - distanceX / 2;
+        buttons.get("character").setBounds(startingX,0.5f*WINDOW_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+        buttons.get("map").setBounds(startingX + distanceX + BUTTON_WIDTH,0.5f*WINDOW_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+
+        buttons.get("character").addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Audio.playClickedSound();
@@ -45,7 +49,7 @@ public class TypeOfSkinChooser extends Screen {
             }
         });
 
-        chooseTileSkin.addListener(new ClickListener() {
+        buttons.get("map").addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Audio.playClickedSound();
@@ -53,19 +57,8 @@ public class TypeOfSkinChooser extends Screen {
             }
         });
 
-        stage.addActor(chooseCharacterSkin);
-        stage.addActor(chooseTileSkin);
-    }
-
-    private void createButtonStyles() {
-
-        TextButton.TextButtonStyle chooseButtonStyle = new TextButton.TextButtonStyle();
-        chooseButtonStyle.font = fonts.get("36");
-        chooseButtonStyle.up = skin.getDrawable("yellow-btn-up");
-        chooseButtonStyle.down = skin.getDrawable("yellow-btn-down");
-        chooseButtonStyle.over = skin.getDrawable("yellow-btn-over");
-        chooseButtonStyle.disabled = skin.getDrawable("btn-disabled");
-
-        textButtonStyles.put("buy", chooseButtonStyle);
+        stage.addActor(buttons.get("character"));
+        stage.addActor(buttons.get("map"));
+        stage.addActor(getBackButton(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 0.2f*WINDOW_HEIGHT));
     }
 }
