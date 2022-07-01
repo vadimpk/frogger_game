@@ -75,7 +75,7 @@ public class SkinsScreen extends Screen {
         stage.addActor(rightArrow);
         stage.addActor(leftArrow);
         stage.addActor(buyButton);
-        stage.addActor(getBackButton(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 0.08f * WINDOW_HEIGHT));
+        stage.addActor(getBackButton(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 0.08f * WINDOW_HEIGHT, new TypeOfSkinChooser(game)));
     }
 
     @Override

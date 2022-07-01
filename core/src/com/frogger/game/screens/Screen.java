@@ -155,7 +155,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         buttonStyles.put("sounds", soundsStyle);
     }
 
-    public TextButton getBackButton(float x, float y) {
+    public TextButton getBackButton(float x, float y, final Screen previousScreen) {
         if(!textButtonStyles.containsKey("red")) createMenuButtons();
         TextButton backButton = new TextButton("Back", textButtonStyles.get("red"));
         backButton.setBounds(x, y, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -163,7 +163,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Audio.playClickedSound();
-                switchScreenWithFading(new MainMenuScreen(game), 0.3f);
+                switchScreenWithFading(previousScreen, 0.3f);
             }
         });
         return backButton;

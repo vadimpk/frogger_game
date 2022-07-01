@@ -114,7 +114,7 @@ public class GameOverScreen extends Screen{
                 for (Score score : currentLevel.getMap().getScores()) {
                     score.setUncollected();
                 }
-                switchScreenWithFading(new MainMenuScreen(game), 0.3f);
+                switchScreenWithFading(new LevelsScreen(game), 0.3f);
             }
         });
         restartButton.addListener(new ClickListener(){

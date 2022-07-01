@@ -59,6 +59,6 @@ public class TypeOfSkinChooser extends Screen {
 
         stage.addActor(buttons.get("character"));
         stage.addActor(buttons.get("map"));
-        stage.addActor(getBackButton(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 0.2f*WINDOW_HEIGHT));
+        stage.addActor(getBackButton(WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, 0.2f*WINDOW_HEIGHT, new MainMenuScreen(game)));
     }
 }

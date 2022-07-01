@@ -38,8 +38,6 @@ public class PauseScreen extends Screen {
         buttons.get("resume").setBounds(startingX, 0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *0.1f, BUTTON_WIDTH, BUTTON_HEIGHT);
         buttons.put("restart", new TextButton("Restart", textButtonStyles.get("yellow")));
         buttons.get("restart").setBounds(startingX,0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *1.7f , BUTTON_WIDTH, BUTTON_HEIGHT);
-        buttons.put("back",  new TextButton("Back", textButtonStyles.get("red")));
-        buttons.get("back").setBounds(startingX, 0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *3.3f, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         //Add listeners to buttons
         buttons.get("resume").addListener(new ClickListener(){
@@ -58,22 +56,14 @@ public class PauseScreen extends Screen {
             }
         });
 
-        buttons.get("back").addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Audio.playClickedSound();
-                switchScreenWithFading(new MainMenuScreen(game), 0.3f);
-            }
-        });
-
-        bgTexture = new Texture(Gdx.files.internal("transparent-bg.png"));
+        bgTexture = new Texture(Gdx.files.internal("backgrounds/transparent-bg.png"));
         Image bg = new Image(bgTexture);
         bg.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         stage.addActor(bg);
         stage.addActor(buttons.get("resume"));
         stage.addActor(buttons.get("restart"));
-        stage.addActor(buttons.get("back"));
+        stage.addActor(getBackButton(startingX, 0.65f * WINDOW_HEIGHT - BUTTON_HEIGHT *3.3f, new LevelsScreen(game)));
 
 
     }
