@@ -111,6 +111,7 @@ public class CharacterSkin {
                 }
             }
         } else {
+
             if (active) {
                 for (Level level: DataIO.getLevels()) {
                     for (Tile[] row: level.getMap().getTiles()) {

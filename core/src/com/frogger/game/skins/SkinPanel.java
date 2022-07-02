@@ -48,6 +48,7 @@ public class SkinPanel {
     /**
      * Method to choose a new skin (from a list)
      */
+
     public void nextSkin() {
         skinId = (skinId + 1 >= skins.length) ? 0 : skinId + 1;
         setCurrentSkin(skinId);

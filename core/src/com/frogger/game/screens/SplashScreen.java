@@ -35,6 +35,7 @@ public class SplashScreen extends Screen {
      * Method adds logo image and add for it animation
      */
     @Override
+
     public void show() {
         Gdx.input.setInputProcessor(stage);
 

@@ -22,6 +22,7 @@ import static com.frogger.game.utils.Const.WINDOW_HEIGHT;
  */
 public class FroggerGameScreen extends Screen {
 
+
     public static Level level;
     private final Timer timer;
     private final Scorer scorer;

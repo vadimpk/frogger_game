@@ -38,6 +38,7 @@ import static com.frogger.game.utils.Const.*;
 public abstract class Screen implements com.badlogic.gdx.Screen {
     protected FroggerGame game;
 
+
     protected SpriteBatch batch;
     protected Stage stage;
     protected Viewport viewport;

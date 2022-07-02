@@ -16,6 +16,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
@@ -29,11 +30,15 @@ import java.util.Arrays;
  */
 public class DataIO {
 
+    private static final String folderSrc = "data/";
+    private static final Path characterSkinsPath = Paths.get(folderSrc + "characterSkins.txt");
+    private static final Path tileSkinsPath = Paths.get(folderSrc + "tilesSkins.txt");
+    private static final Path levelsPath = Paths.get(folderSrc + "levels.txt");
+
     private static Level[] levels;
     private static LevelParameters[] levelParameters;
     private static CharacterSkin[] characterSkins;
     private static CharacterSkin[] tileSkins;
-    private static CharacterSkinParameters[] skinsParameters;
     private static CharacterSkinParameters[] characterSkinsParameters;
     private static CharacterSkinParameters[] tileSkinsParameters;
 
@@ -44,7 +49,7 @@ public class DataIO {
      */
     public static Level[] getLevels() {
         if(levels == null) {
-            //createLevels();
+            if(!Files.exists(levelsPath)) createLevels();
             levelParameters = loadLevelsFromFile();
             levels = new Level[10];
             for (int i = 0; i < levels.length; i++) {
@@ -54,24 +59,19 @@ public class DataIO {
         return levels;
     }
 
+
     /**
      * Method returns list with skins for character
      * @return list with skins for character
      */
     public static CharacterSkin[] getCharacterSkins() {
         if(characterSkins == null) {
-            createSkins();
-            skinsParameters = loadSkinsFromFile();
-            int counter = 0;
-            for (CharacterSkinParameters skinsParameter : skinsParameters) if (!skinsParameter.forTiles) counter++;
-            characterSkins = new CharacterSkin[counter];
-            characterSkinsParameters = new CharacterSkinParameters[counter];
-            counter = 0;
-            for (CharacterSkinParameters skinsParameter : skinsParameters) {
-                if (!skinsParameter.forTiles) {
-                    characterSkins[counter] = convertToSkin(skinsParameter);
-                    characterSkinsParameters[counter++] = skinsParameter;
-                }
+            if(!Files.exists(characterSkinsPath)) createSkins();
+            characterSkinsParameters = loadSkinsFromFile(false);
+            characterSkins = new CharacterSkin[characterSkinsParameters.length];
+            for (int i = 0; i < characterSkins.length; i++) {
+                characterSkins[i] = convertToSkin(characterSkinsParameters[i]);
+
             }
         }
         return characterSkins;
@@ -83,18 +83,13 @@ public class DataIO {
      */
     public static CharacterSkin[] getTileSkins() {
         if(tileSkins == null) {
-            createSkins();
-            skinsParameters = loadSkinsFromFile();
-            int counter = 0;
-            for (CharacterSkinParameters skinsParameter : skinsParameters) if (skinsParameter.forTiles) counter++;
-            tileSkins = new CharacterSkin[counter];
-            tileSkinsParameters = new CharacterSkinParameters[counter];
-            counter = 0;
-            for (CharacterSkinParameters skinsParameter : skinsParameters) {
-                if (skinsParameter.forTiles) {
-                    tileSkins[counter] = new CharacterSkin(skinsParameter.name, skinsParameter.price, skinsParameter.unlocked, skinsParameter.active, skinsParameter.tileSkin);
-                    tileSkinsParameters[counter++] = skinsParameter;
-                }
+            if(!Files.exists(tileSkinsPath)) createSkins();
+            tileSkinsParameters = loadSkinsFromFile(true);
+            tileSkins = new CharacterSkin[tileSkinsParameters.length];
+            for (int i = 0; i < tileSkins.length; i++) {
+                tileSkins[i] = new CharacterSkin(tileSkinsParameters[i].name, tileSkinsParameters[i].price,
+                        tileSkinsParameters[i].unlocked, tileSkinsParameters[i].active, tileSkinsParameters[i].tileSkin);
+
             }
         }
         return tileSkins;
@@ -131,7 +126,7 @@ public class DataIO {
      * @param starScore - new star score
      */
     public static void updateLevel(int levelIndex, int bestScore, int starScore) {
-        Level level = levels[levelIndex];
+        Level level = getLevels()[levelIndex];
         boolean isChanging = false;
         if(!level.isPassed()) {
             level.setPassed(true);
@@ -163,20 +158,17 @@ public class DataIO {
      * @param skinIndex - index of skin that has new information
      */
     public static void updateSkins(boolean forTile, int skinIndex) {
-        getTileSkins();
-        getCharacterSkins();
         CharacterSkin[] skins = (forTile) ? getTileSkins() : getCharacterSkins();
-        CharacterSkinParameters[] localSkinsParameters = (forTile) ? tileSkinsParameters : characterSkinsParameters;
-        localSkinsParameters[skinIndex].unlocked = skins[skinIndex].isUnlocked();
-        localSkinsParameters[skinIndex].active = skins[skinIndex].isActive();
-        System.out.println(forTile + ": " + skins[skinIndex].isActive());
-        if(localSkinsParameters[skinIndex].active) for (int i = 0; i < skins.length; i++) {
-            if(i != skinIndex) {
-                localSkinsParameters[i].active = false;
-            }
+        CharacterSkinParameters[] skinsParameters = (forTile) ? tileSkinsParameters : characterSkinsParameters;
+
+        if(skins[skinIndex].isActive()) for (int i = 0; i < skins.length; i++) {
+                skinsParameters[i].active = false;
         }
-        skinsParameters = concat(tileSkinsParameters, characterSkinsParameters);
-        loadSkinsToFile(skinsParameters);
+
+        skinsParameters[skinIndex].unlocked = skins[skinIndex].isUnlocked();
+        skinsParameters[skinIndex].active = skins[skinIndex].isActive();
+
+        loadSkinsToFile(skinsParameters, forTile);
     }
 
     /**
@@ -1330,7 +1322,7 @@ public class DataIO {
      * Method must be invoked only once
      */
     private static void createSkins() {
-        CharacterSkinParameters[] skinParameters = new CharacterSkinParameters[12];
+        CharacterSkinParameters[] skinParameters = new CharacterSkinParameters[8];
         //Character skins
         skinParameters[0] = new CharacterSkinParameters("Frog (just frog)", 0, true, true, Util.Character.FROG);
         skinParameters[1] = new CharacterSkinParameters("Bird Man", 2, false, false, Util.Character.BIRD);
@@ -1340,15 +1332,17 @@ public class DataIO {
         skinParameters[5] = new CharacterSkinParameters("Juvchick na minimalkax", 3, false, false, Util.Character.BOTTLE_OF_COKE);
         skinParameters[6] = new CharacterSkinParameters("Good evening", 3, false, false, Util.Character.BOTTLE_OF_WINE);
         skinParameters[7] = new CharacterSkinParameters("It could be a chicken!", 5, false, false, Util.Character.EGG);
+        loadSkinsToFile(skinParameters, false);
 
+        skinParameters = new CharacterSkinParameters[4];
         //Tiles skins
-        skinParameters[8] = new CharacterSkinParameters("Oak Forest ", 0, true, true, Util.TileSkin.OAK_FOREST);
-        skinParameters[9] = new CharacterSkinParameters("Fir Forest", 2, false, false, Util.TileSkin.FIR_FOREST);
-        skinParameters[10] = new CharacterSkinParameters("Beatchy", 3, false, false, Util.TileSkin.BEACH);
-        skinParameters[11] = new CharacterSkinParameters("Dark Forest", 5, false, false, Util.TileSkin.DARK_FOREST);
+        skinParameters[0] = new CharacterSkinParameters("Oak Forest ", 0, true, true, Util.TileSkin.OAK_FOREST);
+        skinParameters[1] = new CharacterSkinParameters("Fir Forest", 2, false, false, Util.TileSkin.FIR_FOREST);
+        skinParameters[2] = new CharacterSkinParameters("Beatchy", 3, false, false, Util.TileSkin.BEACH);
+        skinParameters[3] = new CharacterSkinParameters("Dark Forest", 5, false, false, Util.TileSkin.DARK_FOREST);
 
 
-        loadSkinsToFile(skinParameters);
+        loadSkinsToFile(skinParameters, true);
     }
 
     /**
@@ -1356,7 +1350,7 @@ public class DataIO {
      * @param levels - list that will be written
      */
     private static void loadLevelsToFile(LevelParameters[] levels) {
-        try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get("data/levels.txt")))) {
+        try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(levelsPath))) {
             out.writeObject(levels);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -1367,8 +1361,8 @@ public class DataIO {
      * Method writes received list into file data/skins.txt
      * @param skins - list that will be written
      */
-    private static void loadSkinsToFile(CharacterSkinParameters[] skins) {
-        try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get("data/skins.txt")))) {
+    private static void loadSkinsToFile(CharacterSkinParameters[] skins, boolean forTile) {
+        try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream( (forTile) ? tileSkinsPath : characterSkinsPath))) {
             out.writeObject(skins);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -1381,7 +1375,7 @@ public class DataIO {
      */
     private static LevelParameters[] loadLevelsFromFile() {
         LevelParameters[] levels;
-        try(ObjectInputStream out = new ObjectInputStream(Files.newInputStream(Paths.get("data/levels.txt")))) {
+        try(ObjectInputStream out = new ObjectInputStream(Files.newInputStream(levelsPath))) {
             levels = (LevelParameters[]) out.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -1393,9 +1387,9 @@ public class DataIO {
      * Method reads list of CharacterSkinParameters instances from data/skins.txt file
      * @return list of CharacterSkinParameters instances
      */
-    private static CharacterSkinParameters[] loadSkinsFromFile() {
+    private static CharacterSkinParameters[] loadSkinsFromFile(boolean forTile) {
         CharacterSkinParameters[] skins;
-        try (ObjectInputStream out = new ObjectInputStream(Files.newInputStream(Paths.get("data/skins.txt")))) {
+        try (ObjectInputStream out = new ObjectInputStream(Files.newInputStream( (forTile) ? tileSkinsPath : characterSkinsPath))) {
             skins = (CharacterSkinParameters[]) out.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -1543,7 +1537,7 @@ public class DataIO {
      * Class for representing parameters for creating CharacterSkin instances
      * It gives opportunity to read and write much less unimportant information
      */
-    static class CharacterSkinParameters implements Serializable{
+    static class CharacterSkinParameters implements Serializable {
 
         private static final long serialVersionUID = 1L;
 

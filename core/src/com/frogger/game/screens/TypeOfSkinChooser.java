@@ -19,6 +19,7 @@ import static com.frogger.game.utils.Const.*;
 
 public class TypeOfSkinChooser extends Screen {
 
+
     public TypeOfSkinChooser(FroggerGame game) {
         super(game);
         createMenuButtons();

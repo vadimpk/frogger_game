@@ -21,6 +21,7 @@ import static com.frogger.game.DataIO.*;
  */
 public class SkinsScreen extends Screen {
 
+
     private SkinPanel skinPanel;
 
     /**
