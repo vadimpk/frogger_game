@@ -59,7 +59,7 @@ public class LevelsScreen extends Screen {
                 public void clicked(InputEvent event, float x, float y) {
                     if(!buttons[finalI].isDisabled()) {
                         Audio.playClickedSound();
-                        switchScreenWithFading(new FroggerGameScreen(game, levels[finalI]), 0.3f);
+                        switchScreen(new FroggerGameScreen(game, levels[finalI]));
                     }
                 }
             });

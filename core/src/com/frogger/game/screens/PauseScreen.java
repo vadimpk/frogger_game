@@ -59,14 +59,14 @@ public class PauseScreen extends Screen {
             public void clicked(InputEvent event, float x, float y) {
                 FroggerGameScreen.isPaused = !FroggerGameScreen.isPaused;
                 Audio.playClickedSound();
-                switchScreenWithFading(gameScreen, 0f);
+                switchScreen(gameScreen);
             }
         });
         buttons.get("restart").addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Audio.playClickedSound();
-                switchScreenWithFading(new FroggerGameScreen(game, FroggerGameScreen.level), 0.3f);
+                switchScreen(new FroggerGameScreen(game, FroggerGameScreen.level));
             }
         });
 
@@ -93,7 +93,7 @@ public class PauseScreen extends Screen {
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             FroggerGameScreen.isPaused = !FroggerGameScreen.isPaused;
-            switchScreenWithFading(gameScreen, 0f);
+            switchScreen(gameScreen);
         }
 
         stage.act();

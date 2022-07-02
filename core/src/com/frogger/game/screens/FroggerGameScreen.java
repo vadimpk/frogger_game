@@ -75,7 +75,7 @@ public class FroggerGameScreen extends Screen {
             isPaused = !isPaused;
             if(timer.isStopped()) timer.start();
             else timer.stop();
-            switchScreenWithFading(new PauseScreen(game, this), 0.1f);
+            switchScreen(new PauseScreen(game, this));
         }
 
         if(isPaused){
@@ -95,18 +95,18 @@ public class FroggerGameScreen extends Screen {
 
             if (!Frog.get().isAlive() && !isSwitching) {
                 isSwitching = true;
-                switchScreenWithFading(new GameOverScreen(game, level, timer.getTimer(), false), 2f);
+                switchScreen(new GameOverScreen(game, level, timer.getTimer(), false));
                 timer.stop();
             }
             if (Frog.get().getTile().isFinish() && !Frog.get().isMoving() && !isSwitching) {
                 isSwitching = true;
-                switchScreenWithFading(new GameOverScreen(game, level, timer.getTimer(), true), 1f);
+                switchScreen(new GameOverScreen(game, level, timer.getTimer(), true));
                 timer.stop();
             }
 
             if (timer.getTimer() == 0 && !isSwitching) {
                 isSwitching = true;
-                switchScreenWithFading(new GameOverScreen(game, level, timer.getTimer(), false), 2f);
+                switchScreen(new GameOverScreen(game, level, timer.getTimer(), false));
                 isPaused = !isPaused;
                 timer.stop();
 

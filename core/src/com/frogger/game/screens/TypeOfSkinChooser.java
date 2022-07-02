@@ -46,7 +46,7 @@ public class TypeOfSkinChooser extends Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Audio.playClickedSound();
-                switchScreenWithFading(new SkinsScreen(game, true), 0.3f);
+                switchScreen(new SkinsScreen(game, true));
             }
         });
 
@@ -54,7 +54,7 @@ public class TypeOfSkinChooser extends Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Audio.playClickedSound();
-                switchScreenWithFading(new SkinsScreen(game, false), 0.3f);
+                switchScreen(new SkinsScreen(game, false));
             }
         });
 

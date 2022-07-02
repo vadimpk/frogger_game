@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -118,7 +117,6 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        stage.getRoot().addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.3f)));
     }
 
     /**
@@ -134,21 +132,11 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
     }
 
     /**
-     * Method switches screens with fading effect
+     * Method switches screens on new one
      * @param newScreen - screen that will be set
-     * @param duration - duration of fading effect in seconds
      */
-    public void switchScreenWithFading(final Screen newScreen, float duration) {
-        stage.getRoot().getColor().a = 1;
-        SequenceAction sequenceAction = new SequenceAction();
-        sequenceAction.addAction(fadeOut(duration));
-        sequenceAction.addAction(run(new Runnable() {
-            @Override
-            public void run() {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(newScreen);
-            }
-        }));
-        stage.getRoot().addAction(sequenceAction);
+    public void switchScreen(final Screen newScreen) {
+        ((Game)Gdx.app.getApplicationListener()).setScreen(newScreen);
     }
 
     @Override
@@ -205,7 +193,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Audio.playClickedSound();
-                switchScreenWithFading(previousScreen, 0.3f);
+                switchScreen(previousScreen);
             }
         });
         return backButton;

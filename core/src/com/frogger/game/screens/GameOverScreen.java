@@ -131,7 +131,7 @@ public class GameOverScreen extends Screen{
                 for (Score score : currentLevel.getMap().getScores()) {
                     score.setUncollected();
                 }
-                switchScreenWithFading(new LevelsScreen(game), 0.3f);
+                switchScreen(new LevelsScreen(game));
             }
         });
         restartButton.addListener(new ClickListener(){
@@ -141,7 +141,7 @@ public class GameOverScreen extends Screen{
                 for (Score score : currentLevel.getMap().getScores()) {
                     score.setUncollected();
                 }
-                switchScreenWithFading(new FroggerGameScreen(game, currentLevel), 0.3f);
+                switchScreen(new FroggerGameScreen(game, currentLevel));
             }
         });
 
