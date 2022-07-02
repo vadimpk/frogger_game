@@ -108,7 +108,7 @@ public class SkinsScreen extends Screen {
     }
 
     private boolean defineBuyButtonAvailability() {
-        return skinPanel.getCurrentSkin().isUnlocked() || DataIO.getStarNumber() < skinPanel.getCurrentSkin().getPrice();
+        return !skinPanel.getCurrentSkin().isForDonations() && (skinPanel.getCurrentSkin().isUnlocked() || DataIO.getStarNumber() < skinPanel.getCurrentSkin().getPrice());
     }
 
     /**

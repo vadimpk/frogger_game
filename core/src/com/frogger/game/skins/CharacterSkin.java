@@ -57,6 +57,7 @@ public class CharacterSkin {
     private Util.Character characterSkin;
     private Util.TileSkin tileSkin;
     private boolean forTiles;
+    private boolean forDonations;
 
     /**
      * Constructor for character skin
@@ -229,5 +230,13 @@ public class CharacterSkin {
 
     public boolean isForTiles() {
         return forTiles;
+    }
+
+    public boolean isForDonations() {
+        return forDonations;
+    }
+
+    public void setForDonations(boolean forDonations) {
+        this.forDonations = forDonations;
     }
 }

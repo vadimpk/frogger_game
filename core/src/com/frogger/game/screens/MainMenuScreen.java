@@ -7,8 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.frogger.game.DataIO;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.utils.Audio;
+
+import java.sql.DatabaseMetaData;
 
 import static com.frogger.game.utils.Const.*;
 
@@ -113,6 +116,8 @@ public class MainMenuScreen extends Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Audio.playClickedSound();
+                Gdx.net.openURI("https://helpukraine.center/#donate");
+                DataIO.setDonation();
             }
         });
 
