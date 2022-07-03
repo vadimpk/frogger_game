@@ -1433,8 +1433,6 @@ public class DataIO {
      * @return merged array
      */
     private static <T> T[] concat(T[] first, T[] second) {
-        System.out.println(Arrays.toString(first));
-        System.out.println(Arrays.toString(second));
         T[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
         return result;

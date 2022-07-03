@@ -794,14 +794,6 @@ public class Frog {
         return alive;
     }
 
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public void setTile(Tile tile) {
-        this.tile = tile;
-    }
-
     public boolean isGoingToDrown() {
         return goingToDrown;
     }

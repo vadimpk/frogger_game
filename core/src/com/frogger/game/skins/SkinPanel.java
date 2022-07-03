@@ -1,12 +1,11 @@
 package com.frogger.game.skins;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.frogger.game.DataIO;
 import com.frogger.game.attributeObjects.Scorer;
@@ -28,10 +27,10 @@ public class SkinPanel {
     private int skinId;
     private TextureRegion thumbnail;
     private final Stage stage;
-    private Label starNumberLabel;
-    private Label nameLabel;
-    private Label priceLabel;
-    private Label throughDonateLabel;
+    private GlyphLayout starNumberLabel;
+    private GlyphLayout nameLabel;
+    private GlyphLayout priceLabel;
+    private GlyphLayout throughDonateLabel;
     private Image thumbnailImg;
     private Image star;
     private Image smallStar;
@@ -95,75 +94,59 @@ public class SkinPanel {
      * Method to draw skin panel
      */
     public void render() {
+        stage.getBatch().begin();
+
         // draw amount of available stars (top right corner)
-        starNumberLabel.setText(String.valueOf(DataIO.getStarNumber()));
-        starNumberLabel.setPosition(star.getX() - 1.2f*starNumberLabel.getWidth(), star.getY() + star.getHeight()  / 2 - starNumberLabel.getHeight() / 2);
+        starNumberLabel.setText(FONT_FOR_NUMBERS, String.valueOf(DataIO.getStarNumber()));
+        FONT_FOR_NUMBERS.draw(stage.getBatch(), starNumberLabel, star.getX() - 1.1f*starNumberLabel.width, star.getY() + star.getHeight() - starNumberLabel.height/2);
 
         // draw thumbnail
         thumbnailImg.setDrawable(new TextureRegionDrawable(thumbnail));
 
         // draw name
-        nameLabel.setText(currentSkin.getName());
-        nameLabel.setPosition((WINDOW_WIDTH / 2 - nameLabel.getWidth() / 2), thumbnailImg.getY() + thumbnailImg.getHeight() + 0.05f*WINDOW_HEIGHT);
+        nameLabel.setText(FONT_FOR_TEXT, currentSkin.getName());
+        FONT_FOR_TEXT.draw(stage.getBatch(), nameLabel, (WINDOW_WIDTH - nameLabel.width) / 2, thumbnailImg.getY() + thumbnailImg.getHeight() + 0.05f*WINDOW_HEIGHT);
 
         // draw price (if is not unlocked already)
-        if (!currentSkin.isUnlocked()) {
-            priceLabel.setText(String.valueOf(currentSkin.getPrice()));
-            smallStar.setBounds(WINDOW_WIDTH / 2 - priceLabel.getWidth() / 2 + 0.11f*WINDOW_HEIGHT , WINDOW_HEIGHT * 0.325f, 0.1f*WINDOW_HEIGHT, 0.1f*WINDOW_HEIGHT);
-            priceLabel.setPosition(WINDOW_WIDTH / 2 - priceLabel.getWidth() / 2, WINDOW_HEIGHT * 0.325f);
+        if (!currentSkin.isUnlocked() && !currentSkin.isForDonations()) {
+            priceLabel.setText(FONT_FOR_NUMBERS, String.valueOf(currentSkin.getPrice()));
+            smallStar.setBounds(WINDOW_WIDTH / 2 + priceLabel.width / 2 , WINDOW_HEIGHT * 0.325f, 0.1f*WINDOW_HEIGHT, 0.1f*WINDOW_HEIGHT);
+            FONT_FOR_NUMBERS.draw(stage.getBatch(), priceLabel, (WINDOW_WIDTH - priceLabel.width) / 2, WINDOW_HEIGHT * 0.415f);
         }
-        smallStar.setVisible(!currentSkin.isUnlocked());
-        priceLabel.setVisible(!currentSkin.isUnlocked());
+        smallStar.setVisible(!currentSkin.isUnlocked() && !currentSkin.isForDonations());
 
         if (currentSkin.isForDonations()) {
-            priceLabel.setVisible(false);
-            smallStar.setVisible(false);
-            if(DataIO.isDonation()) {
-                throughDonateLabel.setText("Thank for donation");
-                throughDonateLabel.setPosition(WINDOW_WIDTH / 2 - throughDonateLabel.getWidth() / 2, WINDOW_HEIGHT * 0.325f);
-            }
-            throughDonateLabel.setVisible(true);
+            throughDonateLabel.setText(FONT_FOR_TEXT,(DataIO.isDonation()) ? "Thank for donation" : "Donate to unlock this skin");
+            FONT_FOR_TEXT.draw(stage.getBatch(), throughDonateLabel, (WINDOW_WIDTH - throughDonateLabel.width) / 2, WINDOW_HEIGHT * 0.375f);
         }
+
+        stage.getBatch().end();
     }
 
     public void show() {
 
+        starNumberLabel = new GlyphLayout();
+        nameLabel = new GlyphLayout();
+        priceLabel = new GlyphLayout();
+        throughDonateLabel = new GlyphLayout();
+
         star = new Image(STAR_TEXTURE);
         star.setBounds(WINDOW_WIDTH - 0.2f*WINDOW_HEIGHT, 0.8f*WINDOW_HEIGHT, 0.15f*WINDOW_HEIGHT, 0.15f*WINDOW_HEIGHT);
-
-        starNumberLabel = new Label(String.valueOf(DataIO.getStarNumber()), new Label.LabelStyle(FONT_FOR_NUMBERS, Color.BLACK));
-        starNumberLabel.setPosition(star.getX() - 1.2f*starNumberLabel.getWidth(), star.getY() + star.getHeight()  / 2 - starNumberLabel.getHeight() / 2);
 
         thumbnailImg = new Image(thumbnail);
         thumbnailImg.setBounds(WINDOW_WIDTH * 0.4f, WINDOW_HEIGHT * 0.45f,
                             WINDOW_WIDTH * 0.2f, WINDOW_WIDTH * 0.2f);
 
-        nameLabel = new Label(currentSkin.getName(), new Label.LabelStyle(FONT_FOR_NUMBERS, Color.BLACK));
-        nameLabel.setPosition((WINDOW_WIDTH / 2 - nameLabel.getWidth() / 2), thumbnailImg.getY() + thumbnailImg.getHeight() + 0.05f*WINDOW_HEIGHT);
-
         smallStar = new Image(STAR_TEXTURE);
-        priceLabel = new Label(String.valueOf(currentSkin.getPrice()), new Label.LabelStyle(FONT_FOR_NUMBERS, Color.BLACK));
 
-        smallStar.setBounds(WINDOW_WIDTH / 2 - priceLabel.getWidth() / 2, WINDOW_HEIGHT * 0.325f, 0.1f*WINDOW_HEIGHT, 0.1f*WINDOW_HEIGHT);
-        priceLabel.setPosition(WINDOW_WIDTH / 2 - priceLabel.getWidth() / 2, WINDOW_HEIGHT * 0.325f);
-        if (currentSkin.isUnlocked()) {
-            priceLabel.setVisible(false);
-            smallStar.setVisible(false);
-        }
+        smallStar.setBounds(WINDOW_WIDTH / 2 - priceLabel.width / 2, WINDOW_HEIGHT * 0.325f, 0.1f*WINDOW_HEIGHT, 0.1f*WINDOW_HEIGHT);
+        smallStar.setVisible(!currentSkin.isUnlocked());
 
-        throughDonateLabel = new Label("Donate to unlock this skin",  new Label.LabelStyle(FONT_FOR_TEXT, Color.BLACK));
-        throughDonateLabel.setPosition(WINDOW_WIDTH / 2 - throughDonateLabel.getWidth() / 2, WINDOW_HEIGHT * 0.325f);
-        throughDonateLabel.setVisible(false);
-
-        stage.addActor(starNumberLabel);
         stage.addActor(thumbnailImg);
-        stage.addActor(nameLabel);
-        stage.addActor(priceLabel);
-        stage.addActor(throughDonateLabel);
         stage.addActor(star);
         stage.addActor(smallStar);
-
     }
+
 
     public void dispose() {
         FONT_FOR_NUMBERS.dispose();
