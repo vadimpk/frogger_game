@@ -71,7 +71,6 @@ public class DataIO {
             characterSkins = new CharacterSkin[characterSkinsParameters.length];
             for (int i = 0; i < characterSkins.length; i++) {
                 characterSkins[i] = convertToSkin(characterSkinsParameters[i]);
-                if(characterSkinsParameters[i].forDonations) characterSkins[i].setForDonations(true);
             }
         }
         return characterSkins;
@@ -89,38 +88,9 @@ public class DataIO {
             for (int i = 0; i < tileSkins.length; i++) {
                 tileSkins[i] = new CharacterSkin(tileSkinsParameters[i].name, tileSkinsParameters[i].price,
                         tileSkinsParameters[i].unlocked, tileSkinsParameters[i].active, tileSkinsParameters[i].tileSkin);
-                if(tileSkinsParameters[i].forDonations) tileSkins[i].setForDonations(true);
             }
         }
         return tileSkins;
-    }
-
-    public static boolean isDonation() {
-        for (CharacterSkin skin : concat(getTileSkins(), getCharacterSkins())) {
-            if(skin.isForDonations()) return skin.isUnlocked();
-        }
-        return false;
-    }
-
-    public static void setDonation() {
-        boolean forTiles = false;
-        for (CharacterSkin skin : concat(getTileSkins(), getCharacterSkins())) {
-            if(skin.isForDonations()) {
-                skin.setUnlocked(true);
-                forTiles = skin.isForTiles();
-            }
-        }
-
-        CharacterSkinParameters[] skinParameters = (forTiles ? tileSkinsParameters : characterSkinsParameters);
-        int skinIndex  = 0;
-        for (int i = 0; i < skinParameters.length; i++) {
-            if(skinParameters[i].forDonations) {
-                skinParameters[i].unlocked = true;
-                skinIndex = i;
-            }
-        }
-
-        updateSkins(forTiles, skinIndex);
     }
 
     /**
@@ -1360,7 +1330,6 @@ public class DataIO {
         skinParameters[5] = new CharacterSkinParameters("Juvchick na minimalkax", 3, false, false, Util.Character.BOTTLE_OF_COKE);
         skinParameters[6] = new CharacterSkinParameters("Good evening", 3, false, false, Util.Character.BOTTLE_OF_WINE);
         skinParameters[7] = new CharacterSkinParameters("It could be a chicken!", 5, false, false, Util.Character.EGG);
-        //skinParameters[2].forDonations = true;
         loadSkinsToFile(skinParameters, false);
 
         skinParameters = new CharacterSkinParameters[4];
@@ -1433,8 +1402,6 @@ public class DataIO {
      * @return merged array
      */
     private static <T> T[] concat(T[] first, T[] second) {
-        System.out.println(Arrays.toString(first));
-        System.out.println(Arrays.toString(second));
         T[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
         return result;

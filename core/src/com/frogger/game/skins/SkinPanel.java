@@ -31,7 +31,6 @@ public class SkinPanel {
     private Label starNumberLabel;
     private Label nameLabel;
     private Label priceLabel;
-    private Label throughDonateLabel;
     private Image thumbnailImg;
     private Image star;
     private Image smallStar;
@@ -114,17 +113,6 @@ public class SkinPanel {
         }
         smallStar.setVisible(!currentSkin.isUnlocked());
         priceLabel.setVisible(!currentSkin.isUnlocked());
-
-        /*if (currentSkin.isForDonations()) {
-            priceLabel.setVisible(false);
-            smallStar.setVisible(false);
-            if(DataIO.isDonation()) {
-                throughDonateLabel.setText("Thank for donation");
-                throughDonateLabel.setPosition(WINDOW_WIDTH / 2 - throughDonateLabel.getWidth() / 2, WINDOW_HEIGHT * 0.325f);
-            }
-            throughDonateLabel.setVisible(true);
-        }
-         */
     }
 
     public void show() {
@@ -152,15 +140,10 @@ public class SkinPanel {
             smallStar.setVisible(false);
         }
 
-        throughDonateLabel = new Label("Donate to unlock this skin",  new Label.LabelStyle(FONT_FOR_TEXT, Color.BLACK));
-        throughDonateLabel.setPosition(WINDOW_WIDTH / 2 - throughDonateLabel.getWidth() / 2, WINDOW_HEIGHT * 0.325f);
-        throughDonateLabel.setVisible(false);
-
         stage.addActor(starNumberLabel);
         stage.addActor(thumbnailImg);
         stage.addActor(nameLabel);
         stage.addActor(priceLabel);
-        stage.addActor(throughDonateLabel);
         stage.addActor(star);
         stage.addActor(smallStar);
 

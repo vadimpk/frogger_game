@@ -117,7 +117,6 @@ public class MainMenuScreen extends Screen {
             public void clicked(InputEvent event, float x, float y) {
                 Audio.playClickedSound();
                 Gdx.net.openURI("https://helpukraine.center/#donate");
-                DataIO.setDonation();
             }
         });
 
