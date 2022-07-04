@@ -4,13 +4,15 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.frogger.game.*;
+import com.frogger.game.DataIO;
+import com.frogger.game.FroggerGame;
 import com.frogger.game.skins.CharacterSkin;
 import com.frogger.game.skins.SkinPanel;
 import com.frogger.game.utils.Audio;
 
+import static com.frogger.game.DataIO.getCharacterSkins;
+import static com.frogger.game.DataIO.getTileSkins;
 import static com.frogger.game.utils.Const.*;
-import static com.frogger.game.DataIO.*;
 
 /**
  * SkinsScreen.java
