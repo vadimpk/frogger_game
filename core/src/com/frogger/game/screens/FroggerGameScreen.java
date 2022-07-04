@@ -3,6 +3,8 @@ package com.frogger.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.frogger.game.*;
 import com.frogger.game.attributeObjects.Scorer;
@@ -12,6 +14,7 @@ import com.frogger.game.levels.Level;
 import com.frogger.game.utils.Const;
 
 import static com.frogger.game.utils.Const.WINDOW_HEIGHT;
+import static com.frogger.game.utils.Const.WINDOW_WIDTH;
 
 
 /**
@@ -27,6 +30,7 @@ public class FroggerGameScreen extends Screen {
     private final Timer timer;
     private final Scorer scorer;
     public static boolean isPaused;
+    private Image bg;
 
     /**
      * Class constructor creates Timer and Scorer instances.
@@ -36,6 +40,7 @@ public class FroggerGameScreen extends Screen {
      */
     public FroggerGameScreen(FroggerGame game, Level level) {
         super(game);
+
         FroggerGameScreen.level = level;
         Frog.get().respawn(level.getMap().getTiles()[0][level.getMap().getnColumns() / 2]);
         FroggerGame.gameCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -104,7 +109,7 @@ public class FroggerGameScreen extends Screen {
                 timer.stop();
             }
 
-            if (timer.getTimer() == 0 && !isSwitching) {
+            if (timer.getTimer() == -1 && !isSwitching) {
                 isSwitching = true;
                 switchScreen(new GameOverScreen(game, level, timer.getTimer(), false));
                 isPaused = !isPaused;

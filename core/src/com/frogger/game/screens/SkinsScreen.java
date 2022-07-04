@@ -69,6 +69,7 @@ public class SkinsScreen extends Screen {
         rightArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Audio.playClickedSound();
                 skinPanel.nextSkin();
                 buyButton.setDisabled(defineBuyButtonAvailability());
             }
@@ -77,6 +78,7 @@ public class SkinsScreen extends Screen {
         leftArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Audio.playClickedSound();
                 skinPanel.previousSkin();
                 buyButton.setDisabled(defineBuyButtonAvailability());
             }
@@ -108,7 +110,8 @@ public class SkinsScreen extends Screen {
     }
 
     private boolean defineBuyButtonAvailability() {
-        return !skinPanel.getCurrentSkin().isForDonations() && (skinPanel.getCurrentSkin().isUnlocked() || DataIO.getStarNumber() < skinPanel.getCurrentSkin().getPrice());
+        //return !skinPanel.getCurrentSkin().isForDonations() && (skinPanel.getCurrentSkin().isUnlocked() || DataIO.getStarNumber() < skinPanel.getCurrentSkin().getPrice());
+        return (skinPanel.getCurrentSkin().isUnlocked() || DataIO.getStarNumber() < skinPanel.getCurrentSkin().getPrice());
     }
 
     /**

@@ -128,7 +128,7 @@ public class DataIO {
      * @return number of star that was collected
      */
     public static int getStarNumber() {
-        int starNumber = 10;
+        int starNumber = 20;
         for (Level level : getLevels()) {
             if(!level.isBlocked() && level.isPassed()) {
                 starNumber += level.getStarScore();
@@ -1360,7 +1360,7 @@ public class DataIO {
         skinParameters[5] = new CharacterSkinParameters("Juvchick na minimalkax", 3, false, false, Util.Character.BOTTLE_OF_COKE);
         skinParameters[6] = new CharacterSkinParameters("Good evening", 3, false, false, Util.Character.BOTTLE_OF_WINE);
         skinParameters[7] = new CharacterSkinParameters("It could be a chicken!", 5, false, false, Util.Character.EGG);
-        skinParameters[2].forDonations = true;
+        //skinParameters[2].forDonations = true;
         loadSkinsToFile(skinParameters, false);
 
         skinParameters = new CharacterSkinParameters[4];

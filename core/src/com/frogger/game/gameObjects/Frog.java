@@ -520,10 +520,7 @@ public class Frog {
      */
     public void animateMovingUp(Row[] rows, int nColumns, int nRows) {
 
-        // don't let next move until time passes
-        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
-            endAnimation();
-        }
+
 
         // counter of frames (for animation)
         animationFrameCount++;
@@ -560,17 +557,16 @@ public class Frog {
 
             animate();
         }
+        // don't let next move until time passes
+        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
+            endAnimation();
+        }
     }
 
     /**
      * Method to animate moving down. Runs every frame. Also changes camera
      */
     public void animateMovingDown(Row[] rows, int nColumns, int nRows) {
-
-        // don't let next move until time passes
-        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
-            endAnimation();
-        }
 
         // counter of frames (for animation)
         animationFrameCount++;
@@ -608,16 +604,18 @@ public class Frog {
 
             animate();
         }
+
+
+        // don't let next move until time passes
+        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
+            endAnimation();
+        }
     }
 
     /**
      * Method to animate moving right. Runs every frame.
      */
     private void animateMovingRight(Row[] rows) {
-
-        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
-            endAnimation();
-        }
 
         animationFrameCount++;
 
@@ -640,8 +638,13 @@ public class Frog {
                     }
                 }
             }
+            animate();
         }
-        animate();
+
+
+        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
+            endAnimation();
+        }
     }
 
     /**
@@ -649,9 +652,6 @@ public class Frog {
      */
     public void animateMovingLeft(Row[] rows) {
 
-        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
-            endAnimation();
-        }
         animationFrameCount++;
 
         if (moveToTheWall) {
@@ -674,6 +674,9 @@ public class Frog {
                 }
             }
             animate();
+        }
+        if (TimeUtils.nanoTime() - startedMovingTime > MOVE_TIME) {
+            endAnimation();
         }
     }
 

@@ -26,7 +26,7 @@ public class Audio {
 
 
     /** fields to define whether particular sound is playing at the moment */
-    private static final long SOUND_CLICKED_DURATION = 800000000;
+    private static final long SOUND_CLICKED_DURATION = 200000000;
     private static long startedPlayingClickedSound;
 
     private static boolean playingFrogJumping   = false;

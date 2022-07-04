@@ -115,7 +115,7 @@ public class SkinPanel {
         smallStar.setVisible(!currentSkin.isUnlocked());
         priceLabel.setVisible(!currentSkin.isUnlocked());
 
-        if (currentSkin.isForDonations()) {
+        /*if (currentSkin.isForDonations()) {
             priceLabel.setVisible(false);
             smallStar.setVisible(false);
             if(DataIO.isDonation()) {
@@ -124,6 +124,7 @@ public class SkinPanel {
             }
             throughDonateLabel.setVisible(true);
         }
+         */
     }
 
     public void show() {
