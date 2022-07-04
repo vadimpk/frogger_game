@@ -109,12 +109,11 @@ public class FroggerGameScreen extends Screen {
                 timer.stop();
             }
 
-            if (timer.getTimer() == -1 && !isSwitching) {
+            if (timer.getTimer() == 0 && !isSwitching) {
                 isSwitching = true;
                 switchScreen(new GameOverScreen(game, level, timer.getTimer(), false));
                 isPaused = !isPaused;
                 timer.stop();
-
             }
         }
 
