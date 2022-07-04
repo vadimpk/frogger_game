@@ -19,7 +19,6 @@ import static com.frogger.game.utils.Const.WINDOW_WIDTH;
  * It draws skin image, name, price and amount of stars on a screen.
  * It has methods to change skin (next or previous) and to buy a skin
  */
-
 public class SkinPanel {
 
     private final CharacterSkin[] skins;
