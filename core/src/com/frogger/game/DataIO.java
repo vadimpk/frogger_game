@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 /**
  * DataIO.java
@@ -1397,18 +1396,6 @@ public class DataIO {
     }
 
     /**
-     * Method returns array that is merging of received arrays
-     * @param first - first array that will be merger
-     * @param second - second array that will be merger
-     * @return merged array
-     */
-    private static <T> T[] concat(T[] first, T[] second) {
-        T[] result = Arrays.copyOf(first, first.length + second.length);
-        System.arraycopy(second, 0, result, first.length, second.length);
-        return result;
-    }
-
-    /**
      * @author stas-bukovskiy
      *
      * Class for representing parameters for creating Level instances
@@ -1545,7 +1532,6 @@ public class DataIO {
         Util.Character character;
         Util.TileSkin tileSkin;
         boolean forTiles;
-        boolean forDonations;
 
         public CharacterSkinParameters(String name, int price, boolean isUnlocked, boolean active, Util.Character character) {
             this.name = name;

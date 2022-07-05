@@ -29,11 +29,9 @@ public class Map {
 
     private static Frog frog;
 
-    public Texture t2;
 
     public Map(Row[] rows, Tile[][] tiles) {
         scores = new Score[3];
-        t2 = new Texture(Gdx.files.internal("temp2.jpg"));
 
         nColumns = tiles[0].length;
         nRows = tiles.length;

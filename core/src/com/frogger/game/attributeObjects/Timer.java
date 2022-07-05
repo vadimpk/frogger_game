@@ -25,12 +25,12 @@ public class Timer {
 
     /**
      * Constructor of Timer instance
-     * @param x - starting x-coordinate of drawing
-     * @param y - starting y-coordinate of drawing
+     *
+     * @param x     - starting x-coordinate of drawing
      * @param timer - time that will be passing
      * @param stage - stage where timer will be displayed
      */
-    public Timer(float x, float y, int timer, Stage stage) {
+    public Timer(float x, int timer, Stage stage) {
         font = new BitmapFont(Gdx.files.internal("fonts/Pixellari_36.fnt"), false);
         this.timer = timer;
         timeLabel = new Label("Time:", new Label.LabelStyle(font, Color.BLACK));
@@ -54,14 +54,6 @@ public class Timer {
             }
         }
         timeLabel.setText("Time: " + convert(timer));
-    }
-
-    /**
-     * Method returns time in string representations
-     * @return time in string representations
-     */
-    public String getTime() {
-        return convert(timer);
     }
 
     /**

@@ -57,7 +57,6 @@ public class Log extends MovingObject {
     private int state;
     private long deltaTime;
     private long startTime;
-    private TextureRegion texture;
     private boolean flooded;
 
     /**
@@ -119,6 +118,7 @@ public class Log extends MovingObject {
     private void defaultRender(SpriteBatch batch) {
         for (int i = 0; i < getLength(); i++) {
 
+            TextureRegion texture;
             switch (state) {
                 case 0:
                     if (getLength() == 1) {

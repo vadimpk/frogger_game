@@ -120,13 +120,5 @@ public class MovingObject {
         this.x = x;
     }
 
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public void setSize(float size) {
-        this.size = size;
-    }
-
     public void setFlooded(boolean flooded) {}
 }

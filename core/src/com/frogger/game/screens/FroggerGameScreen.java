@@ -42,7 +42,6 @@ public class FroggerGameScreen extends Screen {
         FroggerGame.gameCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         timer = new Timer((float) (level.getMap().getTiles()[0][0].getX() + 0.1 * level.getMap().getTiles()[0][0].getSize()),
-                level.getMap().getTiles()[level.getMap().getnColumns() - 1][0].getY() + level.getMap().getTiles()[0][0].getSize(),
                 level.getTime(), stage);
 
         scorer = new Scorer(level.getMap().getTiles()[0][level.getMap().getnColumns() - 1].getX() - 2f * WINDOW_HEIGHT*0.08f, WINDOW_HEIGHT*0.932f, WINDOW_HEIGHT*0.08f);
@@ -97,18 +96,18 @@ public class FroggerGameScreen extends Screen {
 
             if (!Frog.get().isAlive() && !isSwitching) {
                 isSwitching = true;
-                switchScreen(new GameOverScreen(game, level, timer.getTimer(), false));
+                switchScreenWithDelay(new GameOverScreen(game, level, timer.getTimer(), false));
                 timer.stop();
             }
             if (Frog.get().getTile().isFinish() && !Frog.get().isMoving() && !isSwitching) {
                 isSwitching = true;
-                switchScreen(new GameOverScreen(game, level, timer.getTimer(), true));
+                switchScreenWithDelay(new GameOverScreen(game, level, timer.getTimer(), true));
                 timer.stop();
             }
 
             if (timer.getTimer() == 0 && !isSwitching) {
                 isSwitching = true;
-                switchScreen(new GameOverScreen(game, level, timer.getTimer(), false));
+                switchScreenWithDelay(new GameOverScreen(game, level, timer.getTimer(), false));
                 isPaused = !isPaused;
                 timer.stop();
             }

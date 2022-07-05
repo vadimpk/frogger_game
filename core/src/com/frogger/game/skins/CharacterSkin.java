@@ -54,7 +54,6 @@ public class CharacterSkin {
     private final int PRICE;
     private boolean unlocked;
     private boolean active;
-    private Util.Character characterSkin;
     private Util.TileSkin tileSkin;
     private final boolean forTiles;
 
@@ -71,8 +70,7 @@ public class CharacterSkin {
         this.PRICE = price;
         this.unlocked = isUnlocked;
         this.active = isActive;
-        this.characterSkin = character;
-        setCharacterSkin(characterSkin);
+        setCharacterSkin(character);
         textureRotation = 0;
         forTiles = false;
     }

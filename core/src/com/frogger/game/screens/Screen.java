@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -33,19 +34,19 @@ import static com.frogger.game.utils.Util.*;
  * It uses in all screen classe
  */
 public abstract class Screen implements com.badlogic.gdx.Screen {
-    protected FroggerGame game;
+    protected final FroggerGame game;
 
 
-    protected SpriteBatch batch;
-    protected Stage stage;
-    protected Viewport viewport;
-    protected OrthographicCamera camera;
-    protected Map<String, BitmapFont> fonts;
-    protected Skin skin;
-    protected TextureAtlas buttonAtlas;
-    protected Map<String, TextButton.TextButtonStyle> textButtonStyles;
-    protected Map<String, Button.ButtonStyle> buttonStyles;
-    protected Map<String, TextButton> buttons;
+    protected final SpriteBatch batch;
+    protected final Stage stage;
+    protected final Viewport viewport;
+    protected final OrthographicCamera camera;
+    protected final Map<String, BitmapFont> fonts;
+    protected final Skin skin;
+    protected final TextureAtlas buttonAtlas;
+    protected final Map<String, TextButton.TextButtonStyle> textButtonStyles;
+    protected final Map<String, Button.ButtonStyle> buttonStyles;
+    protected final Map<String, TextButton> buttons;
     protected Texture bgTexture;
     protected boolean isSwitching;
 
@@ -206,5 +207,18 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         bg.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         stage.addActor(bg);
+    }
+
+    /**
+     * Method sets standard background image
+     */
+    public void switchScreenWithDelay(final Screen newScreen){
+        Runnable bgSetting = new Runnable() {
+            @Override
+            public void run() {
+                switchScreen(newScreen);
+            }
+        };
+        stage.addAction(Actions.sequence(Actions.delay(1.5f), Actions.run(bgSetting)));
     }
 }

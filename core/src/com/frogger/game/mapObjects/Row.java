@@ -13,8 +13,7 @@ import com.frogger.game.gameObjects.*;
 
 public class Row  {
 
-    private int rowIndex;
-    private TypeOfRow type;
+    private final TypeOfRow type;
     private MovingObject[] movingObjects;
 
     /**

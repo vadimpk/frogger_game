@@ -125,12 +125,6 @@ public class Tile{
      */
     public int getCOLUMN() {return COLUMN;}
 
-    /**
-     * Get texture of a tile
-     * @return texture
-     */
-    public TextureRegion getTexture() {return texture;}
-
     public boolean isTransparent() {
         return transparent;
     }
@@ -151,12 +145,6 @@ public class Tile{
         }
 
     }
-
-    /**
-     * Set texture of a tile
-     * @param texture new texture
-     */
-    public void setTexture(TextureRegion texture) {this.texture = texture;}
 
     public void setTransparent(boolean transparent) {
         this.transparent = transparent;
