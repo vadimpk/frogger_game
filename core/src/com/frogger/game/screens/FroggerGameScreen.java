@@ -4,9 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.frogger.game.*;
+import com.frogger.game.FroggerGame;
 import com.frogger.game.attributeObjects.Scorer;
 import com.frogger.game.attributeObjects.Timer;
 import com.frogger.game.gameObjects.Frog;
@@ -14,7 +13,6 @@ import com.frogger.game.levels.Level;
 import com.frogger.game.utils.Const;
 
 import static com.frogger.game.utils.Const.WINDOW_HEIGHT;
-import static com.frogger.game.utils.Const.WINDOW_WIDTH;
 
 
 /**
@@ -30,8 +28,6 @@ public class FroggerGameScreen extends Screen {
     private final Timer timer;
     private final Scorer scorer;
     public static boolean isPaused;
-    private Image bg;
-
     /**
      * Class constructor creates Timer and Scorer instances.
      * Also, it respawns Frog instance
@@ -51,6 +47,7 @@ public class FroggerGameScreen extends Screen {
 
         scorer = new Scorer(level.getMap().getTiles()[0][level.getMap().getnColumns() - 1].getX() - 2f * WINDOW_HEIGHT*0.08f, WINDOW_HEIGHT*0.932f, WINDOW_HEIGHT*0.08f);
         isPaused = false;
+        bgTexture = new Texture(Gdx.files.internal("backgrounds/bg.png"));
     }
 
     /**

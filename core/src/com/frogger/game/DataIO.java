@@ -98,7 +98,7 @@ public class DataIO {
      * @return number of star that was collected
      */
     public static int getStarNumber() {
-        int starNumber = 20;
+        int starNumber = 0;
         for (Level level : getLevels()) {
             if(!level.isBlocked() && level.isPassed()) {
                 starNumber += level.getStarScore();

@@ -3,7 +3,6 @@ package com.frogger.game.mapObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.frogger.game.Util;
 import com.frogger.game.attributeObjects.Score;
 import com.frogger.game.gameObjects.Frog;
@@ -12,26 +11,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.frogger.game.FroggerGame.*;
-import static com.frogger.game.FroggerGame.attributesBatch;
 
 
 public class Map {
 
-    private int nColumns;
-    private int nRows;
+    private final int nColumns;
+    private final int nRows;
 
-    private Row[] rows;
-    private Tile[][] tiles;
+    private final Row[] rows;
+    private final Tile[][] tiles;
+    private final Texture rightBgTexture;
+    private final Texture leftBgTexture;
+    private final Texture bottomBgTexture;
+    private final Texture topBgTexture;
+    private final Texture white;
     private Score[] scores;
 
     private static Frog frog;
 
     public Texture t2;
-
-    /** variables for calculating time between frames in render() method */
-    long now = 0;
-    long last = 0;
-    float dt;
 
     public Map(Row[] rows, Tile[][] tiles) {
         scores = new Score[3];
@@ -51,6 +49,13 @@ public class Map {
         for(Tile[] row: tiles)
             for (Tile tile : row) if (tile.isScore()) scoreList.add(new Score(tile));
         scores = scoreList.toArray(new Score[0]);
+
+        rightBgTexture = new Texture(Gdx.files.internal("backgrounds/right.png"));
+        leftBgTexture = new Texture(Gdx.files.internal("backgrounds/left.png"));
+        bottomBgTexture = new Texture(Gdx.files.internal("backgrounds/bottom.png"));
+        topBgTexture = new Texture(Gdx.files.internal("backgrounds/top.png"));
+        white = new Texture(Gdx.files.internal("backgrounds/white.png"));
+
     }
 
     public static Frog getFrog() {
@@ -100,11 +105,16 @@ public class Map {
 
         // attributes batch setup
         attributesBatch.begin();
-        attributesBatch.draw(t2, 0, 0, Gdx.graphics.getWidth(), tiles[0][0].getY());
-        attributesBatch.draw(t2, 0, tiles[nColumns - 1][0].getY() + tiles[0][0].getSize(), Gdx.graphics.getWidth(), tiles[0][0].getY());
-        attributesBatch.draw(t2, 0, 0, tiles[0][0].getX(), Gdx.graphics.getHeight());
-        attributesBatch.draw(t2, tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), 0, Gdx.graphics.getWidth() - tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), Gdx.graphics.getHeight());
 
+        attributesBatch.draw(white, tiles[0][0].getX(), 0, tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() - tiles[0][0].getX(), tiles[0][0].getY());
+        attributesBatch.draw(white, tiles[0][0].getX(), tiles[nColumns - 1][0].getY() + tiles[0][0].getSize(), tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() - tiles[0][0].getX(), tiles[0][0].getY());
+        attributesBatch.draw(white, 0, 0, tiles[0][0].getX(), Gdx.graphics.getHeight());
+        attributesBatch.draw(white, tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), 0, Gdx.graphics.getWidth() - tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), Gdx.graphics.getHeight());
+
+        attributesBatch.draw(bottomBgTexture, tiles[0][0].getX(), 0, tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() - tiles[0][0].getX(), tiles[0][0].getY());
+        attributesBatch.draw(topBgTexture, tiles[0][0].getX(), tiles[nColumns - 1][0].getY() + tiles[0][0].getSize(), tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() - tiles[0][0].getX(), tiles[0][0].getY());
+        attributesBatch.draw(leftBgTexture, 0, 0, tiles[0][0].getX(), Gdx.graphics.getHeight());
+        attributesBatch.draw(rightBgTexture, tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), 0, Gdx.graphics.getWidth() - tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), Gdx.graphics.getHeight());
         attributesBatch.end();
     }
 
@@ -137,12 +147,18 @@ public class Map {
         gameBatch.end();
 
         // attributes batch setup
+        // attributes batch setup
         attributesBatch.begin();
-        attributesBatch.draw(t2, 0, 0, Gdx.graphics.getWidth(), tiles[0][0].getY());
-        attributesBatch.draw(t2, 0, tiles[nColumns - 1][0].getY() + tiles[0][0].getSize(), Gdx.graphics.getWidth(), tiles[0][0].getY());
-        attributesBatch.draw(t2, 0, 0, tiles[0][0].getX(), Gdx.graphics.getHeight());
-        attributesBatch.draw(t2, tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), 0, Gdx.graphics.getWidth() - tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), Gdx.graphics.getHeight());
 
+        attributesBatch.draw(white, tiles[0][0].getX(), 0, tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() - tiles[0][0].getX(), tiles[0][0].getY());
+        attributesBatch.draw(white, tiles[0][0].getX(), tiles[nColumns - 1][0].getY() + tiles[0][0].getSize(), tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() - tiles[0][0].getX(), tiles[0][0].getY());
+        attributesBatch.draw(white, 0, 0, tiles[0][0].getX(), Gdx.graphics.getHeight());
+        attributesBatch.draw(white, tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), 0, Gdx.graphics.getWidth() - tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), Gdx.graphics.getHeight());
+
+        attributesBatch.draw(bottomBgTexture, tiles[0][0].getX(), 0, tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() - tiles[0][0].getX(), tiles[0][0].getY());
+        attributesBatch.draw(topBgTexture, tiles[0][0].getX(), tiles[nColumns - 1][0].getY() + tiles[0][0].getSize(), tiles[0][nColumns - 1].getX() + tiles[0][0].getSize() - tiles[0][0].getX(), tiles[0][0].getY());
+        attributesBatch.draw(leftBgTexture, 0, 0, tiles[0][0].getX(), Gdx.graphics.getHeight());
+        attributesBatch.draw(rightBgTexture, tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), 0, Gdx.graphics.getWidth() - tiles[0][nColumns - 1].getX() + tiles[0][0].getSize(), Gdx.graphics.getHeight());
         attributesBatch.end();
     }
 
@@ -164,5 +180,12 @@ public class Map {
 
     public Score[] getScores() {
         return scores;
+    }
+
+    public void dispose() {
+        rightBgTexture.dispose();
+        leftBgTexture.dispose();
+        bottomBgTexture.dispose();
+        topBgTexture.dispose();
     }
 }

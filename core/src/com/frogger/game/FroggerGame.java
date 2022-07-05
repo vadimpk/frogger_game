@@ -15,7 +15,6 @@ public class FroggerGame extends Game {
 	public static SpriteBatch gameBatch;
 	public static OrthographicCamera gameCamera;
 	public static SpriteBatch attributesBatch;
-	public static SpriteBatch skinPanelBatch;
 
 	/**
 	 * Method create() runs on the start of the program.
@@ -29,8 +28,6 @@ public class FroggerGame extends Game {
 
 		// initialize batch for attributes
 		attributesBatch = new SpriteBatch();
-
-		skinPanelBatch = new SpriteBatch();
 
 		// initialize batch and camera for game
 		gameCamera = new OrthographicCamera();
@@ -47,7 +44,6 @@ public class FroggerGame extends Game {
 	public void dispose () {
 		gameBatch.dispose();
 		attributesBatch.dispose();
-		skinPanelBatch.dispose();
 
 		Frog.dispose();
 		Log.dispose();
