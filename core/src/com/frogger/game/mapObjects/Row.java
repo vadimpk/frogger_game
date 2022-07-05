@@ -1,7 +1,7 @@
 package com.frogger.game.mapObjects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.frogger.game.Util.TypeOfRow;
+import com.frogger.game.utils.Util.TypeOfRow;
 import com.frogger.game.gameObjects.*;
 
 /**

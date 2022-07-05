@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.frogger.game.Util;
+import com.frogger.game.utils.Util;
 
 import java.util.Random;
 
@@ -31,7 +31,7 @@ public class Car extends MovingObject {
 
     private TextureRegion textureHead;
     private TextureRegion textureTail;
-    private int textureRotation;
+    private final int textureRotation;
 
     public Car(float size, float x, float y, float speed, int length, Util.Direction direction) {
         super(size, x, y, speed, length, direction);

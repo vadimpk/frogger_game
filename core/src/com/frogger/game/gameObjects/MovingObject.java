@@ -1,7 +1,7 @@
 package com.frogger.game.gameObjects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.frogger.game.Util.Direction;
+import com.frogger.game.utils.Util.Direction;
 import com.frogger.game.screens.FroggerGameScreen;
 
 /**
@@ -16,9 +16,9 @@ public class MovingObject {
 
 
     private float x,y,size;
-    private float speed;
-    private int length;
-    private Direction direction;
+    private final float speed;
+    private final int length;
+    private final Direction direction;
 
     private boolean safe;
 

@@ -2,7 +2,6 @@ package com.frogger.game.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
@@ -10,8 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.frogger.game.FroggerGame;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-import static com.frogger.game.utils.Const.WINDOW_HEIGHT;
-import static com.frogger.game.utils.Const.WINDOW_WIDTH;
 
 /**
  * SplashScreen.java
@@ -20,7 +17,8 @@ import static com.frogger.game.utils.Const.WINDOW_WIDTH;
  * It used only once, on starting of game.
  */
 public class SplashScreen extends Screen {
-    private Image splashImg;
+
+    private Texture splashTex;
 
     /**
      * Basic constructor
@@ -46,8 +44,8 @@ public class SplashScreen extends Screen {
             }
         };
 
-        Texture splashTex = new Texture(Gdx.files.internal("backgrounds/logo.png"));
-        splashImg = new Image(splashTex);
+        splashTex = new Texture(Gdx.files.internal("backgrounds/logo.png"));
+        Image splashImg = new Image(splashTex);
         splashImg.setSize(0.3f*splashTex.getWidth(), 0.3f*splashTex.getHeight());
         splashImg.setOrigin(splashImg.getWidth() / 2, splashImg.getHeight());
         splashImg.setPosition(stage.getWidth() / 2 - 32, stage.getHeight() + 32);
@@ -77,5 +75,11 @@ public class SplashScreen extends Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, false);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        splashTex.dispose();
     }
 }

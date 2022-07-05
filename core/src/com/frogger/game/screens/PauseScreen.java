@@ -8,12 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.frogger.game.utils.Audio;
 import com.frogger.game.FroggerGame;
+import com.frogger.game.utils.Audio;
 
-import java.util.HashMap;
-
-import static com.frogger.game.utils.Const.*;
+import static com.frogger.game.utils.Util.*;
 
 /**
  * PauseScreen.java

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.frogger.game.DataIO;
 import com.frogger.game.skins.CharacterSkin;
-import com.frogger.game.Util;
+import com.frogger.game.utils.Util;
 
 import java.util.Random;
 

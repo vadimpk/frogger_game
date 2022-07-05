@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.frogger.game.DataIO;
-import com.frogger.game.Util;
+import com.frogger.game.utils.Util;
 import com.frogger.game.gameObjects.Frog;
 import com.frogger.game.levels.Level;
 import com.frogger.game.mapObjects.Tile;
@@ -56,7 +56,7 @@ public class CharacterSkin {
     private boolean active;
     private Util.Character characterSkin;
     private Util.TileSkin tileSkin;
-    private boolean forTiles;
+    private final boolean forTiles;
 
     /**
      * Constructor for character skin
@@ -205,10 +205,6 @@ public class CharacterSkin {
         FIR_FOREST_TILES_PACK.dispose();
         BEACH_TILES_PACK.dispose();
         DARK_FOREST_TILES_PACK.dispose();
-    }
-
-    public Util.Character getCharacterSkin() {
-        return characterSkin;
     }
 
     /**

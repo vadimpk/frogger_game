@@ -7,14 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.frogger.game.DataIO;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.utils.Audio;
-import com.frogger.game.utils.Const;
 
-import java.sql.DatabaseMetaData;
-
-import static com.frogger.game.utils.Const.*;
+import static com.frogger.game.utils.Util.*;
 
 /**
  * MainMenuScreen.java

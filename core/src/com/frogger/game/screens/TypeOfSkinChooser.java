@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.frogger.game.FroggerGame;
 import com.frogger.game.utils.Audio;
 
-import static com.frogger.game.utils.Const.*;
+import static com.frogger.game.utils.Util.*;
 
 /**
  * TypeOfSkinChooser.java

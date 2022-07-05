@@ -12,7 +12,7 @@ import com.frogger.game.utils.Audio;
 
 import static com.frogger.game.DataIO.getCharacterSkins;
 import static com.frogger.game.DataIO.getTileSkins;
-import static com.frogger.game.utils.Const.*;
+import static com.frogger.game.utils.Util.*;
 
 /**
  * SkinsScreen.java

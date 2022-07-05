@@ -23,7 +23,7 @@ import com.frogger.game.utils.Audio;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.frogger.game.utils.Const.*;
+import static com.frogger.game.utils.Util.*;
 
 /**
  * Screen.java

@@ -10,9 +10,9 @@ import com.frogger.game.attributeObjects.Scorer;
 import com.frogger.game.attributeObjects.Timer;
 import com.frogger.game.gameObjects.Frog;
 import com.frogger.game.levels.Level;
-import com.frogger.game.utils.Const;
 
-import static com.frogger.game.utils.Const.WINDOW_HEIGHT;
+import static com.frogger.game.utils.Util.WINDOW_HEIGHT;
+import static com.frogger.game.utils.Util.WINDOW_WIDTH;
 
 
 /**
@@ -60,7 +60,7 @@ public class FroggerGameScreen extends Screen {
         float startingY = level.getMap().getTiles()[level.getMap().getnColumns() - 1][0].getY() + level.getMap().getTiles()[0][0].getSize();
 
         Label levelLabel = new Label("Level " + level.getNumber(), new Label.LabelStyle(fonts.get("36"), Color.BLACK));
-        levelLabel.setX(Const.WINDOW_WIDTH / 2 - levelLabel.getWidth() / 2);
+        levelLabel.setX(WINDOW_WIDTH / 2 - levelLabel.getWidth() / 2);
         levelLabel.setY(startingY);
 
         stage.addActor(levelLabel);

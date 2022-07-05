@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.frogger.game.DataIO;
 import com.frogger.game.attributeObjects.Scorer;
 
-import static com.frogger.game.utils.Const.WINDOW_HEIGHT;
-import static com.frogger.game.utils.Const.WINDOW_WIDTH;
+import static com.frogger.game.utils.Util.WINDOW_HEIGHT;
+import static com.frogger.game.utils.Util.WINDOW_WIDTH;
 
 /**
  * SkinPanel.java

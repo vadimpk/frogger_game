@@ -3,7 +3,7 @@ package com.frogger.game.mapObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.frogger.game.Util;
+import com.frogger.game.utils.Util;
 import com.frogger.game.attributeObjects.Score;
 import com.frogger.game.gameObjects.Frog;
 

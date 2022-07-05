@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.frogger.game.utils.Audio;
 import com.frogger.game.mapObjects.Map;
-import com.frogger.game.Util.Direction;
+import com.frogger.game.utils.Util.Direction;
 
 import static com.frogger.game.screens.FroggerGameScreen.level;
 

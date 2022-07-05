@@ -3,7 +3,6 @@ package com.frogger.game.attributeObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -20,8 +19,8 @@ public class Timer {
     private final BitmapFont font;
 
     private boolean isStopped;
-    private Label timeLabel;
-    private Stage stage;
+    private final Label timeLabel;
+    private final Stage stage;
     private float animatingTime;
 
     /**
@@ -42,7 +41,6 @@ public class Timer {
 
     /**
      * Method draws time, counts passed time
-     * @param delta
      */
     public void render(float delta) {
         if (!isStopped) timer -= delta;
